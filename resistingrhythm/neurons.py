@@ -1,25 +1,8 @@
 import inspect
-import csv
 import numpy as np
 
 from brian2 import *
 from copy import deepcopy
-
-from resistingrhythm.util import burst
-from resistingrhythm.util import pulse
-
-
-def _parse_membrane_param(x, N, prng):
-    try:
-        if len(x) == 2:
-            x_min, x_max = x
-            x = prng.uniform(x_min, x_max, N)
-        else:
-            raise ValueError("Parameters must be scalars, or 2 V_lement lists")
-    except TypeError:
-        pass
-
-    return x, prng
 
 
 def HHH(time,
@@ -36,19 +19,17 @@ def HHH(time,
         tau_osc=5e-3,
         V_osc=0,
         sigma=0,
-        w_m=0,
         time_step=1e-5,
         report=None,
         seed_value=None):
     """Homeostasis in HH neurons."""
-    # -
     prefs.codegen.target = 'numpy'
     seed(seed_value)
 
     time_step *= second
     defaultclock.dt = time_step
 
-    # -
+    # ----------------------------------------------------
     # Drive
     bias_in *= amp
 
@@ -68,7 +49,6 @@ def HHH(time,
     Et = 20 * mvolt
     Cm = 1 * uF  # /cm2
 
-    w_m = w_m * msiemens
     g_Na = 100 * msiemens
     g_K = 80 * msiemens
     g_l = 0.1 * msiemens
@@ -77,8 +57,9 @@ def HHH(time,
     V_K = -100 * mV
     V_l = -67 * mV  # 67 mV
 
+    # ----------------------------------------------------
     hh = """
-    dV/dt = (I_Na + I_K + I_l + I_m + bias_in + I_noi + I_syn + I_osc) / Cm : volt
+    dV/dt = (I_Na + I_K + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
     m = a_m / (a_m + b_m) : 1
@@ -93,58 +74,91 @@ def HHH(time,
     """ + """
     I_l = g_l * (V_l - V) : amp
     """ + """
-    I_m = w_m * w * (V_K - V) : amp
-    dw/dt = (w_inf - w) / tau_w/ms : 1
-    w_inf = 1 / (1 + exp(-1 * (V/mV + 35) / 10)) : 1
-    tau_w = 400 / ((3.3 * exp((V/mV + 35)/20)) + (exp(-1 * (V/mV + 35) / 20))) : 1
-    """ + """
-    I_noi = g_noi * (V - V_l) : amp
+    I_noi = g_noi * (V_l - V) : amp
     """ + """
     dg_noi/dt = -(g_noi + (sigma * sqrt(tau_in) * xi)) / tau_in : siemens
     """ + """
-    I_syn = g_in * (V - V_in) : amp
-    dg_in/dt = g_in / tau_in : siemens
-    """ + """
-    I_osc = g_osc * (V - V_osc) : amp
-    dg_osc/dt = g_osc / tau_osc : siemens
+    g_total = g_in + g_osc : siemens
+    I_in = g_in * (V_in - V) : amp
+    I_osc = g_osc * (V_osc - V) : amp
+    dg_in/dt = -g_in / tau_in : siemens
+    dg_osc/dt = -g_osc / tau_osc : siemens
     """
 
+    # ----------------------------------------------------
+    # Def the net by hand....
+    net = Network()
+
     # -
-    # Our one neuron to gain control
+    # The target pop....
     P_target = NeuronGroup(
         N, hh, threshold='V > Et', refractory=2 * ms, method='euler')
+
     P_target.V = V_l
 
+    net.add(P_target)
+
+    # -
     # Connect in
     if ns_in.size > 0:
         P_in = SpikeGeneratorGroup(np.max(ns_in) + 1, ns_in, ts_in * second)
+
         C_in = Synapses(
             P_in, P_target, model='w_in : siemens', on_pre='g_in += w_in')
         C_in.connect()
 
+        C_in.w_in = w_in
+
+        net.add([P_in, C_in])
+
+    # -
     # Connect osc
     if ns_osc.size > 0:
         P_osc = SpikeGeneratorGroup(
             np.max(ns_osc) + 1, ns_osc, ts_osc * second)
+
         C_osc = Synapses(
             P_osc, P_target, model='w_osc : siemens', on_pre='g_osc += w_osc')
         C_osc.connect()
 
+        C_osc.w_osc = w_osc
+
+        net.add([P_osc, C_osc])
+
     # -
     # Data acq
-    spikes_e = SpikeMonitor(P_target)
+    spikes = SpikeMonitor(P_target)
 
     # TODO add Ca dynamics
-    to_monitor = [
-        'V',
-        'g_in',
-        'g_osc',
-    ]
+    to_monitor = ['V', 'g_total']
+    # to_monitor = ['V', 'g_total', 'x']
+    traces = StateMonitor(P_target, to_monitor, record=True)
 
-    traces_e = StateMonitor(P_target, to_monitor, record=True)
+    net.add([spikes, traces])
 
     # !
-    run(time * second, report=report)
+    net.run(time * second, report=report)
+
+    # ----------------------------------------------------
+    # Unpack the results
+    ns, ts = np.asarray(spikes.i_), np.asarray(spikes.t_)
+
+    times = np.asarray(traces.t_)
+    vm = np.asarray(traces.V_)
+    g_total = np.asarray(traces.g_total)
+    # calcium = np.asarray(traces.x)
+
+    # and repack them
+    results = {
+        'ns': ns,
+        'ts': ts,
+        'times': times,
+        'v_m': vm,
+        'g_total': g_total,
+        # 'calcium': calcium
+    }
+
+    return results
 
 
 def homeostadex(N,
