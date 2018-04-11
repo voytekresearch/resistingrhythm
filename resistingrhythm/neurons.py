@@ -10,7 +10,7 @@ def HHH(time,
         ts_in,
         ns_osc,
         ts_osc,
-        Ca_target=0.5e-6,
+        Ca_target=50e-9,
         tau_h=10,
         N=1,
         w_in=0.8e-9,
@@ -58,19 +58,21 @@ def HHH(time,
 
     g_Na = 100 * msiemens
     g_K = 80 * msiemens
+    g_A = 80 * msiemens
     g_l = 0.1 * msiemens
 
     V_Na = 50 * mV
-    V_K = -60 * mV  # was 100, changed to match LeMasson
+    V_K = -100 * mV  # was 100, changed to match LeMasson
     V_l = -67 * mV
+    V_A = -80 * mV
 
     # Ca + homeo specific
     delta = 0.6 * umolar
-    Ca = 5e-5 * molar
+    Ca = 5e-5 * mmolar
     k = 1 / (600.0 * msecond)
     gamma = -4.7e-2 * (mmolar / mamp / msecond)
 
-    V_Ca = 150 * mV
+    V_Ca = 120 * mV
     V1 = -50 * mV
     V2 = 10 * mV
     g_Ca = 0.03 * msiemens
@@ -80,7 +82,7 @@ def HHH(time,
 
     # ----------------------------------------------------
     hh = """
-    dV/dt = (I_Na + I_K + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
+    dV/dt = (I_Na + I_K + I_A + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
     m = a_m / (a_m + b_m) : 1
@@ -92,6 +94,14 @@ def HHH(time,
     dn/dt = (a_n - (a_n * n)) - b_n * n : 1
     a_n = (0.032 * (52 + V/mV)) / (1 - exp(-0.2 * (V/mV + 52))) / ms : Hz
     b_n = 0.5 * exp(-0.025 * (57 + V/mV)) / ms : Hz
+    """ + """
+    I_A = g_A * (m_A ** 3) * h_A * (V_A - V) : amp
+    dm_A/dt = (m_A_inf - m_A) / tau_m_A : 1
+    dh_A/dt = (h_A_inf - h_A) / tau_h_A : 1
+    m_A_inf = 1 / (1 + exp((V/mV + 27.2) / -8.7)) : 1
+    h_A_inf = 1 / (1 + exp((V/mV + 56.9) / 4.9)) : 1
+    tau_m_A = (11.6 - (10.4 / (1 + exp((V/mV + 32.9) / -15.2)))) * ms : second
+    tau_h_A = (36.8 - (29.2 / (1 + exp((V/mV + 38.9) / -26.5)))) * ms : second
     """ + """
     I_l = g_l * (V_l - V) : amp
     """ + """
