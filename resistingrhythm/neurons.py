@@ -5,14 +5,13 @@ from brian2 import *
 from copy import deepcopy
 
 
-def HHH(
-        time,
+def HHH(time,
         ns_in,
         ts_in,
         ns_osc,
         ts_osc,
         Ca_target=0.5e-6,
-        s=1,  # Sign of homeostasis
+        tau_h=10,
         N=1,
         w_in=0.8e-9,
         tau_in=5e-3,
@@ -33,7 +32,7 @@ def HHH(
     defaultclock.dt = time_step
 
     # ----------------------------------------------------
-    # Drive
+    # User set (in SI units)
     bias_in *= amp
 
     # Input constants
@@ -48,7 +47,12 @@ def HHH(
     # Noise scale
     sigma *= siemens
 
-    # HH general
+    # The homeo. eq point and tau
+    Ca_target *= molar
+    tau_h *= second
+
+    # ----------------------------------------------------
+    # HH general params, in misc units
     Et = 20 * mvolt
     Cm = 1 * uF  # /cm2
 
@@ -61,11 +65,10 @@ def HHH(
     V_l = -67 * mV
 
     # Ca + homeo specific
-    Ca_target *= molar
     delta = 0.6 * umolar
-    tau_h = 10 * second
-    Ca = 0 * molar
+    Ca = 5e-5 * molar
     k = 1 / (600.0 * msecond)
+    gamma = -4.7e-2 * (mmolar / mamp / msecond)
 
     V_Ca = 150 * mV
     V1 = -50 * mV
@@ -95,11 +98,11 @@ def HHH(
     I_noi = g_noi * (V_l - V) : amp
     dg_noi/dt = -(g_noi + (sigma * sqrt(tau_in) * xi)) / tau_in : siemens
     """ + """
-    I_Ca = -g_Ca * (1 + tanh((V/mV - V1) / V2)) * (V/mV - V_Ca): amp
-    dCa/dt = (-k * Ca) - (I_Ca/amp/molar) : molar
+    I_Ca = -g_Ca * (1 + tanh((V - V1) / V2)) * (V - V_Ca): amp
+    dCa/dt = (-k * Ca) - (gamma * I_Ca) : mmolar
     """ + """
-    dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(s * (Ca - Ca_target)/delta)) - g_Na) : siemens 
-    dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(s * (Ca - Ca_target)/delta)) - g_K) : siemens 
+    dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
+    dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
     """ + """
     g_total = g_in + g_osc : siemens
     I_in = g_in * (V_in - V) : amp
@@ -118,6 +121,9 @@ def HHH(
         N, hh, threshold='V > Et', refractory=2 * ms, method='euler')
 
     P_target.V = V_l
+    P_target.g_Na = g_Na
+    P_target.g_K = g_K
+    P_target.Ca = Ca
 
     net.add(P_target)
 
@@ -153,8 +159,8 @@ def HHH(
     spikes = SpikeMonitor(P_target)
 
     # TODO add Ca dynamics
-    to_monitor = ['V', 'g_total']
-    # to_monitor = ['V', 'g_total', 'x']
+    # to_monitor = ['V', 'g_total']
+    to_monitor = ['V', 'g_total', 'g_Na', 'g_K', 'Ca']
     traces = StateMonitor(P_target, to_monitor, record=True)
 
     net.add([spikes, traces])
@@ -168,8 +174,10 @@ def HHH(
 
     times = np.asarray(traces.t_)
     vm = np.asarray(traces.V_)
-    g_total = np.asarray(traces.g_total)
-    # calcium = np.asarray(traces.x)
+    g_total = np.asarray(traces.g_total_)
+    g_Na = np.asarray(traces.g_Na_)
+    g_K = np.asarray(traces.g_K_)
+    calcium = np.asarray(traces.Ca)
 
     # and repack them
     results = {
@@ -178,7 +186,9 @@ def HHH(
         'times': times,
         'v_m': vm,
         'g_total': g_total,
-        # 'calcium': calcium
+        'calcium': calcium,
+        'g_Na': g_Na,
+        'g_K': g_K
     }
 
     return results
