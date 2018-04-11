@@ -5,11 +5,14 @@ from brian2 import *
 from copy import deepcopy
 
 
-def HHH(time,
+def HHH(
+        time,
         ns_in,
         ts_in,
         ns_osc,
         ts_osc,
+        Ca_target=0.5e-6,
+        s=1,  # Sign of homeostasis
         N=1,
         w_in=0.8e-9,
         tau_in=5e-3,
@@ -45,7 +48,7 @@ def HHH(time,
     # Noise scale
     sigma *= siemens
 
-    # HH specific
+    # HH general
     Et = 20 * mvolt
     Cm = 1 * uF  # /cm2
 
@@ -54,8 +57,23 @@ def HHH(time,
     g_l = 0.1 * msiemens
 
     V_Na = 50 * mV
-    V_K = -100 * mV
-    V_l = -67 * mV  # 67 mV
+    V_K = -60 * mV  # was 100, changed to match LeMasson
+    V_l = -67 * mV
+
+    # Ca + homeo specific
+    Ca_target *= molar
+    delta = 0.6 * umolar
+    tau_h = 10 * second
+    Ca = 0 * molar
+    k = 1 / (600.0 * msecond)
+
+    V_Ca = 150 * mV
+    V1 = -50 * mV
+    V2 = 10 * mV
+    g_Ca = 0.03 * msiemens
+
+    G_Na = 360 * msiemens
+    G_K = 180 * msiemens
 
     # ----------------------------------------------------
     hh = """
@@ -75,8 +93,13 @@ def HHH(time,
     I_l = g_l * (V_l - V) : amp
     """ + """
     I_noi = g_noi * (V_l - V) : amp
-    """ + """
     dg_noi/dt = -(g_noi + (sigma * sqrt(tau_in) * xi)) / tau_in : siemens
+    """ + """
+    I_Ca = -g_Ca * (1 + tanh((V/mV - V1) / V2)) * (V/mV - V_Ca): amp
+    dCa/dt = (-k * Ca) - (I_Ca/amp/molar) : molar
+    """ + """
+    dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(s * (Ca - Ca_target)/delta)) - g_Na) : siemens 
+    dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(s * (Ca - Ca_target)/delta)) - g_K) : siemens 
     """ + """
     g_total = g_in + g_osc : siemens
     I_in = g_in * (V_in - V) : amp
