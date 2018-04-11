@@ -5,8 +5,8 @@ import numpy as np
 from brian2 import *
 from copy import deepcopy
 
-from rhythmzen.util import burst
-from rhythmzen.util import pulse
+from resistingrhythm.util import burst
+from resistingrhythm.util import pulse
 
 
 def _parse_membrane_param(x, N, prng):
