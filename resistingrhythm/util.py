@@ -155,6 +155,7 @@ def poisson_oscillation(t,
                         n=10,
                         dt=1e-3,
                         min_rate=0.0,
+                        name=None,
                         seed=None):
     # Define time
     times = fsutil.create_times(t, dt=dt)
@@ -176,20 +177,28 @@ def poisson_oscillation(t,
     nrns = neurons.Spikes(n, t, dt=dt, seed=seed)
     ns, ts = fsutil.to_spiketimes(times, nrns.poisson(osc))
 
-    return ns, ts
+    if name is not None:
+        write_spikes(name, ns, ts)
+        return None
+    else:
+        return ns, ts
 
 
-def poisson_impulse(t, t_stim, w, rate, n=10, dt=1e-3, seed=None):
-    """Create a pulse of spikes w seconds wide, starting at t_stim."""
+def poisson_impulse(t, t_onset, w, rate, n=10, dt=1e-3, name=None, seed=None):
+    """Create a pulse of spikes w seconds wide, starting at t_onset."""
 
     # Poisson sample the rate over w
     times = fsutil.create_times(t, dt)
     nrns = neurons.Spikes(n, t, dt=dt, seed=seed)
-    pulse = rates.square_pulse(times, rate, t_stim, w, dt, min_a=0)
+    pulse = rates.square_pulse(times, rate, t_onset, w, dt, min_a=0)
 
     ns, ts = fsutil.to_spiketimes(times, nrns.poisson(pulse))
 
-    return ns, ts
+    if name is not None:
+        write_spikes(name, ns, ts)
+        return None
+    else:
+        return ns, ts
 
 
 def write_spikes(name, ns, ts):
@@ -199,7 +208,46 @@ def write_spikes(name, ns, ts):
         writer.writerows([[nrn, spk] for nrn, spk in zip(ns, ts)])
 
 
-def write_voltages(name, voltages, select=None):
+def _read_csv_cols_into_dict(filename):
+    # csv goes here:
+    data = {}
+
+    # Open and iterate over lines
+    # when csv is returning lines as dicts
+    # using the header as a key
+    reader = csv.DictReader(open(filename, 'r'))
+    for row in reader:
+        for k, v in row.items():
+            # Is a number?
+            try:
+                v = float(v)
+            except ValueError:
+                pass
+
+            # Add or init?
+            if k in data:
+                data[k].append(v)
+            else:
+                data[k] = [
+                    v,
+                ]
+
+    return data
+
+
+def load_spikes(filename):
+    """Read in a spikes .csv
+    
+    NOTE: assumes data was written be write_spikes().
+    """
+    data = _read_csv_cols_into_dict(filename)
+    ns = data['ns']
+    ts = data['ts']
+
+    return ns, ts
+
+
+def write_traces(name, results, select=None):
     selected = select_voltages(voltages, select=select)
 
     for k in selected.keys():
