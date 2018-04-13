@@ -24,7 +24,8 @@ def HHH(time,
         sigma=0,
         time_step=1e-5,
         homeostasis=True,
-        report=None,
+        record_traces=True,
+        progress_report=None,
         seed_value=None):
     """Homeostasis in HH neurons."""
     prefs.codegen.target = 'numpy'
@@ -182,39 +183,43 @@ def HHH(time,
     # -
     # Data acq
     spikes = SpikeMonitor(P_target)
+    net.add(spikes)
 
-    to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'Ca']
-    traces = StateMonitor(P_target, to_monitor, record=True)
-
-    net.add([spikes, traces])
+    if record_traces:
+        to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'Ca']
+        traces = StateMonitor(P_target, to_monitor, record=True)
+        net.add(traces)
 
     # ----------------------------------------------------
     # !
-    net.run(time * second, report=report)
+    net.run(time * second, report=progress_report)
 
     # ----------------------------------------------------
     # Unpack the results
     ns, ts = np.asarray(spikes.i_), np.asarray(spikes.t_)
 
-    times = np.asarray(traces.t_)
-    vm = np.asarray(traces.V_)
-    g_total = np.asarray(traces.g_total_)
-    g_Na = np.asarray(traces.g_Na_)
-    g_K = np.asarray(traces.g_K_)
-    I_Ca = np.asarray(traces.I_Ca_)
-    calcium = np.asarray(traces.Ca)
+    if record_traces:
+        times = np.asarray(traces.t_)
+        vm = np.asarray(traces.V_)
+        g_total = np.asarray(traces.g_total_)
+        g_Na = np.asarray(traces.g_Na_)
+        g_K = np.asarray(traces.g_K_)
+        I_Ca = np.asarray(traces.I_Ca_)
+        calcium = np.asarray(traces.Ca)
 
-    # and repack them
-    results = {
-        'ns': ns,
-        'ts': ts,
-        'times': times,
-        'v_m': vm,
-        'g_total': g_total,
-        'calcium': calcium,
-        'I_Ca': I_Ca,
-        'g_Na': g_Na,
-        'g_K': g_K
-    }
+        # and repack them
+        results = {
+            'ns': ns,
+            'ts': ts,
+            'times': times,
+            'v_m': vm,
+            'g_total': g_total,
+            'calcium': calcium,
+            'I_Ca': I_Ca,
+            'g_Na': g_Na,
+            'g_K': g_K
+        }
+    else:
+        results = {'ns': ns, 'ts': ts}
 
     return results
