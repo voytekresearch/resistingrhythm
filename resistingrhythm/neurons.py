@@ -23,6 +23,7 @@ def HHH(time,
         V_osc=0,
         sigma=0,
         time_step=1e-5,
+        homeostasis=True,
         report=None,
         seed_value=None):
     """Homeostasis in HH neurons."""
@@ -92,7 +93,7 @@ def HHH(time,
     G_K = 180 * msiemens
 
     # ----------------------------------------------------
-    hh = """
+    eqs = """
     dV/dt = (I_Na + I_K + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
@@ -114,9 +115,6 @@ def HHH(time,
     I_Ca = -g_Ca * (1 + tanh((V - V1) / V2)) * (V - V_Ca): amp
     dCa/dt = (-k * Ca) - (gamma * I_Ca) : mmolar
     """ + """
-    dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
-    dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
-    """ + """
     g_total = g_in + g_osc : siemens
     I_in = g_in * (V_in - V) : amp
     I_osc = g_osc * (V_osc - V) : amp
@@ -126,18 +124,16 @@ def HHH(time,
     Ca_target : mmolar
     """
 
-    # A
-
-    # g_A = 80 * msiemens
-    # V_A = -80 * mV
-    #
-    # I_A = g_A * (m_A ** 3) * h_A * (V_A - V) : amp
-    # dm_A/dt = (m_A_inf - m_A) / tau_m_A : 1
-    # dh_A/dt = (h_A_inf - h_A) / tau_h_A : 1
-    # m_A_inf = 1 / (1 + exp((V/mV + 27.2) / -8.7)) : 1
-    # h_A_inf = 1 / (1 + exp((V/mV + 56.9) / 4.9)) : 1
-    # tau_m_A = (11.6 - (10.4 / (1 + exp((V/mV + 32.9) / -15.2)))) * ms : second
-    # tau_h_A = (36.8 - (29.2 / (1 + exp((V/mV + 38.9) / -26.5)))) * ms : second
+    if homeostasis:
+        eqs += """ 
+        dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
+        dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
+        """
+    else:
+        eqs += """
+        g_Na : siemens
+        g_K : siemens
+        """
 
     # ----------------------------------------------------
     # Def the net by hand....
@@ -146,7 +142,7 @@ def HHH(time,
     # -
     # The target pop....
     P_target = NeuronGroup(
-        N, hh, threshold='V > Et', refractory=2 * ms, method='euler')
+        N, eqs, threshold='V > Et', refractory=2 * ms, method='euler')
 
     P_target.V = V_l
     P_target.g_Na = g_Na
