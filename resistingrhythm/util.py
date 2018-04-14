@@ -157,6 +157,8 @@ def poisson_oscillation(t,
                         min_rate=0.0,
                         name=None,
                         seed=None):
+    """Simulate a Poisson population, oscillating"""
+
     # Define time
     times = fsutil.create_times(t, dt=dt)
 
@@ -184,11 +186,62 @@ def poisson_oscillation(t,
         return ns, ts
 
 
+def poisson_drift_rate(t,
+                       t_onset,
+                       tau=.5,
+                       sigma=0.01,
+                       rate=6.0,
+                       n=10,
+                       dt=1e-3,
+                       min_rate=0,
+                       name=None,
+                       seed=None):
+    """Simulate a Poisson population with an OU rate drift"""
+    prng = np.random.RandomState(seed)
+
+    times = create_times((0, t), dt)
+
+    # OU as a difference equation
+    x = min_rate
+    rates = [x]
+    for t in times[1:]:
+        if t < t_onset:
+            rates.append(x)
+            continue
+
+        # Last x
+        xi = prng.normal(0, 1)
+
+        # Drift, scaling the step by sigma * sqrt(tau)
+        delta_x = (sigma * np.sqrt(tau) * xi) / tau
+        x -= delta_x
+
+        # Save
+        rates.append(x)
+
+    # Drop initial value
+    rates = np.asarray(rates)
+
+    # No negative rates
+    rates[rates < min_rate] = min_rate
+
+    # Sample xs with N poisson 'cells'
+    nrns = neurons.Spikes(n, t, dt=dt, seed=seed)
+    ns, ts = fsutil.to_spiketimes(times, nrns.poisson(rates))
+
+    # -
+    if name is not None:
+        write_spikes(name, ns, ts)
+        return None
+    else:
+        return ns, ts, times, rates
+
+
 def poisson_impulse(t, t_onset, w, rate, n=10, dt=1e-3, name=None, seed=None):
-    """Create a pulse of spikes w seconds wide, starting at t_onset."""
+    """Simulate a pulse of spikes w seconds wide, starting at t_onset."""
 
     # Poisson sample the rate over w
-    times = fsutil.create_times(t, dt)
+    times = create_times((0, t), dt)
     nrns = neurons.Spikes(n, t, dt=dt, seed=seed)
     pulse = rates.square_pulse(times, rate, t_onset, w, dt, min_a=0)
 
