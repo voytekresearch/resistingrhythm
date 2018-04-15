@@ -11,6 +11,7 @@ from resistingrhythm.util import filter_spikes
 from resistingrhythm.util import poisson_impulse
 from resistingrhythm.util import poisson_oscillation
 from resistingrhythm.util import load_spikes
+from resistingrhythm.util import l1_by_n
 
 
 def run(run_name,
@@ -23,8 +24,7 @@ def run(run_name,
         bias_in=100e-9,
         sigma=0,
         t=12,
-        t_analysis_on=11,
-        t_analysis_off=12,
+        burn_time=11,
         N=10,
         V_osc=0e-3,
         tau_h=5,
@@ -33,7 +33,10 @@ def run(run_name,
     """Run a HHH experiment"""
 
     # ---------------------------------------------------
-    # Arg sanity?
+    if verbose:
+        print(">>> Running {}".format(run_name))
+        print(">>> Checking args.")
+
     N = int(N)
     n_samples = int(n_samples)
 
@@ -43,17 +46,14 @@ def run(run_name,
     tau_h = float(tau_h)
     V_osc = float(V_osc)
     percent_change = float(percent_change)
-    t_analysis_on = float(t_analysis_on)
-    t_analysis_off = float(t_analysis_off)
+    burn_time = float(burn_time
 
     if w_min > w_max:
         raise ValueError("w_min must be smaller than w_max")
-    if t_analysis_off >= t_analysis_on:
-        raise ValueError("t_analysis_off must be bigger than t_analysis_on")
     if t <= 0:
         raise ValueError("t must be positive")
-    if t_analysis_off >= t:
-        raise ValueError("t_analysis_off must be less than t")
+    if burn_time >= t:
+        raise ValueError("burn_time must be less than t")
     if N < 1:
         raise ValueError("N must be positive")
     if tau_h < 1:
@@ -64,16 +64,26 @@ def run(run_name,
         raise ValueError("percent_change must be <= to 1")
 
     # -
-    a_window = (t_analysis_on, t_analysis_off)
+    a_window = (burn_time + 1e-3, t)
     w = (w_min, w_max)
+    
+    if verbose:
+        print(">>> Analysis window: {}".format(a_window))
+        print(">>> Weight range: {}".format(w))
 
     # ---------------------------------------------------
     # load spikes
     ns_stim, ts_stim = load_spikes(stim_name)
     ns_osc, ts_osc = load_spikes(osc_name)
+    if verbose:
+        print(">>> Loaded {}".format(stim_name))
+        print(">>> Loaded {}".format(osc_name))
 
     # ---------------------------------------------------
     # Estimate the Ca_eq value.
+    if verbose:
+        print(">>> Finding the Ca_eq value.")
+
     results_eq = HHH(
         t,
         np.asarray([]),  # No input 
@@ -86,16 +96,20 @@ def run(run_name,
         bias_in=bias_in,
         sigma=sigma,
         tau_h=tau_h,
+        burn_time=burn_time,
         time_step=time_step,
         seed_value=seed_value,
         homeostasis=True)
 
     # To est Ca)eq, avg the last 50 times steps
     Ca_eq = results_eq['calcium'][:, -50].mean()
+    if verbose:
+        print(">>> Ca_eq: {}".format(Ca_eq))
 
     # ---------------------------------------------------
-    # run ref Ca_target = Ca_eq, osc = None
-    # save spikes, no traces
+    if verbose:
+        print(">>> Running the reference model")
+
     results_ref = HHH(
         t,
         ns_stim,
@@ -112,6 +126,7 @@ def run(run_name,
         w_osc=w,
         tau_h=tau_h,
         time_step=time_step,
+        burn_time=burn_time,
         seed_value=seed_value,
         record_traces=False,
         homeostasis=True)
@@ -119,9 +134,11 @@ def run(run_name,
     ns_ref = results_ref["ns"]
     ts_ref = results_ref["ts"]
 
-    # ---------------------------------------------------
-    # Pre-filter ref times
     ns_ref, ts_ref = filter_spikes(ns_ref, ts_ref, a_window)
+
+    # ---------------------------------------------------
+    if verbose:
+        print(">>> Running {} Ca_targets".format(n_samples))
 
     # A range of targets
     Ca_targets = np.linspace(Ca_eq + (Ca_eq * min_change),
@@ -145,6 +162,7 @@ def run(run_name,
                         w_osc=w,
                         tau_h=tau_h,
                         time_step=time_step,
+                        burn_time=burn_time,
                         seed_value=seed_value,
                         record_traces=True,
                         homeostasis=True)
@@ -153,19 +171,11 @@ def run(run_name,
         ns_t, ts_t = filter_spikes(results_t['ns'], results_t['ts'], a_window)
 
         # Analysis of error and network corr, in a_window
-        error = kappa(
-            ns_ref,
-            ts_ref,
-            ns_t,
-            ts_t, (t_analysis_on, t_analysis_off),
-            dt=time_step)
+        k_error = kappa(ns_ref, ts_ref, ns_t, ts_t, a_window, dt=time_step)
+        k_coord = kappa(ns_t, ts_t, ns_t, ts_t, a_window, dt=time_step)
 
-        coord = kappa(
-            ns_t,
-            ts_t,
-            ns_t,
-            ts_t, (t_analysis_on, t_analysis_off),
-            dt=time_step)
+        # l1 scores
+        abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_t, ts_t)
 
         # Get final avg. calcium
         # over a window? Just grab last?
@@ -175,12 +185,17 @@ def run(run_name,
         V_m = results_eq['v_m'][:, -50].mean()
 
         # save row
-        row = (i, V_m, Ca_eq, Ca_t, Ca_obs, error, coord)
+        row = (i, V_m, Ca_eq, Ca_t, Ca_obs, error, coord, abs_error, abs_var)
         results.append(row)
 
     # ---------------------------------------------------
-    # Write results to a .csv
-    head = ["i", "V_m", "Ca_eq", "Ca_target", "Ca_obs", "error", "coord"]
+    if verbose:
+        print(">>> Saving results")
+
+    head = [
+        "i", "V_m", "Ca_eq", "Ca_target", "Ca_obs", "kappa_error",
+        "kappa_coord", "abs_error", "abs_var"
+    ]
     with open("{}.csv".format(name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")
         writer.writerow(head)
