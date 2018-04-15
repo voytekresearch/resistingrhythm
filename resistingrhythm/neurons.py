@@ -5,6 +5,19 @@ from brian2 import *
 from copy import deepcopy
 
 
+def _parse_membrane_param(x, n, prng):
+    try:
+        if len(x) == 2:
+            x_min, x_max = x
+            x = prng.uniform(x_min, x_max, n)
+        else:
+            raise ValueError("Parameters must be scalars, or 2 V_lement lists")
+    except TypeError:
+        pass
+
+    return x, prng
+
+
 def HHH(time,
         ns_in,
         ts_in,
@@ -21,7 +34,9 @@ def HHH(time,
         w_osc=0.8e-9,
         tau_osc=5e-3,
         V_osc=0,
+        p_connection=0.1,
         sigma=0,
+        burn_time=0,
         time_step=1e-5,
         homeostasis=True,
         record_traces=True,
@@ -29,6 +44,8 @@ def HHH(time,
         seed_value=None):
     """Homeostasis in HH neurons."""
     prefs.codegen.target = 'numpy'
+
+    prng = np.random.RandomState(seed_value)
     seed(seed_value)
 
     time_step *= second
@@ -39,7 +56,7 @@ def HHH(time,
     bias_in *= amp
 
     # Input constants
-    w_in *= siemens
+    # w_in/w_osc are parsed and given units below...
     tau_in *= second
     V_in *= volt
 
@@ -156,43 +173,64 @@ def HHH(time,
     # -
     # Connect in
     if ns_in.size > 0:
+        # Make a population out of spiking input
         P_in = SpikeGeneratorGroup(np.max(ns_in) + 1, ns_in, ts_in * second)
 
+        # Connect to P_target
         C_in = Synapses(
             P_in, P_target, model='w_in : siemens', on_pre='g_in += w_in')
-        C_in.connect()
 
-        C_in.w_in = w_in
+        C_in.connect(p=p_connection)
+
+        # Finally, set potentially random weights
+        w_in, prng = _parse_membrane_param(w_in, len(C_in), prng)
+        C_in.w_in = w_in * siemens
 
         net.add([P_in, C_in])
 
     # -
     # Connect osc
     if ns_osc.size > 0:
+        # Make a population out of spiking input
         P_osc = SpikeGeneratorGroup(
             np.max(ns_osc) + 1, ns_osc, ts_osc * second)
 
+        # Connect to P_target
         C_osc = Synapses(
             P_osc, P_target, model='w_osc : siemens', on_pre='g_osc += w_osc')
-        C_osc.connect()
 
-        C_osc.w_osc = w_osc
+        C_osc.connect(p=p_connection)
+
+        # Finally, set potentially random weights
+        w_osc, prng = _parse_membrane_param(w_osc, len(C_osc), prng)
+        C_osc.w_osc = w_osc * siemens
 
         net.add([P_osc, C_osc])
 
     # -
-    # Data acq
+    # Setup recoding, but don't add it to the net yet....
     spikes = SpikeMonitor(P_target)
-    net.add(spikes)
-
     if record_traces:
         to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'Ca']
         traces = StateMonitor(P_target, to_monitor, record=True)
-        net.add(traces)
 
     # ----------------------------------------------------
     # !
-    net.run(time * second, report=progress_report)
+    if burn_time > 0:
+        if burn_time <= 0:
+            raise ValueError("burn_time must be <= time")
+
+        # Run without recording.
+        net.run(burn_time * second, report=progress_report)
+
+        # Start recording
+        net.add(spikes)
+        net.add(traces)
+        net.run((time - burn_time) * second, report=progress_report)
+    else:
+        net.add(spikes)
+        net.add(traces)
+        net.run(time * second, report=progress_report)
 
     # ----------------------------------------------------
     # Unpack the results
