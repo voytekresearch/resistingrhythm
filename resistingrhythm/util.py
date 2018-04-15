@@ -23,6 +23,26 @@ def select_n(n, ns, ts):
     return ns[m], ts[m]
 
 
+def l1_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
+    v_i = []
+    e_i = []
+    for i in range(N):
+        ns_ref_i, ts_ref_i = select_n(i, ns_ref, ts_ref)
+        ns_i, ts_i = select_n(i, ns_n, ts_n)
+
+        # Variance
+        v_i.append(mad(ts_i) / ts_i.size)
+
+        # Error
+        e_i.append(mae(ts_i, ts_ref_i))
+
+    # Expectation of all neurons.
+    var = np.mean(v_i)
+    error = np.mean(e_i)
+
+    return var, error
+
+
 def mad(x, M=None, axis=None):
     """Mean absolute deviation"""
 
@@ -36,7 +56,7 @@ def mad(x, M=None, axis=None):
 
 
 def mae(x, y, axis=None):
-    """Mean absolute deviation"""
+    """Mean absolute error"""
 
     if np.isclose(x.size, 0.0) and np.isclose(y.size, 0.0):
         return 0.0
