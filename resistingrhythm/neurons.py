@@ -23,7 +23,6 @@ def HHH(time,
         ts_in,
         ns_osc,
         ts_osc,
-        Ca=50e-9,
         Ca_target=50e-9,
         tau_h=10,
         N=1,
@@ -81,7 +80,6 @@ def HHH(time,
     # 0.001
     # **To correct for that, we use mmolar in all our unit conversions.**
     Ca_target *= mmolar
-    Ca *= mmolar
     tau_h *= second
 
     # ----------------------------------------------------
@@ -91,11 +89,11 @@ def HHH(time,
 
     g_Na = 100 * msiemens
     g_K = 80 * msiemens
-
-    g_l = 0.1 * msiemens
+    g_Ca = 0.03 * msiemens
+    g_l = 1.0 * msiemens
 
     V_K = -100 * mV  # was 100, changed to match LeMasson
-    V_l = -67 * mV
+    V_l = -70 * mV
     V_Na = 50 * mV
 
     # Ca + homeo specific
@@ -106,7 +104,6 @@ def HHH(time,
     V_Ca = 150 * mV
     V1 = -50 * mV
     V2 = 10 * mV
-    g_Ca = 0.03 * msiemens
 
     G_Na = 360 * msiemens
     G_K = 180 * msiemens
@@ -141,6 +138,7 @@ def HHH(time,
     dg_osc/dt = -g_osc / tau_osc : siemens
     """ + """
     Ca_target : mmolar
+    g_Ca : siemens
     """
 
     if homeostasis:
@@ -166,7 +164,7 @@ def HHH(time,
     P_target.V = V_l
     P_target.g_Na = g_Na
     P_target.g_K = g_K
-    # P_target.Ca = Ca
+    P_target.g_Ca = g_Ca
     P_target.Ca_target = Ca_target
 
     net.add(P_target)
@@ -209,10 +207,12 @@ def HHH(time,
         net.add([P_osc, C_osc])
 
     # -
-    # Setup recoding, but don't add it to the net yet....
+    # Setup recording, but don't add it to the net yet....
     spikes = SpikeMonitor(P_target)
     if record_traces:
-        to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'Ca']
+        to_monitor = [
+            'V', 'g_total', 'g_Na', 'g_Ca', 'g_K', 'Ca', 'I_Ca', 'I_Na', 'I_K'
+        ]
         traces = StateMonitor(P_target, to_monitor, record=True)
 
     # ----------------------------------------------------
@@ -243,7 +243,10 @@ def HHH(time,
         g_total = np.asarray(traces.g_total_)
         g_Na = np.asarray(traces.g_Na_)
         g_K = np.asarray(traces.g_K_)
+        g_Ca = np.asarray(traces.g_Ca_)
         I_Ca = np.asarray(traces.I_Ca_)
+        I_Na = np.asarray(traces.I_Na_)
+        I_K = np.asarray(traces.I_K_)
         calcium = np.asarray(traces.Ca)
 
         # and repack them
@@ -254,8 +257,11 @@ def HHH(time,
             'v_m': vm,
             'g_total': g_total,
             'calcium': calcium,
-            'I_Ca': I_Ca,
+            'g_Ca': g_Ca,
             'g_Na': g_Na,
+            'I_Ca': I_Ca,
+            'I_Na': I_Na,
+            'I_K': I_K,
             'g_K': g_K
         }
     else:
