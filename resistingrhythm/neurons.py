@@ -91,7 +91,6 @@ def HHH(time,
 
     g_Na = 100 * msiemens
     g_K = 80 * msiemens
-    g_KCa = 80 * msiemens
 
     g_l = 0.1 * msiemens
 
@@ -111,7 +110,6 @@ def HHH(time,
 
     G_Na = 360 * msiemens
     G_K = 180 * msiemens
-    G_KCa = 180 * msiemens
 
     # ----------------------------------------------------
     eqs = """
@@ -127,11 +125,6 @@ def HHH(time,
     dn/dt = (a_n - (a_n * n)) - b_n * n : 1
     a_n = (0.032 * (52 + V/mV)) / (1 - exp(-0.2 * (V/mV + 52))) / ms : Hz
     b_n = 0.5 * exp(-0.025 * (57 + V/mV)) / ms : Hz
-    """ + """
-    I_KCa = g_KCa * (m_KCa ** 4) * (V_K - V) : amp
-    dm_KCa/dt = (m_KCa_inf - m_KCa) / tau_m_KCa : 1
-    m_KCa_inf = (Ca / (Ca + 3 * molar)) * (1 / (1 + exp((V/mV + 28.3) / -12.6))) : 1
-    tau_m_KCa = (90.3 - (75.1 / (1 + exp((V/mV + 46) / -22.7)))) * ms : second
     """ + """  
     I_l = g_l * (V_l - V) : amp
     """ + """
@@ -154,13 +147,11 @@ def HHH(time,
         eqs += """ 
         dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
         dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
-        dg_KCa/dt = (1 / tau_h) * (G_KCa / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_KCa) : siemens 
         """
     else:
         eqs += """
         g_Na : siemens
         g_K : siemens
-        g_KCa : siemens
         """
 
     # ----------------------------------------------------
@@ -175,7 +166,6 @@ def HHH(time,
     P_target.V = V_l
     P_target.g_Na = g_Na
     P_target.g_K = g_K
-    P_target.g_KCa = g_KCa
     P_target.Ca = Ca
     P_target.Ca_target = Ca_target
 
@@ -222,7 +212,7 @@ def HHH(time,
     # Setup recoding, but don't add it to the net yet....
     spikes = SpikeMonitor(P_target)
     if record_traces:
-        to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'g_KCa', 'Ca']
+        to_monitor = ['V', 'g_total', 'g_Na', 'I_Ca', 'g_K', 'Ca']
         traces = StateMonitor(P_target, to_monitor, record=True)
 
     # ----------------------------------------------------
@@ -253,7 +243,6 @@ def HHH(time,
         g_total = np.asarray(traces.g_total_)
         g_Na = np.asarray(traces.g_Na_)
         g_K = np.asarray(traces.g_K_)
-        g_KCa = np.asarray(traces.g_KCa_)
         I_Ca = np.asarray(traces.I_Ca_)
         calcium = np.asarray(traces.Ca)
 
@@ -266,7 +255,6 @@ def HHH(time,
             'g_total': g_total,
             'calcium': calcium,
             'I_Ca': I_Ca,
-            'g_KCa': g_KCa,
             'g_Na': g_Na,
             'g_K': g_K
         }
