@@ -113,7 +113,7 @@ def HHH(time,
 
     # ----------------------------------------------------
     eqs = """
-    dV/dt = (I_Na + I_K + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
+    dV/dt = (I_Na + I_K + I_Ca + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
     m = a_m / (a_m + b_m) : 1
@@ -166,7 +166,7 @@ def HHH(time,
     P_target.V = V_l
     P_target.g_Na = g_Na
     P_target.g_K = g_K
-    P_target.Ca = Ca
+    # P_target.Ca = Ca
     P_target.Ca_target = Ca_target
 
     net.add(P_target)
