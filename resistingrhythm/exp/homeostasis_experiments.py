@@ -12,6 +12,7 @@ from resistingrhythm.util import poisson_impulse
 from resistingrhythm.util import poisson_oscillation
 from resistingrhythm.util import load_spikes
 from resistingrhythm.util import l1_by_n
+from resistingrhythm.util import l2_by_n
 
 
 def run(run_name,
@@ -24,10 +25,11 @@ def run(run_name,
         bias_in=100e-9,
         sigma=0,
         t=12,
-        burn_time=11,
+        burn_time=10,
+        analysis_time=10,
         N=10,
         V_osc=0e-3,
-        tau_h=5,
+        tau_h=1,
         n_samples=10,
         verbose=False):
     """Run a HHH experiment"""
@@ -46,7 +48,7 @@ def run(run_name,
     tau_h = float(tau_h)
     V_osc = float(V_osc)
     percent_change = float(percent_change)
-    burn_time = float(burn_time
+    burn_time = float(burn_time)
 
     if w_min > w_max:
         raise ValueError("w_min must be smaller than w_max")
@@ -66,7 +68,7 @@ def run(run_name,
     # -
     a_window = (burn_time + 1e-3, t)
     w = (w_min, w_max)
-    
+
     if verbose:
         print(">>> Analysis window: {}".format(a_window))
         print(">>> Weight range: {}".format(w))
@@ -91,7 +93,6 @@ def run(run_name,
         np.asarray([]),
         np.asarray([]),
         N=1,  # With no input, there is no need to run N > 1
-        Ca=0,  # Let the system find its Ca value
         Ca_target=0,
         bias_in=bias_in,
         sigma=sigma,
@@ -117,7 +118,6 @@ def run(run_name,
         np.asarray([]),  # no osc mod
         np.asarray([]),
         N=N,
-        Ca=Ca_eq,
         Ca_target=Ca_eq + (Ca_eq * min_change),
         bias_in=bias_in,
         sigma=sigma,
@@ -153,7 +153,6 @@ def run(run_name,
                         ns_osc,
                         ts_osc,
                         N=N,
-                        Ca=Ca_eq,
                         Ca_target=Ca_t,
                         bias_in=bias_in,
                         sigma=sigma,
@@ -177,6 +176,12 @@ def run(run_name,
         # l1 scores
         abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_t, ts_t)
 
+        # l2 scores
+        mse_var, mse_error = l2_by_n(N, ns_ref, ts_ref, ns_t, ts_t)
+
+        # Get rate
+        rate_t = float(ns_t.size) / float(N) / (t - burn_time)
+
         # Get final avg. calcium
         # over a window? Just grab last?
         Ca_obs = results_t['calcium'][:, -50].mean()
@@ -185,7 +190,8 @@ def run(run_name,
         V_m = results_eq['v_m'][:, -50].mean()
 
         # save row
-        row = (i, V_m, Ca_eq, Ca_t, Ca_obs, error, coord, abs_error, abs_var)
+        row = (i, V_m, Ca_eq, Ca_t, Ca_obs, error, coord, abs_error, abs_var,
+               mse_error, mse_var, rate_t)
         results.append(row)
 
     # ---------------------------------------------------
@@ -194,7 +200,7 @@ def run(run_name,
 
     head = [
         "i", "V_m", "Ca_eq", "Ca_target", "Ca_obs", "kappa_error",
-        "kappa_coord", "abs_error", "abs_var"
+        "kappa_coord", "abs_error", "abs_var", "mse_error", "mse_var", "rate"
     ]
     with open("{}.csv".format(name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")
