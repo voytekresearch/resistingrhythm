@@ -89,7 +89,8 @@ def HHH(time,
 
     g_Na = 100 * msiemens
     g_K = 80 * msiemens
-    g_Ca = 0.03 * msiemens
+    g_KCa = 80 * msiemens
+    g_Ca = 0.01 * msiemens
     g_l = 1.0 * msiemens
 
     V_K = -100 * mV  # was 100, changed to match LeMasson
@@ -98,19 +99,20 @@ def HHH(time,
 
     # Ca + homeo specific
     delta = 0.6 * umolar  # TODO: was umolar?
-    k = 1 / (100.0 * msecond)
+    k = 1 / (200.0 * msecond)
     gamma = -4.7e-2 * (mmolar / mamp / msecond)
 
     V_Ca = 150 * mV
     V1 = -50 * mV
     V2 = 10 * mV
 
+    G_Ca = 3 * msiemens
     G_Na = 360 * msiemens
     G_K = 180 * msiemens
 
     # ----------------------------------------------------
     eqs = """
-    dV/dt = (I_Na + I_K + I_Ca + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
+    dV/dt = (I_Na + I_K + I_KCa + I_Ca + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
     m = a_m / (a_m + b_m) : 1
@@ -123,6 +125,11 @@ def HHH(time,
     a_n = (0.032 * (52 + V/mV)) / (1 - exp(-0.2 * (V/mV + 52))) / ms : Hz
     b_n = 0.5 * exp(-0.025 * (57 + V/mV)) / ms : Hz
     """ + """  
+    I_KCa = g_KCa * (m_KCa ** 4) * (V_K - V) : amp
+    dm_KCa/dt = (m_KCa_inf - m_KCa) / tau_m_KCa : 1
+    m_KCa_inf = (Ca / (Ca + 3 * molar)) * (1 / (1 + exp((V/mV + 28.3) / -12.6))) : 1
+    tau_m_KCa = (90.3 - (75.1 / (1 + exp((V/mV + 46) / -22.7)))) * ms : second
+    """ + """
     I_l = g_l * (V_l - V) : amp
     """ + """
     I_noi = g_noi * (V_l - V) : amp
@@ -138,18 +145,20 @@ def HHH(time,
     dg_osc/dt = -g_osc / tau_osc : siemens
     """ + """
     Ca_target : mmolar
-    g_Ca : siemens
+    g_KCa : siemens
     """
 
     if homeostasis:
         eqs += """ 
         dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
+        dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
         dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
         """
     else:
         eqs += """
         g_Na : siemens
         g_K : siemens
+        g_Ca : siemens
         """
 
     # ----------------------------------------------------
@@ -164,6 +173,7 @@ def HHH(time,
     P_target.V = V_l
     P_target.g_Na = g_Na
     P_target.g_K = g_K
+    P_target.g_KCa = g_KCa
     P_target.g_Ca = g_Ca
     P_target.Ca_target = Ca_target
 
@@ -211,7 +221,8 @@ def HHH(time,
     spikes = SpikeMonitor(P_target)
     if record_traces:
         to_monitor = [
-            'V', 'g_total', 'g_Na', 'g_Ca', 'g_K', 'Ca', 'I_Ca', 'I_Na', 'I_K'
+            'V', 'g_total', 'g_Na', 'g_Ca', 'g_K', 'g_KCa', 'Ca', 'I_Ca',
+            'I_Na', 'I_K'
         ]
         traces = StateMonitor(P_target, to_monitor, record=True)
 
@@ -243,6 +254,7 @@ def HHH(time,
         g_total = np.asarray(traces.g_total_)
         g_Na = np.asarray(traces.g_Na_)
         g_K = np.asarray(traces.g_K_)
+        g_KCa = np.asarray(traces.g_KCa_)
         g_Ca = np.asarray(traces.g_Ca_)
         I_Ca = np.asarray(traces.I_Ca_)
         I_Na = np.asarray(traces.I_Na_)
@@ -258,6 +270,7 @@ def HHH(time,
             'g_total': g_total,
             'calcium': calcium,
             'g_Ca': g_Ca,
+            'g_KCa': g_KCa,
             'g_Na': g_Na,
             'I_Ca': I_Ca,
             'I_Na': I_Na,
