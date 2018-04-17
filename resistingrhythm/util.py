@@ -204,11 +204,11 @@ def find_time(times, t):
     return times[idx]
 
 
-def poisson_oscillation(t,
-                        t_onset,
-                        n_cycles,
-                        rate,
-                        f,
+def poisson_oscillation(t=1,
+                        t_onset=0.2,
+                        n_cycles=10,
+                        rate=6,
+                        f=8,
                         phi=0,
                         n=10,
                         dt=1e-3,
@@ -244,8 +244,8 @@ def poisson_oscillation(t,
         return ns, ts
 
 
-def poisson_drift_rate(t,
-                       t_onset,
+def poisson_drift_rate(t=1,
+                       t_onset=0.2,
                        tau=.5,
                        sigma=0.01,
                        rate=6.0,
@@ -295,7 +295,14 @@ def poisson_drift_rate(t,
         return ns, ts, times, rates
 
 
-def poisson_impulse(t, t_onset, w, rate, n=10, dt=1e-3, name=None, seed=None):
+def poisson_impulse(t=1,
+                    t_onset=0.2,
+                    w=1,
+                    rate=6,
+                    n=10,
+                    dt=1e-3,
+                    name=None,
+                    seed=None):
     """Simulate a pulse of spikes w seconds wide, starting at t_onset."""
 
     # Poisson sample the rate over w
