@@ -18,21 +18,23 @@ from resistingrhythm.util import l2_by_n
 def run(run_name,
         stim_name=None,
         osc_name=None,
-        min_change=0.01,
-        max_change=0.1,
-        w_min=0.2e-6,
-        w_max=2.0e-6,
-        bias_in=100e-9,
-        sigma=0,
         t=12,
-        burn_time=10,
-        analysis_time=10,
+        burn_t=10,
         N=10,
-        V_osc=0e-3,
+        Ca_target=0.03,
         tau_h=1,
-        n_samples=10,
+        w_min=5e-6,
+        w_max=50e-6,
+        sigma=0,
+        num_trials=2,
+        seed_value=42,
         verbose=False):
     """Run a HHH experiment"""
+
+    # ---------------------------------------------------
+    # Fixed params
+    bias_in = 0
+    time_step = 1e-5
 
     # ---------------------------------------------------
     if verbose:
@@ -40,33 +42,30 @@ def run(run_name,
         print(">>> Checking args.")
 
     N = int(N)
-    n_samples = int(n_samples)
+    num_trials = int(num_trials)
 
     t = float(t)
     w_min = float(w_min)
     w_max = float(w_max)
     tau_h = float(tau_h)
-    V_osc = float(V_osc)
-    percent_change = float(percent_change)
-    burn_time = float(burn_time)
+    Ca_target = float(Ca_target)
+    burn_t = float(burn_t)
 
     if w_min > w_max:
         raise ValueError("w_min must be smaller than w_max")
     if t <= 0:
         raise ValueError("t must be positive")
-    if burn_time >= t:
-        raise ValueError("burn_time must be less than t")
+    if burn_t >= t:
+        raise ValueError("burn_t must be less than t")
     if N < 1:
         raise ValueError("N must be positive")
     if tau_h < 1:
         raise ValueError("tau_h must be greater than 1")
-    if n_samples < 1:
-        raise ValueError("n_samples must be greater than 1")
-    if abs(percent_change) > 1:
-        raise ValueError("percent_change must be <= to 1")
+    if num_trials < 1:
+        raise ValueError("num_trials must be greater than 1")
 
     # -
-    a_window = (burn_time + 1e-3, t)
+    a_window = (burn_t + 1e-3, t)
     w = (w_min, w_max)
 
     if verbose:
@@ -82,116 +81,82 @@ def run(run_name,
         print(">>> Loaded {}".format(osc_name))
 
     # ---------------------------------------------------
-    # Estimate the Ca_eq value.
-    if verbose:
-        print(">>> Finding the Ca_eq value.")
-
-    results_eq = HHH(
-        t,
-        np.asarray([]),  # No input 
-        np.asarray([]),
-        np.asarray([]),
-        np.asarray([]),
-        N=1,  # With no input, there is no need to run N > 1
-        Ca_target=0,
-        bias_in=bias_in,
-        sigma=sigma,
-        tau_h=tau_h,
-        burn_time=burn_time,
-        time_step=time_step,
-        seed_value=seed_value,
-        homeostasis=True)
-
-    # To est Ca)eq, avg the last 50 times steps
-    Ca_eq = results_eq['calcium'][:, -50].mean()
-    if verbose:
-        print(">>> Ca_eq: {}".format(Ca_eq))
-
-    # ---------------------------------------------------
-    if verbose:
-        print(">>> Running the reference model")
-
-    results_ref = HHH(
-        t,
-        ns_stim,
-        ts_stim,
-        np.asarray([]),  # no osc mod
-        np.asarray([]),
-        N=N,
-        Ca_target=Ca_eq + (Ca_eq * min_change),
-        bias_in=bias_in,
-        sigma=sigma,
-        V_osc=V_osc,
-        w_in=w,
-        w_osc=w,
-        tau_h=tau_h,
-        time_step=time_step,
-        burn_time=burn_time,
-        seed_value=seed_value,
-        record_traces=False,
-        homeostasis=True)
-
-    ns_ref = results_ref["ns"]
-    ts_ref = results_ref["ts"]
-
-    ns_ref, ts_ref = filter_spikes(ns_ref, ts_ref, a_window)
-
-    # ---------------------------------------------------
-    if verbose:
-        print(">>> Running {} Ca_targets".format(n_samples))
-
-    # A range of targets
-    Ca_targets = np.linspace(Ca_eq + (Ca_eq * min_change),
-                             Ca_eq + (Ca_eq * max_change), n_samples)
-
     results = []
-    for i, Ca_t in enumerate(Ca_targets):
-        # !
-        results_t = HHH(t,
+    for k in range(num_trials):
+        if verbose:
+            print(">>> Running trial {}".format(k))
+            print(">>> Running the reference model")
+
+        # No osc
+        results_ref = HHH(
+            t,
+            ns_stim,
+            ts_stim,
+            np.asarray([]),  # no osc mod
+            np.asarray([]),
+            N=N,
+            Ca_target=Ca_target,
+            bias_in=bias_in,
+            sigma=sigma,
+            w_in=w,
+            w_osc=w,
+            tau_h=tau_h,
+            time_step=time_step,
+            burn_time=burn_t,
+            seed_value=seed_value + k,
+            record_traces=False,
+            homeostasis=True)
+
+        ns_ref, ts_ref = filter_spikes(results_ref["ns"], results_ref["ts"],
+                                       a_window)
+
+        # -
+        if verbose:
+            print(">>> Running the modulation model")
+        results_k = HHH(t,
                         ns_stim,
                         ts_stim,
                         ns_osc,
                         ts_osc,
                         N=N,
-                        Ca_target=Ca_t,
+                        Ca_target=Ca_target,
                         bias_in=bias_in,
                         sigma=sigma,
-                        V_osc=V_osc,
                         w_in=w,
                         w_osc=w,
                         tau_h=tau_h,
                         time_step=time_step,
-                        burn_time=burn_time,
-                        seed_value=seed_value,
+                        burn_time=burn_t,
+                        seed_value=seed_value + k,
                         record_traces=True,
                         homeostasis=True)
 
         # Select spikes in a_window
-        ns_t, ts_t = filter_spikes(results_t['ns'], results_t['ts'], a_window)
+        ns_k, ts_k = filter_spikes(results_k['ns'], results_k['ts'], a_window)
 
         # Analysis of error and network corr, in a_window
-        k_error = kappa(ns_ref, ts_ref, ns_t, ts_t, a_window, dt=time_step)
-        k_coord = kappa(ns_t, ts_t, ns_t, ts_t, a_window, dt=time_step)
+        k_error = kappa(ns_ref, ts_ref, ns_k, ts_k, a_window, dt=time_step)
+        k_coord = kappa(ns_k, ts_k, ns_k, ts_k, a_window, dt=time_step)
 
         # l1 scores
-        abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_t, ts_t)
+        abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
 
         # l2 scores
-        mse_var, mse_error = l2_by_n(N, ns_ref, ts_ref, ns_t, ts_t)
+        mse_var, mse_error = l2_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
 
         # Get rate
-        rate_t = float(ns_t.size) / float(N) / (t - burn_time)
+        rate_k = float(ns_k.size) / float(N) / (t - burn_t)
 
         # Get final avg. calcium
         # over a window? Just grab last?
-        Ca_obs = results_t['calcium'][:, -50].mean()
+        Ca_obs = results_k['calcium'][:, -50].mean()
 
         # Get final avg V_m
         V_m = results_eq['v_m'][:, -50].mean()
 
         # save row
-        row = (i, V_m, Ca_eq, Ca_t, Ca_obs, error, coord, abs_error, abs_var,
-               mse_error, mse_var, rate_t)
+        row = (i, V_m, Ca_eq, Ca_k, Ca_obs, error, coord, abs_error, abs_var,
+               mse_error, mse_var, rate_k)
         results.append(row)
 
     # ---------------------------------------------------
