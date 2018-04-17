@@ -236,12 +236,16 @@ def HHH(time,
         net.run(burn_time * second, report=progress_report)
 
         # Start recording
+        if record_traces:
+            net.add(traces)
         net.add(spikes)
-        net.add(traces)
+
         net.run((time - burn_time) * second, report=progress_report)
     else:
+        if record_traces:
+            net.add(traces)
         net.add(spikes)
-        net.add(traces)
+
         net.run(time * second, report=progress_report)
 
     # ----------------------------------------------------
