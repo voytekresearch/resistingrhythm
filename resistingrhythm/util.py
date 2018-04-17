@@ -31,7 +31,11 @@ def l1_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
         ns_i, ts_i = select_n(i, ns_n, ts_n)
 
         # Variance
-        v_i.append(mad(ts_i) / ts_i.size)
+        if ts_i.size > 0:
+            var = mad(ts_i) / ts_i.size
+        else:
+            var = 0
+        v_i.append(var)
 
         # Error
         e_i.append(mae(ts_i, ts_ref_i))
