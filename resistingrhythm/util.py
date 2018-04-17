@@ -43,6 +43,26 @@ def l1_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
     return var, error
 
 
+def l2_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
+    v_i = []
+    e_i = []
+    for i in range(N):
+        ns_ref_i, ts_ref_i = select_n(i, ns_ref, ts_ref)
+        ns_i, ts_i = select_n(i, ns_n, ts_n)
+
+        # Variance
+        v_i.append(np.std(ts_i))
+
+        # Error
+        e_i.append(mse(ts_i, ts_ref_i))
+
+    # Expectation of all neurons.
+    var = np.mean(v_i)
+    error = np.mean(e_i)
+
+    return var, error
+
+
 def mad(x, M=None, axis=None):
     """Mean absolute deviation"""
 
@@ -71,6 +91,24 @@ def mae(x, y, axis=None):
     y = np.sort(y, axis)
 
     return np.mean(np.absolute(x[:min_l] - y[:min_l]), axis)
+
+
+def mse(x, y, axis=None):
+    """Mean squared error"""
+
+    if np.isclose(x.size, 0.0) and np.isclose(y.size, 0.0):
+        return 0.0
+    elif np.isclose(x.size, 0.0):
+        return np.mean(np.absolute(y))
+    elif np.isclose(y.size, 0.0):
+        return np.mean(np.absolute(x))
+
+    min_l = min(len(x), len(y))
+
+    x = np.sort(x, axis)
+    y = np.sort(y, axis)
+
+    return np.mean((x[:min_l] - y[:min_l])**2, axis)
 
 
 def precision(ns, ts, ns_ref, ts_ref, combine=True):
