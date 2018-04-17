@@ -84,7 +84,7 @@ def run(run_name,
     results = []
     for k in range(num_trials):
         if verbose:
-            print(">>> Running trial {}".format(k))
+            print(">>> - Running trial {} -".format(k))
             print(">>> Running the reference model")
 
         # No osc
@@ -130,6 +130,10 @@ def run(run_name,
                         seed_value=seed_value + k,
                         record_traces=True,
                         homeostasis=True)
+
+        # -
+        if verbose:
+            print(">>> Running analysis")
 
         # Select spikes in a_window
         ns_k, ts_k = filter_spikes(results_k['ns'], results_k['ts'], a_window)
