@@ -98,7 +98,7 @@ def HHH(time,
 
     # Ca + homeo specific
     delta = 0.6 * umolar  # TODO: was umolar?
-    k = 1 / (600.0 * msecond)
+    k = 1 / (100.0 * msecond)
     gamma = -4.7e-2 * (mmolar / mamp / msecond)
 
     V_Ca = 150 * mV
