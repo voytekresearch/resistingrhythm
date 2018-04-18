@@ -104,7 +104,7 @@ def run(run_name,
             time_step=time_step,
             burn_time=burn_t,
             seed_value=seed_value + k,
-            record_traces=False,
+            record_traces=True,
             homeostasis=True)
 
         ns_ref, ts_ref = filter_spikes(results_ref["ns"], results_ref["ts"],
@@ -150,17 +150,20 @@ def run(run_name,
 
         # Get rate
         rate_k = float(ns_k.size) / float(N) / (t - burn_t)
+        rate_ref = float(ns_ref.size) / float(N) / (t - burn_t)
 
         # Get final avg. calcium
         # over a window? Just grab last?
-        Ca_obs = results_k['calcium'][:, -50].mean()
+        Ca_k = results_k['calcium'][:, -50].mean()
+        Ca_ref = results_ref['calcium'][:, -50].mean()
 
         # Get final avg V_m
-        V_m = results_eq['v_m'][:, -50].mean()
+        V_k = results_k['v_m'][:, -50].mean()
+        V_ref = results_ref['v_m'][:, -50].mean()
 
         # save row
-        row = (i, V_m, Ca_eq, Ca_k, Ca_obs, error, coord, abs_error, abs_var,
-               mse_error, mse_var, rate_k)
+        row = (k, V_ref, V_k, Ca_ref, Ca_k, Ca_target, k_error, k_coord,
+               abs_error, abs_var, mse_error, mse_var, rate_k, rate_ref)
         results.append(row)
 
     # ---------------------------------------------------
@@ -168,10 +171,11 @@ def run(run_name,
         print(">>> Saving results")
 
     head = [
-        "i", "V_m", "Ca_eq", "Ca_target", "Ca_obs", "kappa_error",
-        "kappa_coord", "abs_error", "abs_var", "mse_error", "mse_var", "rate"
+        "k", "V_ref", "V_k", "Ca_ref", "Ca_k", "Ca_target", "kappa_error",
+        "kappa_coord", "abs_error", "abs_var", "mse_error", "mse_var",
+        "rate_k", "rate_ref"
     ]
-    with open("{}.csv".format(name), "w") as fi:
+    with open("{}.csv".format(run_name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")
         writer.writerow(head)
         writer.writerows(results)
