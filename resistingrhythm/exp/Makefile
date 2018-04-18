@@ -1,6 +1,9 @@
 SHELL=/bin/bash -O expand_aliases
-export DATA_PATH=/Users/type/Code/resistingrhythm/data/
+# DATA_PATH=/Users/type/Code/resistingrhythm/data/
+DATA_PATH=/home/ejp/src/resistingrhythm/data
 
+create_data_path:
+	-mkdir $(DATA_PATH)
 
 # --------------------------------------------------------------
 # Replicate 3 sitm, same params, different draws
