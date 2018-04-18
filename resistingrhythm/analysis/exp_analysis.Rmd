@@ -95,15 +95,17 @@ results %>%
 ```{r, fig.width=1.8, fig.height=0.8}
 results %>% 
   ggplot(aes(x=mse_error, y=kappa_coord)) +
-  geom_point(size=0.1, alpha=0.2) + 
+  geom_point(size=0.4, alpha=0.2) + 
   theme_classic() + 
+  labs(y="Kappa", x="Error") +
   facet_grid(.~osc_rate)
 ```
 
 ```{r, fig.width=1.8, fig.height=0.8}
 results %>% 
   ggplot(aes(x=mse_error, y=mse_var)) +
-  geom_point(size=0.1, alpha=0.2) + 
+  geom_point(size=0.4, alpha=0.2) + 
   theme_classic() + 
+  labs(y="Variance", x="Error") +
   facet_grid(.~osc_rate)
 ```
