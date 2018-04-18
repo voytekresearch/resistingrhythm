@@ -69,7 +69,7 @@ burst6:
 # Cut down osc sets to so there are only 12 jobs total
 exp1:
 	parallel -j 12 -v \
-		--joblog '$(DATA_PATH)/exp1.log' \
+		--joblog '$(DATA_PATH)/exp1.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp1_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
-	::: 0 1 2 ::: 0 1 3 5
+	::: 0 1 2 ::: 0 1 3 5 | tee exp1.log
