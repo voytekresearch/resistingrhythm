@@ -61,11 +61,12 @@ burst6:
 
 # --------------------------------------------------------------
 # 4-17-2018
-# Intial testing, N=20 cells, t = 22, tau_h = 2, all 10 stim, all osc levels
-# Ca preset to 0.031 (~ 6-12 Hz firing rate).
+# Intial testing, N=100 cells, 25 trials, t = 22, tau_h = 2, all 10 stim, all osc levels
+# Ca: 0.031 (~ 6-12 Hz firing rate).
+# Cut down osc sets to so there are only 12 jobs total
 exp1:
-	parallel -j 10 -v \
+	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp1.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp1_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=40 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=50 --seed_value=42 --verbose' \
-	::: 0 1 2 ::: 0 1 2 3 4 5 6
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp1_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 2 ::: 0 1 3 5
