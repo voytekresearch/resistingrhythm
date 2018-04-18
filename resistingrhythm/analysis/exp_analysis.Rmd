@@ -39,8 +39,9 @@ for(i in 1:length(osc_codes)){
 }
 ```
 
+
 # Osc rate 
-## Error and variance
+## By variance
 
 ```{r, fig.width=1.0, fig.height=0.8}
 results %>% 
@@ -60,6 +61,8 @@ results %>%
   theme_classic() 
 ```
 
+## By error
+
 ```{r, fig.width=1.0, fig.height=0.8}
 results %>% 
   ggplot(aes(x=osc_rate, y=mse_error, group=osc_rate)) +
@@ -69,7 +72,7 @@ results %>%
   theme_classic() 
 ```
 
-## Rates 
+## By rate
 
 ```{r, fig.width=1.0, fig.height=0.8}
 results %>% 
@@ -90,7 +93,7 @@ results %>%
   theme_classic() 
 ```
 
-# Error and var, by osc rate
+# Error versus var
 
 ```{r, fig.width=1.8, fig.height=0.8}
 results %>% 
