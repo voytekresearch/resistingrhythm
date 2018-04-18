@@ -55,7 +55,12 @@ def l2_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
         ns_i, ts_i = select_n(i, ns_n, ts_n)
 
         # Variance
-        v_i.append(np.std(ts_i))
+        # Variance
+        if ts_i.size > 0:
+            var = np.std(ts_i)
+        else:
+            var = 0
+        v_i.append(var)
 
         # Error
         e_i.append(mse(ts_i, ts_ref_i))
