@@ -176,9 +176,9 @@ def run(run_name,
         print(">>> Saving results")
 
     head = [
-        "k", "V_ref", "V_k", "Ca_target", "Ca_ref", "Ca_obs_k", "Ca_obs_ref",
-        "kappa_error", "kappa_coord", "abs_error", "abs_var", "mse_error",
-        "mse_var", "rate_k", "rate_ref"
+        "k", "V_ref", "V_k", "Ca_target", "Ca_ref", "Ca_obs_target",
+        "Ca_obs_ref", "kappa_error", "kappa_coord", "abs_error", "abs_var",
+        "mse_error", "mse_var", "rate_k", "rate_ref"
     ]
     with open("{}.csv".format(run_name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")
