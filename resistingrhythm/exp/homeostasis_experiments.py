@@ -22,12 +22,14 @@ def run(run_name,
         burn_t=10,
         N=10,
         Ca_target=0.03,
+        Ca_ref=0.03,
         tau_h=1,
         w_min=5e-6,
         w_max=50e-6,
         sigma=0,
         num_trials=2,
         seed_value=42,
+        no_homeostasis=True,
         verbose=False):
     """Run a HHH experiment"""
 
@@ -48,8 +50,10 @@ def run(run_name,
     w_min = float(w_min)
     w_max = float(w_max)
     tau_h = float(tau_h)
-    Ca_target = float(Ca_target)
     burn_t = float(burn_t)
+
+    Ca_target = float(Ca_target)
+    Ca_ref = float(Ca_ref)
 
     if w_min > w_max:
         raise ValueError("w_min must be smaller than w_max")
@@ -95,7 +99,7 @@ def run(run_name,
             np.asarray([]),  # no osc mod
             np.asarray([]),
             N=N,
-            Ca_target=Ca_target,
+            Ca_target=Ca_ref,
             bias_in=bias_in,
             sigma=sigma,
             w_in=w,
@@ -105,7 +109,7 @@ def run(run_name,
             burn_time=burn_t,
             seed_value=seed_value + k,
             record_traces=True,
-            homeostasis=True)
+            homeostasis=no_homeostasis)
 
         ns_ref, ts_ref = filter_spikes(results_ref["ns"], results_ref["ts"],
                                        a_window)
@@ -129,7 +133,7 @@ def run(run_name,
                         burn_time=burn_t,
                         seed_value=seed_value + k,
                         record_traces=True,
-                        homeostasis=True)
+                        homeostasis=no_homeostasis)
 
         # -
         if verbose:
@@ -154,16 +158,17 @@ def run(run_name,
 
         # Get final avg. calcium
         # over a window? Just grab last?
-        Ca_k = results_k['calcium'][:, -50].mean()
-        Ca_ref = results_ref['calcium'][:, -50].mean()
+        Ca_obs_k = results_k['calcium'][:, -50].mean()
+        Ca_obs_ref = results_ref['calcium'][:, -50].mean()
 
         # Get final avg V_m
         V_k = results_k['v_m'][:, -50].mean()
         V_ref = results_ref['v_m'][:, -50].mean()
 
         # save row
-        row = (k, V_ref, V_k, Ca_ref, Ca_k, Ca_target, k_error, k_coord,
-               abs_error, abs_var, mse_error, mse_var, rate_k, rate_ref)
+        row = (k, V_ref, V_k, Ca_target, Ca_ref, Ca_obs_k, Ca_obs_ref, k_error,
+               k_coord, abs_error, abs_var, mse_error, mse_var, rate_k,
+               rate_ref)
         results.append(row)
 
     # ---------------------------------------------------
@@ -171,9 +176,9 @@ def run(run_name,
         print(">>> Saving results")
 
     head = [
-        "k", "V_ref", "V_k", "Ca_ref", "Ca_k", "Ca_target", "kappa_error",
-        "kappa_coord", "abs_error", "abs_var", "mse_error", "mse_var",
-        "rate_k", "rate_ref"
+        "k", "V_ref", "V_k", "Ca_target", "Ca_ref", "Ca_obs_k", "Ca_obs_ref",
+        "kappa_error", "kappa_coord", "abs_error", "abs_var", "mse_error",
+        "mse_var", "rate_k", "rate_ref"
     ]
     with open("{}.csv".format(run_name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")
