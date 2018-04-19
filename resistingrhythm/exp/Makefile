@@ -2,7 +2,7 @@ SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/resistingrhythm/data/
 DATA_PATH=/home/ejp/src/resistingrhythm/data
 # DATA_PATH=/home/ubuntu/src/resistingrhythm/data
-
+#
 create_data_path:
 	-mkdir $(DATA_PATH)
 
@@ -93,6 +93,15 @@ burst5:
 # 6 hz  (equal to stim == 'patho')
 burst6:
 	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=6.0 --n=1000 --name=$(DATA_PATH)/burst6 --seed=42
+
+# --------------------------------------------------------------
+#  Added test recipe 
+test1:
+	parallel -j 1 -v \
+		--joblog '$(DATA_PATH)/test1.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/test1_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 ::: 1 | tee $(DATA_PATH)/test1.log
 
 # --------------------------------------------------------------
 # 4-17-2018
