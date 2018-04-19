@@ -1,0 +1,150 @@
+---
+title: "Ca exp analysis -- 4/18/2018"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(gridExtra)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+```{r, message=FALSE}
+exp_code <- 1
+osc_codes <- c(1, 3, 5)
+osc_rates <- c(1, 3, 5)
+stim_codes <- c(0)
+
+# Load exp 1 results for comparison
+results <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(ca, nrow(df))
+    df$ca_targets <- rep("0.030", nrow(df))
+    
+    results <- rbind(results, df)
+  }
+}
+
+# the load exp2, for Ca 
+exp_code <- 2
+ca_values <- c("0.032", "0.034", "0.036", "0.038")
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(ca in ca_values){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_osc", as.character(o_c),
+                           "_Ca", ca,
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$ca_targets <- rep(ca, nrow(df))
+      
+      results <- rbind(results, df)
+    }
+  }
+}
+```
+
+
+# Osc rate 
+## By variance
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, 
+             group=interaction(osc_rate,ca_targets),
+             color=ca_targets)) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Kappa", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_var, 
+             group=interaction(osc_rate, ca_targets),
+             color=ca_targets)) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Variance", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+## By error
+
+```{r, fig.width=2.0, fig.height=1.0}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_error, 
+             group=interaction(osc_rate,ca_targets),
+             color=ca_targets)) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Error", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+## By rate
+
+```{r, fig.width=2.0, fig.height=1.0}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, 
+             group=interaction(osc_rate,ca_targets),
+             color=ca_targets)) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Mod. rate (Hz)", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+```{r, fig.width=2.0, fig.height=1.0}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_ref - rate_k, 
+             group=interaction(osc_rate,ca_targets),
+             color=ca_targets)) +
+  geom_jitter(alpha=0.1, size=0.1) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_hline(yintercept=0, size=0.5) +
+  labs(y="Rate diff. (Hz)", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+# Error versus var
+
+```{r, fig.width=2.2, fig.height=0.8}
+results %>% 
+  ggplot(aes(x=mse_error, y=kappa_coord, color=ca_targets)) +
+  geom_point(alpha=0.5, size=0.2) + 
+  theme_classic() + 
+  labs(y="Kappa", x="Error") +
+  facet_grid(.~osc_rate)
+```
+
+```{r, fig.width=1.8, fig.height=0.8}
+results %>% 
+  ggplot(aes(x=mse_error, y=mse_var, color=ca_targets)) +
+  geom_point(alpha=0.5, size=0.2) + 
+  theme_classic() + 
+  labs(y="Variance", x="Error") +
+  facet_grid(.~osc_rate)
+```
