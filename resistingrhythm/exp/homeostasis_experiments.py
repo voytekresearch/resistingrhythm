@@ -78,11 +78,21 @@ def run(run_name,
 
     # ---------------------------------------------------
     # load spikes
-    ns_stim, ts_stim = load_spikes(stim_name)
-    ns_osc, ts_osc = load_spikes(osc_name)
-    if verbose:
-        print(">>> Loaded {}".format(stim_name))
-        print(">>> Loaded {}".format(osc_name))
+    if stim_name is not None:
+        ns_stim, ts_stim = load_spikes(stim_name)
+        if verbose:
+            print(">>> Loaded {}".format(stim_name))
+    else:
+        ns_stim = np.asarray([])
+        ts_stim = np.asarray([])
+
+    if osc_name is not None:
+        ns_osc, ts_osc = load_spikes(osc_name)
+        if verbose:
+            print(">>> Loaded {}".format(osc_name))
+    else:
+        ns_osc = np.asarray([])
+        ts_osc = np.asarray([])
 
     # ---------------------------------------------------
     results = []
