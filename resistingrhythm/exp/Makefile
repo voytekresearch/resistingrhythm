@@ -213,3 +213,12 @@ exp8:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp8_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 ::: 7 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp8.log
+
+# TODO
+# Weak osc, with no homeostasis (control)
+exp9:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp9.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp9_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
+	::: 0 ::: 6 7 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp8.log
