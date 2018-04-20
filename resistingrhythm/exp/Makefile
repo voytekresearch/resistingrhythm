@@ -6,6 +6,9 @@ DATA_PATH=/home/ejp/src/resistingrhythm/data
 create_data_path:
 	-mkdir $(DATA_PATH)
 
+spikes: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc7 osc8 os9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6
+
+
 # --------------------------------------------------------------
 # Replicate 3 sitm, same params, different draws
 stim0:
