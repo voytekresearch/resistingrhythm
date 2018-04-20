@@ -29,7 +29,7 @@ def run(run_name,
         sigma=0,
         num_trials=2,
         seed_value=42,
-        no_homeostasis=True,
+        homeostasis=True,
         verbose=False):
     """Run a HHH experiment"""
 
@@ -38,10 +38,15 @@ def run(run_name,
     bias_in = 0
     time_step = 1e-5
 
+    if homeostasis:
+        print(">>> Homeostasis is on")
+    else:
+        print(">>> Homeostasis is off")
+
     # ---------------------------------------------------
     if verbose:
         print(">>> Running {}".format(run_name))
-        print(">>> Checking args.")
+        print(">>> Checking args")
 
     N = int(N)
     num_trials = int(num_trials)
@@ -119,7 +124,7 @@ def run(run_name,
             burn_time=burn_t,
             seed_value=seed_value + k,
             record_traces=True,
-            homeostasis=no_homeostasis)
+            homeostasis=homeostasis)
 
         ns_ref, ts_ref = filter_spikes(results_ref["ns"], results_ref["ts"],
                                        a_window)
@@ -143,7 +148,7 @@ def run(run_name,
                         burn_time=burn_t,
                         seed_value=seed_value + k,
                         record_traces=True,
-                        homeostasis=no_homeostasis)
+                        homeostasis=homeostasis)
 
         # -
         if verbose:
