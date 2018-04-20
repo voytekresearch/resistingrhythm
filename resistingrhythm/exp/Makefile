@@ -7,7 +7,7 @@ create_data_path:
 	-mkdir $(DATA_PATH)
 
 # --------------------------------------------------------------
-spikes: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc7 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6
+spikes: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc7 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16
 
 
 # Replicate 3 sitm, same params, different draws
@@ -44,11 +44,8 @@ osc6:
 	python homeostasis_experiments.py create_osc --t=20 --t_onset=0 --n_cycles=180 --rate=6.0 --n=1000 --name=$(DATA_PATH)/osc6 --seed=42
 
 # Explore weak oscillations 0.05 -> 0.5 Hz
-osc7:
-	python homeostasis_experiments.py create_osc --t=20 --t_onset=0 --n_cycles=180 --rate=0.05 --n=1000 --name=$(DATA_PATH)/osc7 --seed=42
-
 osc8:
-	python homeostasis_experiments.py create_osc --t=20 --t_onset=0 --n_cycles=180 --rate=0.1 --n=1000 --name=$(DATA_PATH)/osc8 --seed=42
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=0 --n_cycles=180 --rate=0.05 --n=1000 --name=$(DATA_PATH)/osc8 --seed=42
 
 osc9:
 	python homeostasis_experiments.py create_osc --t=20 --t_onset=0 --n_cycles=180 --rate=0.1 --n=1000 --name=$(DATA_PATH)/osc9 --seed=42
@@ -96,6 +93,37 @@ burst5:
 # 6 hz  (equal to stim == 'patho')
 burst6:
 	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=6.0 --n=1000 --name=$(DATA_PATH)/burst6 --seed=42
+
+# Explore weak bursts 0.05 -> 0.5 Hz
+burst7:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.05 --n=1000 --name=$(DATA_PATH)/burst7 --seed=42
+
+burst8:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.1 --n=1000 --name=$(DATA_PATH)/burst8 --seed=42
+
+burst9:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.15 --n=1000 --name=$(DATA_PATH)/burst9 --seed=42
+
+burst10:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.2 --n=1000 --name=$(DATA_PATH)/burst10 --seed=42
+
+burst11:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.25 --n=1000 --name=$(DATA_PATH)/burst11 --seed=42
+
+burst12:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.3 --n=1000 --name=$(DATA_PATH)/burst12 --seed=42
+
+burst13:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.35 --n=1000 --name=$(DATA_PATH)/burst13 --seed=42
+
+burst14:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.4 --n=1000 --name=$(DATA_PATH)/burst14 --seed=42
+
+burst15:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.45 --n=1000 --name=$(DATA_PATH)/burst15 --seed=42
+
+burst16:
+	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.45 --n=1000 --name=$(DATA_PATH)/burst16 --seed=42
 
 # --------------------------------------------------------------
 #  Added test recipe 
@@ -177,3 +205,10 @@ exp7:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp7_stim{1}_osc{2}_Ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target={3} --Ca_ref=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 ::: 1 3 5 ::: 0.032 0.034 0.036 | tee $(DATA_PATH)/exp7.logs
+
+exp8:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp8.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp8_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 ::: 7 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp8.log
