@@ -206,7 +206,7 @@ exp7:
 
 # --------------------------------------------------------------
 # 4-20-2018
-# Weak bursts
+# Rerun weak osc, but with the same collection window as burst
 exp8:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp8.parallel.log' \
@@ -222,3 +222,56 @@ exp9:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp9_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
 	::: 0 ::: 6 7 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp9.log
+
+
+# --------------------------------------------------------------
+# 4-21-2018
+# -
+# Run missing values for strong:
+# osc
+exp10:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp10.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp10_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 2 ::: 2 4 6 | tee $(DATA_PATH)/exp10.log
+
+# burst
+exp11:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp11.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp11_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 2 ::: 2 4 6 | tee $(DATA_PATH)/exp11.log
+
+# -
+# Rerun osc with a burst collection window
+exp12:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp12.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp12_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 2 ::: 0 1 2 3 4 5 6 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp12.log
+
+# -
+# Fill in missing stim for weak osc
+exp13:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp13.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp13_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=18 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 1 2 ::: 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp13.log
+
+# -
+# Re-run weak bursts (...repeating exp8 this time with actual bursts)
+exp14:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp14.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp14_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 2 ::: 7 8 9 10 11 12 13 14 15 16 | tee $(DATA_PATH)/exp14.log
+
+# --------------------------------------------------------------
+# TODO
+# Fast burst with 'ach' (bias sweep -100 to + 100)
+# only a couple osc_rates
