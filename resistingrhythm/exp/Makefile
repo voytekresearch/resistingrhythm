@@ -128,7 +128,7 @@ burst16:
 # --------------------------------------------------------------
 # 4-23-2018
 # After trying a few different ranges / sampling schemes for osc_rate
-# settled on a 0-0.5 by 0.1 Hz, then 0.5 - 6.0 by 0.5 Hz, dual methods
+# settled on a 0-0.5 by 0.1 Hz, then 0.5 - 6.0 by 0.5 Hz, dual approach.
 # Run times sampling only at 0.1 are > days. Too slow/expensive.
 osc100:
 	parallel -j 12 -v \
