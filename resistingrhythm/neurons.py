@@ -23,6 +23,7 @@ def HHH(time,
         ts_in,
         ns_osc,
         ts_osc,
+        external_current=None,
         Ca_target=50e-9,
         tau_h=10,
         N=1,
@@ -112,7 +113,7 @@ def HHH(time,
 
     # ----------------------------------------------------
     eqs = """
-    dV/dt = (I_Na + I_K + I_KCa + I_Ca + I_l + bias_in + I_noi + I_in + I_osc) / Cm : volt
+    dV/dt = (I_Na + I_K + I_KCa + I_Ca + I_l + bias_in + I_noi + I_in + I_osc + I_ext) / Cm : volt
     """ + """
     I_Na = g_Na * (m ** 3) * h * (V_Na - V) : amp
     m = a_m / (a_m + b_m) : 1
@@ -160,6 +161,13 @@ def HHH(time,
         g_K : siemens
         g_Ca : siemens
         """
+
+    # Setup the current
+    if external_current is not None:
+        I_x = TimedArray(external_current, dt=time_step)
+        eqs += """I_ext = I_x(t) * amp : amp"""
+    else:
+        eqs += """I_ext = 0 : amp"""
 
     # ----------------------------------------------------
     # Def the net by hand....

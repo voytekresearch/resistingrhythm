@@ -211,6 +211,31 @@ def find_time(times, t):
     return times[idx]
 
 
+def _pulse(I, on, off, t, dt):
+    times = create_times((0, t), dt)
+    wave = np.zeros_like(times)
+    i = find_time_index(times, on)
+    j = find_time_index(times, off)
+    wave[i:j] = I
+
+    return wave
+
+
+def current_pulse(t=1, t_onset=0.8, t_offset=0.9, I=10e-9, dt=1e-5, name=None):
+    wave = _pulse(I, t_onset, t_offset, t, dt)
+
+    if name is not None:
+        np.savetxt("{}.csv".format(name), wave.transpose(), delimiter=',')
+        return None
+    else:
+        return wave
+
+
+def load_current(filename):
+    x = np.loadtxt(filename)
+    return x
+
+
 def poisson_oscillation(t=1,
                         t_onset=0.2,
                         n_cycles=10,

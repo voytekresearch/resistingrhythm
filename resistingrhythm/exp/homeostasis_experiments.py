@@ -10,7 +10,9 @@ from resistingrhythm.neurons import HHH
 from resistingrhythm.util import filter_spikes
 from resistingrhythm.util import poisson_impulse
 from resistingrhythm.util import poisson_oscillation
+from resistingrhythm.util import current_pulse
 from resistingrhythm.util import load_spikes
+from resistingrhythm.util import load_current
 from resistingrhythm.util import l1_by_n
 from resistingrhythm.util import l2_by_n
 
@@ -18,6 +20,7 @@ from resistingrhythm.util import l2_by_n
 def run(run_name,
         stim_name=None,
         osc_name=None,
+        current_name=None,
         t=12,
         burn_t=10,
         N=10,
@@ -82,7 +85,8 @@ def run(run_name,
         print(">>> Weight range: {}".format(w))
 
     # ---------------------------------------------------
-    # load spikes
+    # load ....
+    # spikes
     if stim_name is not None:
         ns_stim, ts_stim = load_spikes(stim_name)
         if verbose:
@@ -98,6 +102,12 @@ def run(run_name,
     else:
         ns_osc = np.asarray([])
         ts_osc = np.asarray([])
+
+    # currents
+    if current_name is not None:
+        external_current = load_current(filename)
+    else:
+        external_current = None
 
     # ---------------------------------------------------
     results = []
@@ -137,6 +147,7 @@ def run(run_name,
                         ts_stim,
                         ns_osc,
                         ts_osc,
+                        external_current=external_current,
                         N=N,
                         Ca_target=Ca_target,
                         bias_in=bias_in,
@@ -207,5 +218,6 @@ if __name__ == "__main__":
     fire.Fire({
         'create_stim': poisson_impulse,
         'create_osc': poisson_oscillation,
+        'create_current': current_pulse,
         'run': run
     })

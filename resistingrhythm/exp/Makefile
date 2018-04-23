@@ -152,6 +152,39 @@ burst200:
 		burst200.txt
 
 # --------------------------------------------------------------
+# 4-23-2019
+# Manipulate the tone, mimicing ACh action, using applied external currents
+
+currents: tonic_current1 tonic_current2 tonic_current3 tonic_current4 step_current1 step_current2 step_current3 step_current4
+
+
+# Tonic
+tonic_current1:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=0.5e-6 --name=$(DATA_PATH)/tonic_current1 
+
+tonic_current2:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=1.0e-6 --name=$(DATA_PATH)/tonic_current2
+
+tonic_current3:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/tonic_current3
+
+tonic_current4:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/tonic_current4
+
+# Burst
+step_current1:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=0.5e-6 --name=$(DATA_PATH)/step_current1 
+
+step_current2:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=1.0e-6 --name=$(DATA_PATH)/step_current2
+
+step_current3:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/step_current3
+
+step_current4:
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/step_current4
+
+# --------------------------------------------------------------
 #  Added test recipe 
 test1:
 	parallel -j 1 -v \
