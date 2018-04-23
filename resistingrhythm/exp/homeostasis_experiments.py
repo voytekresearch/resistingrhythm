@@ -26,6 +26,7 @@ def run(run_name,
         tau_h=1,
         w_min=5e-6,
         w_max=50e-6,
+        bias_in=0,
         sigma=0,
         num_trials=2,
         seed_value=42,
@@ -35,7 +36,6 @@ def run(run_name,
 
     # ---------------------------------------------------
     # Fixed params
-    bias_in = 0
     time_step = 1e-5
 
     if homeostasis:
