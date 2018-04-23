@@ -1,6 +1,6 @@
 SHELL=/bin/bash -O expand_aliases
-# DATA_PATH=/Users/type/Code/resistingrhythm/data/
-DATA_PATH=/home/ejp/src/resistingrhythm/data
+DATA_PATH=/Users/type/Code/resistingrhythm/data/
+# DATA_PATH=/home/ejp/src/resistingrhythm/data
 # DATA_PATH=/home/ubuntu/src/resistingrhythm/data
 #
 create_data_path:
@@ -124,6 +124,32 @@ burst15:
 
 burst16:
 	python homeostasis_experiments.py create_osc --t=20 --t_onset=19.5 --n_cycles=3 --rate=0.45 --n=1000 --name=$(DATA_PATH)/burst16 --seed=42
+
+# --------------------------------------------------------------
+# 4-23-2018
+# After trying a few different ranges / sampling schemes for osc_rate
+# settled on a 0-0.5 by 0.1 Hz, then 0.5 - 6.0 by 0.5 Hz, dual methods
+# Run times sampling only at 0.1 are > days. Too slow/expensive.
+osc100:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/osc100.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --rate={2} --n=1000 --name=$(DATA_PATH)/osc{1} --seed=42' :::: \
+		osc100.txt
+
+burst100:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/burst100.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --rate={2} --n=1000 --name=$(DATA_PATH)/burst{1} --seed=42' :::: \
+		burst100.txt
+
+burst200:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/burst200.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --rate={2} --n=1000 --name=$(DATA_PATH)/burst{1} --seed=42' :::: \
+		burst200.txt
 
 # --------------------------------------------------------------
 #  Added test recipe 
