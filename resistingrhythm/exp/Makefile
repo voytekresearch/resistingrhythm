@@ -7,7 +7,7 @@ create_data_path:
 	-mkdir $(DATA_PATH)
 
 # --------------------------------------------------------------
-spikes: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16
+all_stim: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16 osc100 burst100 burst200 currents
 
 
 # Replicate 3 sitm, same params, different draws
@@ -164,20 +164,20 @@ tonic_current1:
 	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/tonic_current1
 
 tonic_current2:
-	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/tonic_current2
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-0.75e-6 --name=$(DATA_PATH)/tonic_current2
 
 tonic_current3:
-	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-1.5e-6 --name=$(DATA_PATH)/tonic_current3
+	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/tonic_current3
 
 # Burst
 step_current1:
 	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/step_current1
 
 step_current2:
-	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/step_current2
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.75e-6 --name=$(DATA_PATH)/step_current2
 
 step_current3:
-	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-1.5e-6 --name=$(DATA_PATH)/step_current3
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-1.0e-6 --name=$(DATA_PATH)/step_current3
 
 # --------------------------------------------------------------
 #  Added test recipe 
@@ -333,9 +333,10 @@ exp14:
 # 19.5 for f = 8
 # 19.85 for f = 30
 
+# ---
 # Run sustained oscillation with the `100` sampling scheme
 exp15:
-	parallel -j 12 -v \
+	parallel -j 36 -v \
 		--joblog '$(DATA_PATH)/exp15.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp15_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
@@ -343,50 +344,53 @@ exp15:
 
 # Run burst with the 100 sampling scheme
 exp16:
-	parallel -j 12 -v \
+	parallel -j 36 -v \
 		--joblog '$(DATA_PATH)/exp16.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp16_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp16.log
 
+# ---
 # Run f=30 burst, with a matched -step in ACh tone
 exp17:
-	parallel -j 12 -v \
+	parallel -j 36 -v \
 		--joblog '$(DATA_PATH)/exp17.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp17_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --current_name=$(DATA_PATH)/step_current{3} --N=100 --t=20 --tau_h=2 --burn_t=19.85 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
-	::: 0 1 ::: 200 201 202 203 204 205 210 215 220 225 230 235 240 245 250 255 260 ::: 1 2 3 | tee $(DATA_PATH)/exp17.log
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp17_stim{1}_burst{2}_step{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --current_name=$(DATA_PATH)/step_current{3}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.85 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 201 202 203 204 205 ::: 1 2 3 | tee $(DATA_PATH)/exp17.log
+
 
 # Run sustained oscillations with tonic changes in ACh tone
 exp18:
-	parallel -j 12 -v \
+	parallel -j 48 -v \
 		--joblog '$(DATA_PATH)/exp18.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp18_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --current_name=$(DATA_PATH)/tonic_current{3} --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
-	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 ::: 1 2 3 | tee $(DATA_PATH)/exp18.log
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp18_stim{1}_osc{2}_tonic{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --current_name=$(DATA_PATH)/tonic_current{3}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 101 103 105 115 125 135 145 155  ::: 1 2 3 | tee $(DATA_PATH)/exp18.log
 
+# ---
 # Run sustained oscillations, varying Ca_target:
 # 0.026 0.028 0.032 0.034
 exp19:
-	parallel -j 12 -v \
+	parallel -j 64 -v \
 		--joblog '$(DATA_PATH)/exp19.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp19_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --Ca_target={3} --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
-	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 ::: 0.026 0.028 0.032 0.034 | tee $(DATA_PATH)/exp19.log
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp19_stim{1}_osc{2}_ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --Ca_target={3} --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 101 103 105 115 125 135 145 155 ::: 0.026 0.028 0.032 0.034 | tee $(DATA_PATH)/exp19.log
 
 # Run bursts, varying the Ca_target:
 # 0.026 0.028 0.032 0.034
 exp20:
-	parallel -j 12 -v \
+	parallel -j 48 -v \
 		--joblog '$(DATA_PATH)/exp20.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp20_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --Ca_target={3} --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
-	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 ::: 0.026 0.028 0.032 0.034 | tee $(DATA_PATH)/exp20.log
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp20_stim{1}_burst{2}_ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --Ca_target={3} --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 101 102 103 104 105 110 ::: 0.026 0.028 0.032 0.034 | tee $(DATA_PATH)/exp20.log
 
 # Run sustained oscillations, with V_osc set to mimic a GABA synapse:
 # E_rev = -80e-3, tau=10 ms
 exp21:
-	parallel -j 12 -v \
+	parallel -j 36 -v \
 		--joblog '$(DATA_PATH)/exp21.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp21_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
