@@ -1,7 +1,7 @@
 SHELL=/bin/bash -O expand_aliases
-DATA_PATH=/Users/type/Code/resistingrhythm/data/
+# DATA_PATH=/Users/type/Code/resistingrhythm/data/
 # DATA_PATH=/home/ejp/src/resistingrhythm/data
-# DATA_PATH=/home/ubuntu/src/resistingrhythm/data
+DATA_PATH=/home/ubuntu/src/resistingrhythm/data
 #
 create_data_path:
 	-mkdir $(DATA_PATH)
@@ -171,7 +171,7 @@ tonic_current3:
 
 # Burst
 step_current0:
-	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.0e-6 --name=$(DATA_PATH)/step_current1
+	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.0e-6 --name=$(DATA_PATH)/step_current0
 
 step_current1:
 	python homeostasis_experiments.py create_current --t=20 --t_onset=19.85 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/step_current1
