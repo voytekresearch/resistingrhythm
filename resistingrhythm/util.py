@@ -391,6 +391,9 @@ def load_spikes(filename):
     NOTE: assumes data was written be write_spikes().
     """
     data = _read_csv_cols_into_dict(filename)
+    if len(data) == 0:
+        return np.array([]), np.array([])
+
     ns = np.asarray(data['ns'])
     ts = np.asarray(data['ts'])
 
