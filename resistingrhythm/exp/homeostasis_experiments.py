@@ -107,7 +107,9 @@ def run(run_name,
 
     # currents
     if current_name is not None:
-        external_current = load_current(filename)
+        external_current = load_current(current_name)
+        if verbose:
+            print(">>> Loaded {}".format(current_name))
     else:
         external_current = None
 
