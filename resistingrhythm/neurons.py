@@ -65,7 +65,7 @@ def HHH(time,
     V_osc *= volt
 
     # Noise scale
-    sigma *= siemens
+    # sigma *= siemens
 
     # While concentration vars are said to be
     # passed in 'molar',
@@ -134,7 +134,7 @@ def HHH(time,
     I_l = g_l * (V_l - V) : amp
     """ + """
     I_noi = g_noi * (V_l - V) : amp
-    dg_noi/dt = -(g_noi + (sigma * sqrt(tau_in) * xi)) / tau_in : siemens
+    dg_noi/dt = (-g_noi / tau_in) + (sqrt(sigma / tau_in) * xi) * (siemens) : siemens
     """ + """
     I_Ca = -g_Ca * (1 + tanh((V - V1) / V2)) * (V - V_Ca): amp
     dCa/dt = (-k * Ca) - (gamma * I_Ca) : mmolar
@@ -167,7 +167,7 @@ def HHH(time,
         I_x = TimedArray(external_current, dt=time_step)
         eqs += """I_ext = I_x(t) * amp : amp"""
     else:
-        eqs += """I_ext = 0 : amp"""
+        eqs += """I_ext = 0 * amp : amp"""
 
     # ----------------------------------------------------
     # Def the net by hand....
