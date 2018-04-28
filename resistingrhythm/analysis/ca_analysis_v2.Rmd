@@ -11,75 +11,111 @@ data_path <- "~/Code/resistingrhythm/data/"
 ```
 
 ```{r, message=FALSE}
-exp_code <- 1
-osc_codes <- c(1, 3, 5)
-osc_rates <- c(1, 3, 5)
-stim_codes <- c(0)
+exp_code <- 19
+osc_codes <- c(101, 103, 105, 115, 125, 135, 145, 155)
+osc_rates <- c(0.1, 0.3, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+stim_codes <- c(0, 1)
 
-# Load exp 1 results for comparison
+ca_targets <- c(0.026, 0.028, 0.032, 0.034)
+
+
 
 results <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
-    o_c <- osc_codes[i]
-    o_r <- osc_rates[i]
-    
-    # Load the csv
-    df <- read_csv(paste(data_path, 
-                         "exp", as.character(exp_code), 
-                         "_stim", as.character(s_c), 
-                         "_osc", as.character(o_c),
-                         ".csv", sep=""))
-    
-    # Add metadata
-    df$osc_code <- rep(o_c, nrow(df))
-    df$osc_rate <- rep(o_r, nrow(df))
-    df$stim_code <- rep(s_c, nrow(df))
-    df$Ca_target <- rep("0.030", nrow(df))
-    
-    results <- rbind(results, df)
-  }
-}
-
-# Rename Ca to match new format
-results %>% 
-  rename(Ca_obs_target = Ca_k) %>% 
-  mutate(Ca_obs_ref = Ca_obs_target) -> results
-
-# ------------------------------------------------------------------
-# exp_code <- 2
-# ca_values <- c("0.032", "0.034", "0.036", "0.038")
-
-exp_code <- 7
-ca_values <- c("0.032", "0.034", "0.036")
-for(i in 1:length(osc_codes)){
-  for(s_c in stim_codes){
-    for(ca in ca_values){
+    for(ca in ca_targets){
       o_c <- osc_codes[i]
       o_r <- osc_rates[i]
       
-      # Generate name
-      file_name <- paste(data_path, 
-                         "exp", as.character(exp_code), 
-                         "_stim", as.character(s_c), 
-                         "_osc", as.character(o_c),
-                         "_Ca", ca,
-                         ".csv", sep="")
-    
-      if (file.exists(file_name)){
-        # Load
-        df <- read_csv(file_name)
-
-        # Add metadata
-        df$osc_code <- rep(o_c, nrow(df))
-        df$osc_rate <- rep(o_r, nrow(df))
-        df$stim_code <- rep(s_c, nrow(df))
-        
-        results <- rbind(results, df)  
-      }
+      
+      # Load the csv
+      df <- read_csv(paste(data_path,
+                           "exp", as.character(exp_code),
+                           "_stim", as.character(s_c),
+                           "_osc", as.character(o_c),
+                           "_ca", as.character(ca),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$Ca_target <- rep(ca, nrow(df))
+      
+      results <- rbind(results, df)
     }
   }
 }
+
+# exp_code <- 1
+# osc_codes <- c(1, 3, 5)
+# osc_rates <- c(1, 3, 5)
+# stim_codes <- c(0)
+# 
+# # Load exp 1 results for comparison
+# 
+# results <- NULL
+# for(i in 1:length(osc_codes)){
+#   for(s_c in stim_codes){
+#     o_c <- osc_codes[i]
+#     o_r <- osc_rates[i]
+#     
+#     # Load the csv
+#     df <- read_csv(paste(data_path, 
+#                          "exp", as.character(exp_code), 
+#                          "_stim", as.character(s_c), 
+#                          "_osc", as.character(o_c),
+#                          ".csv", sep=""))
+#     
+#     # Add metadata
+#     df$osc_code <- rep(o_c, nrow(df))
+#     df$osc_rate <- rep(o_r, nrow(df))
+#     df$stim_code <- rep(s_c, nrow(df))
+#     df$Ca_target <- rep("0.030", nrow(df))
+#     
+#     results <- rbind(results, df)
+#   }
+# }
+# 
+# # Rename Ca to match new format
+# results %>% 
+#   rename(Ca_obs_target = Ca_k) %>% 
+#   mutate(Ca_obs_ref = Ca_obs_target) -> results
+# 
+# # ------------------------------------------------------------------
+# # exp_code <- 2
+# # ca_values <- c("0.032", "0.034", "0.036", "0.038")
+# 
+# exp_code <- 7
+# ca_values <- c("0.032", "0.034", "0.036")
+# for(i in 1:length(osc_codes)){
+#   for(s_c in stim_codes){
+#     for(ca in ca_values){
+#       o_c <- osc_codes[i]
+#       o_r <- osc_rates[i]
+#       
+#       # Generate name
+#       file_name <- paste(data_path, 
+#                          "exp", as.character(exp_code), 
+#                          "_stim", as.character(s_c), 
+#                          "_osc", as.character(o_c),
+#                          "_Ca", ca,
+#                          ".csv", sep="")
+#     
+#       if (file.exists(file_name)){
+#         # Load
+#         df <- read_csv(file_name)
+# 
+#         # Add metadata
+#         df$osc_code <- rep(o_c, nrow(df))
+#         df$osc_rate <- rep(o_r, nrow(df))
+#         df$stim_code <- rep(s_c, nrow(df))
+#         
+#         results <- rbind(results, df)  
+#       }
+#     }
+#   }
+# }
 
 rm(df, exp_code, ca_values, osc_codes, osc_rates, file_name, i, o_c, o_r, s_c, stim_codes, ca)
 ```
@@ -93,7 +129,9 @@ results %>%
   ggplot(aes(x=osc_rate, y=kappa_coord, 
              group=interaction(osc_rate, Ca_target),
              color=factor(Ca_target))) +
-  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(.~Ca_target) +
   labs(y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() 
 ```
@@ -102,7 +140,9 @@ results %>%
   ggplot(aes(x=osc_rate, y=mse_var, 
              group=interaction(osc_rate, Ca_target),
              color=factor(Ca_target))) +
-  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(.~Ca_target) +
   labs(y="Variance", x="Osc. rate (Hz)") +
   theme_classic() 
 ```
@@ -111,10 +151,12 @@ results %>%
 
 ```{r, fig.width=2.0, fig.height=1}
 results %>% 
-  ggplot(aes(x=osc_rate, y=mse_error, 
+  ggplot(aes(x=osc_rate, y=mse_error/1e3, 
              group=interaction(osc_rate, Ca_target),
              color=factor(Ca_target))) +
-  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(.~Ca_target) +
   labs(y="Error", x="Osc. rate (Hz)") +
   theme_classic() 
 ```
@@ -126,38 +168,37 @@ results %>%
   ggplot(aes(x=osc_rate, y=rate_k, 
              group=interaction(osc_rate, Ca_target),
              color=factor(Ca_target))) +
-  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(y="Firing rate (Hz)", x="Rate (Hz") +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(.~Ca_target) +
+  labs(y="Mod. rate (Hz)", x="Rate (Hz") +
   theme_classic() 
 ```
 
 ```{r, fig.width=2.0, fig.height=1.0}
 results %>% 
-  ggplot(aes(x=osc_rate, y=rate_ref - rate_k, 
+  ggplot(aes(x=osc_rate, y=rate_k - rate_ref, 
              group=interaction(osc_rate, Ca_target),
              color=factor(Ca_target))) +
-  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  geom_hline(yintercept=0, size=0.5) +
-  labs(y="Rate diff. (Hz)", x="Osc. rate (Hz)") +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(.~Ca_target) +
+  labs(y="Delta rate (Hz)", x="Rate (Hz)") +
   theme_classic() 
 ```
 
 # Error versus var
 
-```{r, fig.width=2.2, fig.height=0.8}
+```{r, fig.width=2, fig.height=2}
 results %>% 
-  ggplot(aes(x=mse_error, y=kappa_coord, color=Ca_target)) +
-  geom_point(alpha=0.5, size=0.2) + 
-  theme_classic() + 
-  labs(y="Kappa", x="Error") +
-  facet_grid(.~osc_rate)
+  ggplot(aes(x=mse_error/1e3, y=mse_var, 
+             group=interaction(osc_rate, Ca_target),
+             color=factor(Ca_target))) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  facet_grid(Ca_target~.) +
+  labs(y="Variance", x="Error") +
+  theme_classic() 
 ```
 
-```{r, fig.width=1.8, fig.height=0.8}
-results %>% 
-  ggplot(aes(x=mse_error, y=mse_var, color=Ca_target)) +
-  geom_point(alpha=0.5, size=0.2) + 
-  theme_classic() + 
-  labs(y="Variance", x="Error") +
-  facet_grid(.~osc_rate)
-```
+

@@ -1,0 +1,108 @@
+---
+title: "Ca exp analysis -- 4/18/2018"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(gridExtra)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+```{r, message=FALSE}
+exp_code <- 17
+osc_codes <- c(200, 201, 202, 203, 204, 205)
+osc_rates <- c(0.0, 0.1, 0.2, 0.3, 0.4, 0.5)
+
+step_codes <- c(0, 1, 2, 3)
+step_currents <- c(0.0, -0.5e-6, -0.75e-6, -1.0e-6)
+
+stim_codes <- c(0, 1)
+
+results <- NULL
+for(i in 1:length(osc_codes)){
+  for(j in 1:length(step_codes)){
+  
+    for(s_c in stim_codes){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      stp <- step_codes[j]
+      I <- step_currents[j]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_burst", as.character(o_c),
+                           "_step", as.character(stp),
+                           ".csv", sep=""))
+      
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      
+      df$step_code <- rep(stp, nrow(df))
+      df$step_current <- rep(I, nrow(df))
+      
+      results <- rbind(results, df)
+    }
+  }
+}
+
+results %>% 
+  filter(kappa_coord > 0) -> results
+
+rm(df, exp_code, step_codes, step_currents, osc_codes, osc_rates, stp, I, j, i, o_c, o_r, s_c, stim_codes)
+```
+
+
+# Osc rate 
+## By variance
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, 
+             group=interaction(osc_rate, step_current),
+             color=factor(step_current))) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Kappa", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_var, 
+             group=interaction(osc_rate, step_current),
+             color=factor(step_current))) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Variance", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+## By error
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_error, 
+             group=interaction(osc_rate, step_current),
+             color=factor(step_current))) +
+  geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(y="Error", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+# Var vesus error
+
+```{r, fig.width=3.0, fig.height=0.8}
+results %>% 
+  ggplot(aes(x=mse_error, y=mse_var, 
+             color=factor(step_current))) +
+  geom_point(size=0.1) +
+  labs(y="Variance", x="Error") +
+  facet_grid(.~step_current) +
+  theme_classic() 
+```
+

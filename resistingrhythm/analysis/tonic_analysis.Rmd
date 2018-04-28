@@ -1,0 +1,111 @@
+---
+title: "Ca exp analysis -- 4/18/2018"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(gridExtra)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+```{r, message=FALSE}
+exp_code <- 18
+osc_codes <- c(101, 103, 105, 115, 125, 135, 145, 155)
+osc_rates <- c(0.1, 0.3, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+
+tonic_codes <- c(1, 2, 3)
+tonic_currents <- c(-0.5e-6, -0.75e-6, -1.0e-6)
+
+stim_codes <- c(0, 1)
+
+results <- NULL
+for(i in 1:length(osc_codes)){
+  for(j in 1:length(tonic_codes)){
+  
+    for(s_c in stim_codes){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      stp <- tonic_codes[j]
+      I <- tonic_currents[j]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_osc", as.character(o_c),
+                           "_tonic", as.character(stp),
+                           ".csv", sep=""))
+      
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      
+      df$tonic_code <- rep(stp, nrow(df))
+      df$tonic_current <- rep(I, nrow(df))
+      
+      results <- rbind(results, df)
+    }
+  }
+}
+
+results %>% 
+  filter(kappa_coord > 0) -> results
+
+rm(df, exp_code, tonic_codes, tonic_currents, osc_codes, osc_rates, stp, I, j, i, o_c, o_r, s_c, stim_codes)
+```
+
+
+# Osc rate 
+## By variance
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, 
+             group=interaction(osc_rate, tonic_current),
+             color=factor(tonic_current))) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  labs(y="Kappa", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_var, 
+             group=interaction(osc_rate, tonic_current),
+             color=factor(tonic_current))) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  labs(y="Variance", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+## By error
+
+```{r, fig.width=2.0, fig.height=1}
+results %>% 
+  ggplot(aes(x=osc_rate, y=mse_error, 
+             group=interaction(osc_rate, tonic_current),
+             color=factor(tonic_current))) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  geom_jitter(size=.1) +
+  labs(y="Error", x="Osc. rate (Hz)") +
+  theme_classic() 
+```
+
+# Var vesus error
+
+```{r, fig.width=3.0, fig.height=0.8}
+results %>% 
+  ggplot(aes(x=mse_error, y=mse_var, 
+             color=factor(tonic_current))) +
+  geom_point(size=0.1) +
+  labs(y="Variance", x="Error") +
+  facet_grid(.~tonic_current) +
+  theme_classic() 
+```
+
