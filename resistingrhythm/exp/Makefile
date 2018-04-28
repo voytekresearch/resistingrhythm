@@ -1,13 +1,13 @@
 SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/resistingrhythm/data/
-# DATA_PATH=/home/ejp/src/resistingrhythm/data
-DATA_PATH=/home/ubuntu/src/resistingrhythm/data
+DATA_PATH=/home/ejp/src/resistingrhythm/data
+# DATA_PATH=/home/ubuntu/src/resistingrhythm/data
 
 create_data_path:
 	-mkdir $(DATA_PATH)
 
 # --------------------------------------------------------------
-all_stim: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16 osc100 burst100 burst200 currents
+all_stim: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16 osc100 burst100 burst200 currents osc200 osc300 osc400 burst300 burst400 
 
 
 # Replicate 3 sitm, same params, different draws
@@ -137,6 +137,34 @@ osc100:
 		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --rate={2} --n=1000 --name=$(DATA_PATH)/osc{1} --seed=42' :::: \
 		osc100.txt
 
+# -
+# 4-29-2018
+# f = 30
+osc200:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/osc200.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/osc{1} --seed=42' :::: \
+		osc200.txt
+
+# f = 12
+osc300:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/osc300.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/osc{1} --seed=42' :::: \
+		osc300.txt
+
+# f = 30
+osc400:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/osc400.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/osc{1} --seed=42' :::: \
+		osc400.txt
+# -
+
+# ------------------------------------------------------------------------
 burst100:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst100.parallel.log' \
@@ -151,6 +179,26 @@ burst200:
 		--nice 19 --delay 2 --colsep ',' \
 		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/burst{1} --seed=42' :::: \
 		burst200.txt
+
+# -
+# 4-29-2018
+# f = 12
+burst300:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/burst300.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/burst{1} --seed=42' :::: \
+		burst300.txt
+
+# f = 20
+burst400:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/burst400.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py create_osc --t=20 --t_onset={3} --n_cycles={4} --f={5} --rate={2} --n=1000 --name=$(DATA_PATH)/burst{1} --seed=42' :::: \
+		burst400.txt
+# -
+
 
 # --------------------------------------------------------------
 # 4-23-2019
@@ -421,3 +469,54 @@ exp23:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp23_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
 	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp23.log
+
+# --------------------------------------------------------------
+# 4-29-2018
+# Sustained osc, f=30
+exp24:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp24.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp24_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.85 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 205 215 225 235 245 255 | tee $(DATA_PATH)/exp24.log
+
+# Sustained osc, f=12
+exp25:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp25.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp25_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.66 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 305 315 325 335 345 355 | tee $(DATA_PATH)/exp25.log
+
+# Sustained osc, f=20
+exp26:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp26.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp26_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.80 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 405 415 425 435 445 555 | tee $(DATA_PATH)/exp26.log
+
+# -
+# Burst, f=30
+exp27:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp27.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp27_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.85 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 205 215 225 235 245 255 | tee $(DATA_PATH)/exp27.log
+
+# Burst, f=12
+exp28:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp28.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp28_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.66 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 305 315 325 335 345 355 | tee $(DATA_PATH)/exp28.log
+
+# Burst, f=20
+exp29:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp29.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp29_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=2 --burn_t=19.80 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 405 415 425 435 445 555 | tee $(DATA_PATH)/exp29.log
