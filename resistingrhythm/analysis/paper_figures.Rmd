@@ -1,0 +1,723 @@
+---
+title: "General exp analysis -- 4/18/2018"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load all data
+
+```{r, message=FALSE}
+# 16: Burst E, with H
+exp_code <- 16
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+stim_codes <- c(0, 1)
+
+results16 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results16 <- rbind(results16, df)
+  }
+}
+
+results16 %>%
+  filter(rate_k > 0) -> results15
+
+# -
+# 15: Sustained E, with H
+exp_code <- 15
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+stim_codes <- c(0, 1)
+
+results15 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results15 <- rbind(results15, df)
+  }
+}
+
+results15 %>%
+  filter(rate_k > 0) -> results15
+
+# 22: Sustained E, with NO H
+exp_code <- 22
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+stim_codes <- c(0, 1)
+
+results22 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results22 <- rbind(results22, df)
+  }
+}
+
+results22 %>%
+  filter(rate_k > 0) -> results22
+
+# -
+# 21: Sustained I, with H
+exp_code <- 21
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+stim_codes <- c(0, 1)
+
+results21 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results21 <- rbind(results21, df)
+  }
+}
+
+results21 %>%
+  filter(rate_k > 0) -> results21
+
+# -
+# 23: Sustained I, with NO H
+exp_code <- 23
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+stim_codes <- c(0, 1)
+
+results23 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results23 <- rbind(results23, df)
+  }
+}
+
+results23 %>%
+  filter(rate_k > 0) -> results23
+
+# Calcium exp, E, sustained
+exp_code <- 19
+osc_codes <- c(105, 115, 125, 135, 145, 155)
+osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+stim_codes <- c(0, 1)
+
+ca_targets <- c(0.026, 0.028, 0.032, 0.034)
+
+results19 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(ca in ca_targets){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      
+      # Load the csv
+      df <- read_csv(paste(data_path,
+                           "exp", as.character(exp_code),
+                           "_stim", as.character(s_c),
+                           "_osc", as.character(o_c),
+                           "_ca", as.character(ca),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$Ca_target <- rep(ca, nrow(df))
+      
+      results19 <- rbind(results19, df)
+    }
+  }
+}
+
+# Add default Ca value, from exp
+exp_code <- 15
+osc_codes <- c(105, 115, 125, 135, 145, 155)
+osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+stim_codes <- c(0, 1)
+ca_targets <- c(0.03, 0.03, 0.03, 0.03)
+
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(ca in ca_targets){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path,
+                           "exp", as.character(exp_code),
+                           "_stim", as.character(s_c),
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$Ca_target <- rep(ca, nrow(df))
+      
+      results19 <- rbind(results19, df)
+    }
+  }
+}
+
+# Clean up
+rm(df, exp_code, i, o_c, o_r, osc_codes, osc_rates, s_c, stim_codes)
+```
+
+# Figure 2. Sustained E
+
+```{r, fig.width=3.0, fig.height=2.0}
+shift <- -0.15
+
+# --------------------------------------------------------
+# No H, E
+results22 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results22 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_var, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  lims(y=c(0, .15)) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.35, size=18, face="bold")) -> p1
+
+rm(tmp1, tmp2)
+
+# -
+# With H, E
+results15 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results15 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_var, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="b.", y="Variance (s)", x="Osc. rate (Hz)") +
+  lims(y=c(0, .01)) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
+
+rm(tmp1, tmp2)
+
+
+# -
+# Rate, no H, E
+results22 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results22 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  lims(y=c(0, 70)) +
+  geom_hline(yintercept=0, size=0.2) +
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = -.25, size=18, face="bold")) -> p3
+
+rm(tmp1, tmp2)
+
+# -
+# Rate, with H, E
+results15 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results15 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  lims(y=c(-4, 4)) +
+  geom_hline(yintercept=0, size=0.2) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p4
+
+rm(tmp1, tmp2)
+
+
+# -
+layout_matrix <- rbind(
+  c(NA, 7, 7, 8, 8),
+  c(5, 1, 1, 2, 2), 
+  c(5, 1, 1, 2, 2), 
+  c(5, 1, 1, 2, 2), 
+  c(5, 1, 1, 2, 2), 
+  c(6, 3, 3, 4, 4),
+  c(6, 3, 3, 4, 4),
+  c(6, 3, 3, 4, 4),
+  c(6, 3, 3, 4, 4)
+)
+
+p7 <- textGrob("No homeostatsis")
+p8 <- textGrob("Homeostatsis")
+p5 <- textGrob("Synchrony")
+p6 <- textGrob("Excitability")
+
+# -
+png(file="fig2.png", bg="white", width=6.0, height=4.0, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, layout_matrix=layout_matrix)
+dev.off()
+
+rm(p1, p2, p3, p4, p5, p6, p7, p8)
+```
+
+
+# Figure 3. Burst E
+
+```{r, fig.width=2.25, fig.height=2}
+shift <- -0.15
+
+# --------------------------------------------------------
+# Var
+results16 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results16 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_var, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="dodgerblue3") +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
+                width=.15, size=0.2, color="dodgerblue3") +
+  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = -.6, size=18, face="bold")) -> p1
+
+rm(tmp1, tmp2)
+
+
+# -
+# Rate
+results16 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results16 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="dodgerblue3") +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
+                width=.15, size=0.2, color="dodgerblue3") +
+  geom_hline(yintercept=0, size=0.2) +
+  labs(title="b.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  lims(y=c(-3, 3)) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p2
+
+# -
+# Rate: burst v sustained
+tmp3 <- results15
+tmp3$osc_mode <- rep("Sustained", nrow(results15))
+
+tmp4 <- results16
+tmp4$osc_mode <- rep("Burst", nrow(results16))
+
+tmp5 <- rbind(tmp3, tmp4)
+tmp5 %>% 
+  ggplot(aes(x=osc_mode, y=rate_k - rate_ref, color=osc_mode)) +
+  geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5) +
+  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="") +
+  theme_classic() +
+  geom_hline(yintercept=0, size=0.2) +
+  lims(y=c(-3, 3)) +
+  scale_color_manual(values=c("dodgerblue3", "black"), guide=FALSE) +
+  stat_compare_means(method="wilcox.test", label="p.signif", label.x=1.3, size=3) +
+  theme(
+    axis.text.x = element_text(angle = 70, hjust = 1),
+    plot.title = element_text(hjust = -1.6, size=18, face="bold")) -> p5
+
+
+p3 <- textGrob("Synchrony")
+p4 <- textGrob("Excitability")
+
+layout_matrix <- rbind(
+  c(3, 1, 1, NA), 
+  c(3, 1, 1, NA), 
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5),
+  c(NA, NA, NA, 5))
+
+# -
+png(file="fig3.png", bg="white", width=4.5, height=4.0, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, layout_matrix=layout_matrix)
+dev.off()
+
+rm(p1, p2, p3, p4, p5)
+
+# -
+print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_ref)))
+```
+
+# Figure 4. Weak E oscillations, variance, and error.
+
+```{r, fig.width=2.4, fig.height=1.7}
+# --------------------------------------------------------
+# Burst
+results16 %>% 
+  filter(osc_rate >= 0 & osc_rate <= 0.5) %>% 
+  group_by(osc_rate) %>% 
+  summarise(M_var=mean(mse_var), 
+         SD_var=sd(mse_var),
+         M_error=mean(mse_error)/1e3,
+         SD_error=sd(mse_error)/1e3) -> tmp1
+
+# Sustained
+results15 %>% 
+  filter(osc_rate >= 0 & osc_rate <= 0.5) %>% 
+  group_by(osc_rate) %>% 
+  summarise(M_var=mean(mse_var), 
+         SD_var=sd(mse_var),
+         M_error=mean(mse_error)/1e3,
+         SD_error=sd(mse_error)/1e3) -> tmp2
+
+
+tmp1$osc_mode <- rep("Burst", nrow(tmp1))
+tmp2$osc_mode <- rep("Sustained", nrow(tmp2))
+tmp3 <- rbind(tmp1, tmp2)
+
+tmp3 %>% 
+  ggplot(aes(x=osc_rate, y=M_var, color=osc_mode)) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(x=osc_rate, ymin=M_var - SD_var, ymax=M_var + SD_var), 
+                alpha=0.5, width=.02, size=0.4) +
+  scale_color_manual(values=c("dodgerblue3", "black"), name="Oscillation") +
+  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  theme_classic() + 
+  lims(y=c(0, 0.004)) +
+  theme(
+    legend.position = c(1.4, -0.3),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.5, "cm"),
+    plot.title = element_text(hjust = -.45, size=18, face="bold")) -> p1
+
+
+tmp3 %>% 
+  ggplot(aes(x=osc_rate, y=M_error, color=osc_mode)) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(x=osc_rate, ymin=M_error - SD_error, ymax=M_error + SD_error), 
+                alpha=0.5, width=.02, size=0.4) +
+  scale_color_manual(values=c("dodgerblue3", "black"), guide=FALSE) +
+  labs(title="b.", y="RMSE (s)", x="Osc. rate (Hz)") +
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
+
+# p3 <- textGrob("Homeostatsis")
+p3 <- textGrob("Synchrony")
+p4 <- textGrob("Error")
+
+layout_matrix <- rbind(
+  c(3, 1, 1, 5), 
+  c(3, 1, 1, 5), 
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5))
+
+p5 <- nullGrob()
+
+# -
+png(file="fig4.png", bg="white", width=4.8, height=3.3, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, layout_matrix=layout_matrix)
+dev.off()
+
+rm(p1, p2, p3, p4, tmp1, tmp2, tmp3)
+```
+
+
+# Figure 5. Sustained I
+
+```{r, fig.width=3.0, fig.height=2.2}
+shift <- -0.15
+
+
+# --------------------------------------------------------
+# No H, I
+results23 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results23 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_var, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p1
+
+rm(tmp1, tmp2)
+
+# With H
+results21 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results21 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_var, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  labs(title="b.", y="Variance (s)", x="Osc. rate (Hz)") +
+  theme_classic() + 
+  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
+
+rm(tmp1, tmp2)
+
+
+# -
+# Rate, no H, E
+results23 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results23 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  geom_hline(yintercept=0, size=0.2) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.35, size=18, face="bold")) -> p3
+
+rm(tmp1, tmp2)
+
+# -
+# Rate, with H, E
+results21 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
+
+results21 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate) %>% 
+  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
+  geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
+  # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
+  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  # lims(y=c(-4, 4)) +
+  geom_hline(yintercept=0, size=0.2) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p4
+
+rm(tmp1, tmp2)
+
+# -
+layout_matrix <- rbind(
+  c(NA, 7, 7, 8, 8),
+  c(5, 1, 1, 2, 2), 
+  c(5, 1, 1, 2, 2), 
+  c(5, 1, 1, 2, 2), 
+  c(6, 3, 3, 4, 4),
+  c(6, 3, 3, 4, 4),
+  c(6, 3, 3, 4, 4)
+)
+
+p7 <- textGrob("No homeostatsis")
+p8 <- textGrob("Homeostatsis")
+p5 <- textGrob("Synchrony")
+p6 <- textGrob("Excitability")
+
+# -
+png(file="fig5.png", bg="white", width=6, height=4.4, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, layout_matrix=layout_matrix)
+dev.off()
+
+rm(p1, p2, p3, p4, p5, p6, p7, p8)
+```
+
+# Figure 6. Variable Calcium targets and sustained E
+
+
+```{r, fig.width=2.4, fig.height=1.7}
+# -
+# With H, E
+# Var
+results19 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate, Ca_target) %>% 
+  summarise(M=mean(mse_var), SD=sd(mse_var)) -> tmp1
+
+tmp1 %>% 
+ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.03, 0.032, 0.034)))) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  labs(title="a", y="Variance (s)", x="Osc. rate (Hz)") +
+  scale_color_manual(
+    values=c("paleturquoise3", "paleturquoise4", "black", "indianred4", "indianred1"), 
+    guide=FALSE) +
+  theme_classic() +
+  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p1
+
+# Rate
+results19 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  group_by(osc_rate, Ca_target) %>% 
+  summarise(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+
+tmp2 %>% 
+ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.03, 0.032, 0.034)))) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  labs(title="b", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  geom_hline(yintercept=0, size=0.2) +
+  scale_color_manual(
+    values=c("paleturquoise3", "paleturquoise4", "black", "indianred4", "indianred1"), 
+    name="Target [Ca]\n(mmolar)") +
+  # lims(y=c(0, .01)) 
+  # guides(col = guide_legend(ncol = 2)) +
+  theme_classic() +
+  theme(
+    plot.title = element_text(hjust = -.34, size=18, face="bold"),
+    legend.position = c(1.35, 1.5),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.4, "cm")) -> p2
+
+
+# p3 <- textGrob("Homeostatsis")
+p3 <- textGrob("Synchrony")
+p4 <- textGrob("Excitability    ")
+
+layout_matrix <- rbind(
+  c(3, 1, 1, 5), 
+  c(3, 1, 1, 5), 
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5))
+
+p5 <- nullGrob()
+
+# -
+png(file="fig6.png", bg="white", width=4.8, height=3.2, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, layout_matrix=layout_matrix)
+dev.off()
+
+rm(p1, p2, p3, p4, p5, tmp1, tmp2)
+```
