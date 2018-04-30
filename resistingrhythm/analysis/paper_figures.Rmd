@@ -18,12 +18,12 @@ data_path <- "~/Code/resistingrhythm/data/"
 ```{r, message=FALSE}
 # -----------------------------------------------------------------------
 # 16: Burst E, with H
-exp_code <- 16
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+exp_code <- 31
+osc_codes <- c(500, 501, 502, 503, 504, 505, 510, 515, 520, 525, 530, 535, 540, 545, 550, 555, 560)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
 stim_codes <- c(0, 1)
 
-results16 <- NULL
+results31 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -41,11 +41,11 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results16 <- rbind(results16, df)
+    results31 <- rbind(results31, df)
   }
 }
 
-results16 %>%
+results31 %>%
   filter(rate_k > 0) -> results15
 
 # -----------------------------------------------------------------------
@@ -178,12 +178,12 @@ results23 %>%
 
 # -----------------------------------------------------------------------
 # 30: Burst I, with H
-exp_code <- 30
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
+exp_code <- 32
+osc_codes <- c(500, 501, 502, 503, 504, 505, 510, 515, 520, 525, 530, 535, 540, 545, 550, 555, 560)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
 stim_codes <- c(0, 1)
 
-results30 <- NULL
+results32 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -201,12 +201,12 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results30 <- rbind(results30, df)
+    results32 <- rbind(results32, df)
   }
 }
 
-results30 %>%
-  filter(rate_k > 0) -> results30
+results32 %>%
+  filter(rate_k > 0) -> results32
 
 
 # -----------------------------------------------------------------------
@@ -383,10 +383,10 @@ rm(tmp1, tmp2)
 # Bursts
 
 # Var
-results16 %>% 
+results31 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results16 %>% 
+results31 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
@@ -406,10 +406,10 @@ rm(tmp1, tmp2)
 
 # -
 # Rate
-results16 %>% 
+results31 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results16 %>% 
+results31 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
@@ -430,8 +430,8 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
 tmp3 <- results15
 tmp3$osc_mode <- rep("Sustained", nrow(results15))
 
-tmp4 <- results16
-tmp4$osc_mode <- rep("Burst", nrow(results16))
+tmp4 <- results31
+tmp4$osc_mode <- rep("Burst", nrow(results31))
 
 tmp5 <- rbind(tmp3, tmp4)
 tmp5 %>% 
@@ -494,7 +494,7 @@ print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_re
 ```{r, fig.width=2.4, fig.height=1.7}
 # --------------------------------------------------------
 # Burst
-results16 %>% 
+results31 %>% 
   filter(osc_rate >= 0 & osc_rate <= 0.5) %>% 
   group_by(osc_rate) %>% 
   summarise(M_var=mean(mse_var), 
@@ -675,10 +675,10 @@ rm(tmp1, tmp2)
 # Bursts
 
 # Var
-results30 %>% 
+results32 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results30 %>% 
+results32 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(mse_var), SD=sd(mse_var)) -> tmp2
@@ -698,10 +698,10 @@ rm(tmp1, tmp2)
 
 # -
 # Rate
-results30 %>% 
+results32 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results30 %>% 
+results32 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
@@ -722,8 +722,8 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
 tmp3 <- results21
 tmp3$osc_mode <- rep("Sustained", nrow(results21))
 
-tmp4 <- results30
-tmp4$osc_mode <- rep("Burst", nrow(results30))
+tmp4 <- results32
+tmp4$osc_mode <- rep("Burst", nrow(results32))
 
 tmp5 <- rbind(tmp3, tmp4)
 tmp5 %>% 
@@ -777,7 +777,7 @@ grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, layout_matrix=la
 dev.off()
 ```
 
-# Figure 4. Variable Calcium targets and sustained E
+# Figure 4. Calcium targets
 
 
 ```{r, fig.width=2.4, fig.height=1.7}
@@ -844,7 +844,7 @@ layout_matrix <- rbind(
   c(4, 2, 2, 5))
 
 p5 <- nullGrob()
-p6 <- textGrob("Excitatory modulation")
+p6 <- textGrob("Calcium level")
 
 # -
 png(file="fig5.png", bg="white", width=4.2, height=3.8, unit="in", res=300)
