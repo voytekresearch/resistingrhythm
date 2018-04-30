@@ -7,7 +7,7 @@ create_data_path:
 	-mkdir $(DATA_PATH)
 
 # --------------------------------------------------------------
-all_stim: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16 osc100 burst100 burst200 currents osc200 osc300 osc400 burst300 burst400 burst3000 burst500
+all_stim: stim0 stim1 stim2 osc0 osc1 osc2 osc3 osc4 osc5 osc6 osc8 osc9 osc10 osc11 osc12 osc13 osc14 osc14 osc16 burst0 burst1 burst2 burst3 burst4 burst5 burst6 burst7 burst8 burst9 burst10 burst11 burst12 burst13 burst14 burst15 burst16 osc100 burst100 burst200 currents osc200 osc300 osc400 burst300 burst400 burst3000 burst500 stim3 stim4
 
 
 # Replicate 3 sitm, same params, different draws
@@ -17,6 +17,13 @@ stim1:
 	python homeostasis_experiments.py create_stim --t=20 --t_onset=0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim1 --seed=87
 stim2:
 	python homeostasis_experiments.py create_stim --t=20 --t_onset=0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim2 --seed=5318
+
+# Stim comes on only at the end (19.5, assuming were working with a 8 Hz osc/burst)
+# (Confirmed onset w/ vis)
+stim3:
+	python homeostasis_experiments.py create_stim --t=20 --t_onset=19.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim3 --seed=23434
+stim4:
+	python homeostasis_experiments.py create_stim --t=20 --t_onset=19.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim4 --seed=87
 
 # --------------------------------------------------------------
 # Generate osc pops, at several different firing rates
@@ -168,6 +175,7 @@ osc400:
 # -
 
 # ------------------------------------------------------------------------
+# (Confirmed onset w/ vis)
 burst100:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst100.parallel.log' \
@@ -176,6 +184,7 @@ burst100:
 		burst100.txt
 
 # f = 30
+# (Confirmed onset w/ vis)
 burst200:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst200.parallel.log' \
@@ -186,6 +195,7 @@ burst200:
 # -
 # 4-28-2018
 # f = 12
+# (Confirmed onset w/ vis)
 burst300:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst300.parallel.log' \
@@ -195,6 +205,7 @@ burst300:
 
 # f = 20
 burst400:
+# (Confirmed onset w/ vis)
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst400.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
@@ -205,6 +216,7 @@ burst400:
 # 4-29-2018
 # Burst w/ 4 cycles; f = 8
 burst500:
+# (Confirmed onset w/ vis)
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/burst500.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
@@ -217,10 +229,12 @@ burst500:
 # 4-23-2019
 # Manipulate the tone, mimicing ACh action, using applied external currents
 
+# (Confirmed onset w/ vis)
 currents: tonic_current1 tonic_current2 tonic_current3 step_current0 step_current1 step_current2 step_current3
 
 
 # Tonic
+# (Confirmed onset of all w/ vis)
 tonic_current1:
 	python homeostasis_experiments.py create_current --t=20 --t_onset=0 --t_offset=20  --I=-0.5e-6 --name=$(DATA_PATH)/tonic_current1
 
@@ -538,6 +552,11 @@ exp29:
 # I bursts
 # Run sustained oscillations, with V_osc set to mimic a GABA synapse:
 # E_rev = -80e-3, tau=10 ms
+# (Expected these to be suppresive; they are not; 
+# the stim HHH effect adds a AHP spike which drives an overall excitbility
+# response; if you crank the `osc_rate` to around 30 suppression effects return
+# as these swamp out the AHP rebound spikes; need to run an osc only no stim
+# set of trials to see what I only for a while does...)
 exp30:
 	parallel -j 36 -v \
 		--joblog '$(DATA_PATH)/exp30.parallel.log' \
@@ -545,12 +564,17 @@ exp30:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp30_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp30.log
 
-# --------------------------
+# --------------------------------------------------------------
 # 4-29-2017
 # Rerun I and E bursts with 4 cycles in place of 3
 # with 3 there was a 1 cycle mismatch with the osc
 # exps.... sigh.
 # burst500....
+# (Made the KCa dynamic as well; wanted to rule out it's staticness from causing 
+# the AHP effect discussed in exp30; dynamic KCa changes nothing important; I ran
+# manual control exps with GABA f = 8, osc_rate=30, and NO H, and these neurons
+# do not normally have a AHP effect, as expected; if they did that would be a 
+# parameterization problem.)
 
 # E
 exp31:
@@ -568,3 +592,21 @@ exp32:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp32_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 500 501 502 503 504 505 510 515 520 525 530 535 540 545 550 555 560 | tee $(DATA_PATH)/exp32.log
 
+# --------------------------------------------------------------
+# 4-30-2018
+# Sustained oscillation with stim off until 19.5
+# E
+exp33:
+	parallel -j 36 -v \
+		--joblog '$(DATA_PATH)/exp33.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp33_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp33.log
+
+# I
+exp34:
+	parallel -j 36 -v \
+		--joblog '$(DATA_PATH)/exp34.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp35_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp35.log
