@@ -201,6 +201,7 @@ def run(run_name,
         row = (k, V_ref, V_k, Ca_target, Ca_ref, Ca_obs_k, Ca_obs_ref, k_error,
                k_coord, abs_error, abs_var, mse_error, mse_var, rate_k,
                rate_ref)
+
         results.append(row)
 
     # ---------------------------------------------------
