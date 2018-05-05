@@ -540,7 +540,7 @@ tmp3 %>%
   geom_errorbar(aes(x=osc_rate, ymin=M_error - SD_error, ymax=M_error + SD_error), 
                 alpha=0.5, width=.02, size=0.4) +
   scale_color_manual(values=c("dodgerblue3", "black"), guide=FALSE) +
-  labs(title="b.", y="RMSE (s)", x="Osc. rate (Hz)") +
+  labs(title="b.", y="MSE (s)", x="Osc. rate (Hz)") +
   theme_classic() + 
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
 
@@ -775,6 +775,9 @@ grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, layout_matrix=la
 png(file="fig4.png", bg="white", width=9.0, height=4.5, unit="in", res=300)
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, layout_matrix=layout_matrix)
 dev.off()
+```
+```{r}
+print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_ref)))
 ```
 
 # Figure 4. Calcium targets
