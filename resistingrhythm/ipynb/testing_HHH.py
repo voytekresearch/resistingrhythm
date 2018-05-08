@@ -1,4 +1,4 @@
-#%%
+#%% -------------------------------------------------------------------
 from bokeh.plotting import figure
 from bokeh.io import show, output_notebook
 from bokeh.layouts import column, row
@@ -14,7 +14,7 @@ from resistingrhythm.util import load_spikes
 
 from resistingrhythm.neurons import HHH
 
-#%%
+#%% -------------------------------------------------------------------
 # Shared Params
 time = 1
 N = 1
@@ -29,15 +29,14 @@ tau_h = 4
 
 w = (5e-6, 50e-6)
 
-#%%
+#%% -------------------------------------------------------------------
 # Load data
 osc_name = "/Users/type/Code/resistingrhythm/data/osc160.csv"
-stim_name = "/Users/type/Code/resistingrhythm/data/stim3.csv"
+stim_name = "/Users/type/Code/resistingrhythm/data/stim0.csv"
 
 ns_osc, ts_osc = load_spikes(osc_name)
 ns_in, ts_in = load_spikes(stim_name)
 
-#%%
 # Plot inputs/osc
 p = figure(plot_width=400, plot_height=200)
 p.circle(ts_osc, ns_osc, color="grey")
@@ -52,18 +51,18 @@ show(p)
 # External currents?
 # external_current = current_pulse(time, t_onset=2, t_offset=2.5, I=0.5e-6)
 
-#%%
+#%% -------------------------------------------------------------------
 # Run HHH
 results = HHH(
     time,
-    ns_in,
-    ts_in,
-    ns_osc,
-    ts_osc,
-    #     np.asarray([]), # stim
-    #     np.asarray([]),
-    #     np.asarray([]), # osc
-    #     np.asarray([]),
+    # ns_in,
+    # ts_in,
+    # ns_osc,
+    # ts_osc,
+    np.asarray([]),  # stim
+    np.asarray([]),
+    np.asarray([]),  # osc
+    np.asarray([]),
     external_current=None,
     N=N,
     Ca_target=0.03,
@@ -75,14 +74,14 @@ results = HHH(
     w_osc=w,
     tau_osc=tau_e,
     V_osc=V_e,
-    sigma=0,
-    homeostasis=True,
+    noise_rate=1,
+    homeostasis=False,
     time_step=1e-5,
     seed_value=42)
 
 #%%
 # Plot HHH
-p = figure(plot_width=400, plot_height=200)
+p = figure(plot_width=600, plot_height=300)
 p.circle(results['ts'], results['ns'], color="black")
 p.xaxis.axis_label = 'Time (s)'
 p.yaxis.axis_label = 'N'
@@ -91,7 +90,7 @@ p.xgrid.grid_line_color = None
 p.ygrid.grid_line_color = None
 show(p)
 
-#%%
+#%% -------------------------------------------------------------------
 p = figure(plot_width=600, plot_height=300)
 for n in range(N):
     v = results['v_m'][n, :] * 1e3
@@ -104,7 +103,7 @@ p.ygrid.grid_line_color = None
 p.x_range = Range1d(0, time)
 show(p)
 
-#%%
+#%% -------------------------------------------------------------------
 p = figure(plot_width=600, plot_height=300)
 for n in range(N):
     v = results['I_osc'][n, :]
@@ -116,7 +115,7 @@ p.ygrid.grid_line_color = None
 p.x_range = Range1d(0, time)
 show(p)
 
-#%%
+#%% -------------------------------------------------------------------
 p = figure(plot_width=600, plot_height=300)
 for n in range(N):
     v = results['calcium'][n, :]
@@ -128,7 +127,7 @@ p.ygrid.grid_line_color = None
 p.x_range = Range1d(0, time)
 show(p)
 
-#%%
+#%% -------------------------------------------------------------------
 p = figure(plot_width=600, plot_height=300)
 for n in range(N):
     p.line(
