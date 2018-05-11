@@ -18,7 +18,8 @@ def _parse_membrane_param(x, n, prng):
     return x, prng
 
 
-def HHH(time,
+def HHH(
+        time,
         ns_in,
         ts_in,
         ns_osc,
@@ -35,7 +36,7 @@ def HHH(time,
         tau_osc=5e-3,
         V_osc=0,
         p_connection=0.1,
-        sigma=0,
+        noise_rate=0,  # 12
         burn_time=0,
         time_step=1e-5,
         homeostasis=True,
@@ -110,7 +111,7 @@ def HHH(time,
     G_Ca = 3 * msiemens
     G_Na = 360 * msiemens
     G_K = 180 * msiemens
-    G_KCa = 90 * msiemens
+    G_KCa = 1080 * msiemens
 
     # ----------------------------------------------------
     eqs = """
@@ -134,8 +135,9 @@ def HHH(time,
     """ + """
     I_l = g_l * (V_l - V) : amp
     """ + """
-    I_noi = g_noi * (V_l - V) : amp
-    dg_noi/dt = (-g_noi / tau_in) + (sqrt(sigma / tau_in) * xi) * (siemens) : siemens
+    I_noi = g_e_noise * (V_e_noise - V) + g_i_noise * (V_i_noise - V) : amp
+    dg_i_noise/dt = -g_i_noise / tau_i_noise : siemens
+    dg_e_noise/dt = -g_e_noise / tau_e_noise : siemens
     """ + """
     I_Ca = -g_Ca * (1 + tanh((V - V1) / V2)) * (V - V_Ca): amp
     dCa/dt = (-k * Ca) - (gamma * I_Ca) : mmolar
@@ -191,6 +193,7 @@ def HHH(time,
     P_target.g_KCa = g_KCa
     P_target.g_Ca = g_Ca
     P_target.Ca_target = Ca_target
+    P_target.Ca = Ca_target
 
     net.add(P_target)
 
@@ -232,6 +235,41 @@ def HHH(time,
 
         net.add([P_osc, C_osc])
         to_monitor.append('I_osc')
+
+    # ----------------------------------------------------
+    # Noise model
+
+    # Params
+    Nb = 1000
+    p_noise = 0.1
+
+    tau_e_noise = 5e-3 * second
+    tau_i_noise = 20e-3 * second
+    V_e_noise = 0 * mvolt
+    V_i_noise = -80 * mvolt
+
+    # Adjusted to these numbers by hand, based on the Vm_hat
+    # estimation equation (see results below). This equation 
+    # Began with the 0.73 and 3.67 that manuscript.
+    # Equation and numbers were taken from p742 of
+    # Destexhe, et al,
+    # The high-conductance state of neocortical neurons in vivo. 
+    # Nature Reviews Neuroscience
+    w_e_noise = 0.73 * g_l / 10
+    w_i_noise = 3.87 * w_e_noise
+
+    # Populations
+    P_e_noise = PoissonGroup(0.8 * Nb, rates=noise_rate * Hz)
+    P_i_noise = PoissonGroup(0.2 * Nb, rates=noise_rate * Hz)
+
+    # Connections
+    C_noise_e = Synapses(P_e_noise, P_target, on_pre='g_e_noise += w_e_noise')
+    C_noise_e.connect(p=p_noise)
+    C_noise_i = Synapses(P_i_noise, P_target, on_pre='g_i_noise += w_i_noise')
+    C_noise_i.connect(p=p_noise)
+
+    # Add to the net
+    net.add([P_e_noise, P_i_noise, C_noise_e, C_noise_i])
 
     # -
     # Setup recording, but don't add it to the net yet....
