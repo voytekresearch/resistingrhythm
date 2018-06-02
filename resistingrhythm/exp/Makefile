@@ -25,6 +25,13 @@ stim3:
 stim4:
 	python homeostasis_experiments.py create_stim --t=20 --t_onset=19.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim4 --seed=87
 
+# Weak continuous stim
+stim5:
+	python homeostasis_experiments.py create_stim --t=20 --t_onset=0 --w=20 --rate=0.5 --n=1000 --name=$(DATA_PATH)/stim5 --seed=23434
+stim6:
+	python homeostasis_experiments.py create_stim --t=20 --t_onset=0 --w=20 --rate=0.5 --n=1000 --name=$(DATA_PATH)/stim6 --seed=87
+
+
 # --------------------------------------------------------------
 # Generate osc pops, at several different firing rates
 # Sustained oscillations, all have f = 8
@@ -678,6 +685,7 @@ exp40:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp40_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.80 --w_min=5e-6 --w_max=50e-6 --Ca_target=0.03 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 405 415 425 435 445 555 | tee $(DATA_PATH)/exp40.log
 
+# -------------------------------------------------------------------------
 # 5-1-2018
 # 1f50d94e168f3fcab14382e54bbd988b61cb4110
 # (balanced branch)
@@ -689,3 +697,31 @@ exp41:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp41_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.024 --w_min=5e-6 --w_max=25e-6 --noise_rate=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 1065 1070 1075 1080 1085 1090 1095 1100 1105 1110 1115 1120 1125 1130 1135 1140 1145 1150 1155 1160 1165 1170 1175 1180 | tee $(DATA_PATH)/exp41.log
+
+# -------------------------------------------------------------------------
+# 6-1-2018
+# Rerun, with code balanced changes and a good Ca initial value.
+# TODO rethink stim? and stim baseline?
+
+# exp15 rerun
+exp42:
+	parallel -j 36 -v \
+		--joblog '$(DATA_PATH)/exp42.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp42_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp15.log
+
+
+# exp31 rerun
+exp43:
+	parallel -j 36 -v \
+		--joblog '$(DATA_PATH)/exp43.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp43_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.03 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 500 501 502 503 504 505 510 515 520 525 530 535 540 545 550 555 560 | tee $(DATA_PATH)/exp31.log
+
+
+
+# TODO gating exp desgin
+# TODO Ca deltas
+# TODO freq scan (at fixed/select rates)
