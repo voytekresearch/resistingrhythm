@@ -788,14 +788,14 @@ exp105e:
 	parallel -j 11 -v \
 		--joblog '$(DATA_PATH)/exp105e.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp105e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp105e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp105e.log
 
 exp105i:
 	parallel -j 11 -v \
 		--joblog '$(DATA_PATH)/exp105i.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp105i_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --tau_osc=10e-3 --V_osc=-80e-3 --num_trials=25 --seed_value=42 --verbose' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp105i_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --tau_osc=10e-3 --V_osc=-80e-3 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp105i.log
 
 
