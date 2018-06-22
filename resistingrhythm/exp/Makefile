@@ -799,6 +799,24 @@ exp105i:
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp105i.log
 
 
+# -------------------------------------------------------------------------
+# 6-20-2018
+# Stronger sustained E
+exp106e:
+	parallel -j 11 -v \
+		--joblog '$(DATA_PATH)/exp106e.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp106e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose' \
+	::: 3 4 ::: 135 140 145 150 155 160 165 170 175 180 185 190  | tee $(DATA_PATH)/exp106e.log
+
+exp107e:
+	parallel -j 11 -v \
+		--joblog '$(DATA_PATH)/exp107e.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp107e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 135 140 145 150 155 160 165 170 175 180 185 190 | tee $(DATA_PATH)/exp107e.log
+
+# -------------------------------------------------------------------------
 # TODO Ca deltas?
 # Stim deltas?
 # TODO freq scan (at fixed/select rates)?
