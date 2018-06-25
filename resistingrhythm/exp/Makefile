@@ -817,6 +817,19 @@ exp107e:
 	::: 3 4 ::: 135 140 145 150 155 160 165 170 175 180 185 190 | tee $(DATA_PATH)/exp107e.log
 
 # -------------------------------------------------------------------------
+# 6-25-2018
+# exp15 above was the previous E/H+ standard. Re-running here to confirm 
+# consistency. None of the above are showing the expected var inversion.
+# Run sustained oscillation with the `100` sampling scheme
+# Only change from 15 to this was was the Ca_target.
+# exp15:
+exp108e:
+	parallel -j 36 -v \
+		--joblog '$(DATA_PATH)/exp108r.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp108e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=25 --seed_value=42 --verbose' \
+	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp108e.log
+
 # TODO Ca deltas?
 # Stim deltas?
 # TODO freq scan (at fixed/select rates)?
