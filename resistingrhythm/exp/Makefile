@@ -824,7 +824,7 @@ exp107e:
 # Only change from 15 to this was was the Ca_target (min_rate=0 here)
 # exp15:
 exp108e:
-	parallel -j 36 -v \
+	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp108r.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp108e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --min_rate=0 --num_trials=25 --seed_value=42 --verbose' \
