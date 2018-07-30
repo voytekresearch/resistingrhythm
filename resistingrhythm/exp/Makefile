@@ -830,6 +830,19 @@ exp108e:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp108e_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.0022 --w_min=5e-6 --w_max=50e-6 --noise_rate=0 --num_trials=25 --seed_value=42 --verbose' \
 	::: 0 1 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp108e.log
 
-# TODO Ca deltas?
-# Stim deltas?
-# TODO freq scan (at fixed/select rates)?
+# 7-29-2018
+# Try searching over Ca values, for strong sustained osc and one stim code
+# with H-/H+
+exp109e:
+	parallel -j 10 -v \
+		--joblog '$(DATA_PATH)/exp109e.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp109e_stim{1}_osc{2}_Ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target={3} --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose' \
+	::: 3 4 ::: 160 ::: 0.0001 0.0005 0.0010 0.0015 0.0020 0.0025 0.0030 0.0035 0.0040 0.0045  | tee $(DATA_PATH)/exp109e.log
+
+exp110e:
+	parallel -j 10 -v \
+		--joblog '$(DATA_PATH)/exp110e.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp110e_stim{1}_osc{2}_Ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target={3} --w_min=5e-6 --w_max=50e-6 --noise_rate=2 --num_trials=25 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 160 ::: 0.0001 0.0005 0.0010 0.0015 0.0020 0.0025 0.0030 0.0035 0.0040 0.0045 | tee $(DATA_PATH)/exp110e.log
