@@ -253,7 +253,7 @@ def poisson_oscillation(t=1,
     times = fsutil.create_times(t, dt=dt)
 
     # Create rate wave, over times
-    osc = rate / 2 * (1 + np.sin((times * f * 2 * np.pi) + phi))
+    osc = (rate / 2 * (1 + np.sin((times * f * 2 * np.pi) + phi))) + min_rate
 
     # Truncate it to a n_cycle burst, starting at t_onset
     if np.isclose(f, 0.0):
