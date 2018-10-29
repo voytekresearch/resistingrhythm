@@ -562,6 +562,8 @@ layout_matrix <- rbind(
 p5 <- nullGrob()
 p6 <- textGrob("Weak excitatory modulation")
 
+grid.arrange(p1, p2, p3, p4, p5, p6, layout_matrix=layout_matrix)
+
 # -
 png(file="fig3.png", bg="white", width=4.4, height=3.8, unit="in", res=300)
 grid.arrange(p1, p2, p3, p4, p5, p6, layout_matrix=layout_matrix)
@@ -848,6 +850,8 @@ layout_matrix <- rbind(
 
 p5 <- nullGrob()
 p6 <- textGrob("Calcium level")
+
+grid.arrange(p1, p2, p3, p4, p5, p6,layout_matrix=layout_matrix)
 
 # -
 png(file="fig5.png", bg="white", width=4.2, height=3.8, unit="in", res=300)
