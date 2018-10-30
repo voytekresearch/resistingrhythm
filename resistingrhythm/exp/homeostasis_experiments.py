@@ -175,8 +175,8 @@ def run(run_name,
         ns_k, ts_k = filter_spikes(results_k['ns'], results_k['ts'], a_window)
 
         # Analysis of error and network corr, in a_window
-        k_error = kappa(ns_ref, ts_ref, ns_k, ts_k, a_window, dt=time_step)
-        k_coord = kappa(ns_k, ts_k, ns_k, ts_k, a_window, dt=time_step)
+        k_error = kappa(ns_ref, ts_ref, ns_k, ts_k, a_window, dt=1e-3)
+        k_coord = kappa(ns_k, ts_k, ns_k, ts_k, a_window, dt=1e-3)
 
         # l1 scores
         abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
