@@ -203,7 +203,9 @@ def run(run_name,
                k_coord, abs_error, abs_var, mse_error, mse_var, rate_k,
                rate_ref, abs_ref, mse_ref, k_ref)
 
-        print(row)
+        if verbose:
+            print(">>> Analysis results:")
+            print(row)
 
         results.append(row)
 
