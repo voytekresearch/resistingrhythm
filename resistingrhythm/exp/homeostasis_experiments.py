@@ -177,12 +177,13 @@ def run(run_name,
         # Analysis of error and network corr, in a_window
         k_error = kappa(ns_ref, ts_ref, ns_k, ts_k, a_window, dt=1e-3)
         k_coord = kappa(ns_k, ts_k, ns_k, ts_k, a_window, dt=1e-3)
+        k_ref = kappa(ns_ref, ts_ref, ns_ref, ts_ref, a_window, dt=1e-3)
 
         # l1 scores
-        abs_var, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
+        abs_var, abs_ref, abs_error = l1_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
 
         # l2 scores
-        mse_var, mse_error = l2_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
+        mse_var, mse_ref, mse_error = l2_by_n(N, ns_ref, ts_ref, ns_k, ts_k)
 
         # Get rate
         rate_k = float(ns_k.size) / float(N) / (t - burn_t)
@@ -200,7 +201,9 @@ def run(run_name,
         # save row
         row = (k, V_ref, V_k, Ca_target, Ca_ref, Ca_obs_k, Ca_obs_ref, k_error,
                k_coord, abs_error, abs_var, mse_error, mse_var, rate_k,
-               rate_ref)
+               rate_ref, abs_ref, mse_ref, k_ref)
+
+        print(row)
 
         results.append(row)
 
@@ -211,7 +214,8 @@ def run(run_name,
     head = [
         "k", "V_ref", "V_k", "Ca_target", "Ca_ref", "Ca_obs_target",
         "Ca_obs_ref", "kappa_error", "kappa_coord", "abs_error", "abs_var",
-        "mse_error", "mse_var", "rate_k", "rate_ref"
+        "mse_error", "mse_var", "rate_k", "rate_ref", "abs_ref", "mse_ref",
+        "k_ref"
     ]
     with open("{}.csv".format(run_name), "w") as fi:
         writer = csv.writer(fi, delimiter=",")

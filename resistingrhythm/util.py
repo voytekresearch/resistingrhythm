@@ -23,6 +23,7 @@ def select_n(n, ns, ts):
 
 def l1_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
     v_i = []
+    v_r = []
     e_i = []
     for i in range(N):
         ns_ref_i, ts_ref_i = select_n(i, ns_ref, ts_ref)
@@ -35,24 +36,31 @@ def l1_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
             var = 0
         v_i.append(var)
 
+        if ts_ref_i.size > 0:
+            var = mad(ts_ref_i) / ts_ref_i.size
+        else:
+            var = 0
+        v_r.append(var)
+
         # Error
         e_i.append(mae(ts_i, ts_ref_i))
 
     # Expectation of all neurons.
     var = np.mean(v_i)
+    var_ref = np.mean(v_r)
     error = np.mean(e_i)
 
-    return var, error
+    return var, var_ref, error
 
 
 def l2_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
     v_i = []
+    v_r = []
     e_i = []
     for i in range(N):
         ns_ref_i, ts_ref_i = select_n(i, ns_ref, ts_ref)
         ns_i, ts_i = select_n(i, ns_n, ts_n)
 
-        # Variance
         # Variance
         if ts_i.size > 0:
             var = np.std(ts_i)
@@ -60,14 +68,21 @@ def l2_by_n(N, ns_ref, ts_ref, ns_n, ts_n):
             var = 0
         v_i.append(var)
 
+        if ts_ref_i.size > 0:
+            var = np.std(ts_ref_i)
+        else:
+            var = 0
+        v_r.append(var)
+
         # Error
         e_i.append(mse(ts_i, ts_ref_i))
 
     # Expectation of all neurons.
     var = np.mean(v_i)
+    var_ref = np.mean(v_r)
     error = np.mean(e_i)
 
-    return var, error
+    return var, var_ref, error
 
 
 def mad(x, M=None, axis=None):
