@@ -419,7 +419,7 @@ exp14:
 
 # --------------------------------------------------------------
 # 4-23-2018
-# - Begin FINAL exps -
+
 # All use 2 stim, f = 8 (unless noted). 
 # Analysis window is always 3+1 cycles:
 # 19.5 for f = 8
@@ -684,9 +684,10 @@ exp40:
 # ec52b15e79e2ad3d72f20bf142e3f061b1edc4b5
 
 # Run E and I oscillations w/
-# min_rate ~ 2
-# stim of 6 that comes on only after burn in
-# Modify the osc100 series
+# - min_rate ~ 2 (this is the key change)
+#
+# - stim of 6 that comes on only after burn in by modification of 
+# the osc100 series
 
 # RESULTS: E results look as expected. H inversion, as before w/ stim on the 
 # whole time. 
