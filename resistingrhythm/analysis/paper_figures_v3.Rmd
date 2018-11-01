@@ -53,7 +53,7 @@ results204 %>%
 exp_code <- 201
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
-stim_codes <- c(3)#, 4)
+stim_codes <- c(3)# , 4)
 
 results201 <- NULL
 for(i in 1:length(osc_codes)){
@@ -85,7 +85,7 @@ results201 %>%
 exp_code <- 200
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
-stim_codes <- c(3) #, 3)
+stim_codes <- c(3)#, 4)
 
 results200 <- NULL
 for(i in 1:length(osc_codes)){
@@ -211,14 +211,14 @@ results207 %>%
 
 # -----------------------------------------------------------------------
 # Calcium exp, E, sustained
-exp_code <- 19
+exp_code <- 218
 osc_codes <- c(105, 115, 125, 135, 145, 155)
 osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
-stim_codes <- c(0, 1)
+stim_codes <- c(3)
 
 ca_targets <- c(0.026, 0.028, 0.032, 0.034)
 
-results19 <- NULL
+results218 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     for(ca in ca_targets){
@@ -240,40 +240,41 @@ for(i in 1:length(osc_codes)){
       df$stim_code <- rep(s_c, nrow(df))
       df$Ca_target <- rep(ca, nrow(df))
       
-      results19 <- rbind(results19, df)
+      results218 <- rbind(results218, df)
     }
   }
 }
 
 # -----------------------------------------------------------------------
-# Add default Ca value, from exp
-exp_code <- 15
+# # Add default Ca value, from exp
+exp_code <- 211
 osc_codes <- c(105, 115, 125, 135, 145, 155)
 osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
-stim_codes <- c(0, 1)
+stim_codes <- c(3)
 ca_targets <- c(0.03, 0.03, 0.03, 0.03)
 
+df <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     for(ca in ca_targets){
-      
+
       o_c <- osc_codes[i]
       o_r <- osc_rates[i]
-      
+
       # Load the csv
       df <- read_csv(paste(data_path,
                            "exp", as.character(exp_code),
                            "_stim", as.character(s_c),
                            "_osc", as.character(o_c),
                            ".csv", sep=""))
-      
+
       # Add metadata
       df$osc_code <- rep(o_c, nrow(df))
       df$osc_rate <- rep(o_r, nrow(df))
       df$stim_code <- rep(s_c, nrow(df))
       df$Ca_target <- rep(ca, nrow(df))
-      
-      results19 <- rbind(results19, df)
+
+      results218 <- rbind(results218, df)
     }
   }
 }
@@ -295,14 +296,14 @@ results200 %>%
 results200 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="d.", y="Kappa", x="Osc. rate (Hz)") +
   # # lims(y=c(0, .15)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.35, size=18, face="bold")) -> p1
@@ -317,14 +318,14 @@ results201 %>%
 results201 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="b.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="e.", y="Kappa", x="Osc. rate (Hz)") +
   # lims(y=c(0, .01)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
@@ -347,7 +348,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(0, 70)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() + 
@@ -370,7 +371,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="e.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="b.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-4, 4)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() +
@@ -389,14 +390,14 @@ results204 %>%
 results204 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="dodgerblue3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="dodgerblue3") +
-  labs(title="c.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="f.", y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() + 
   # lims(y=c(0, .01)) +
   theme(plot.title = element_text(hjust = -.6, size=18, face="bold")) -> p5
@@ -420,7 +421,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="dodgerblue3") +
   geom_hline(yintercept=0, size=0.2) +
-  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p6
@@ -438,7 +439,7 @@ tmp5 %>%
   ggplot(aes(x=osc_mode, y=rate_k - rate_ref, color=osc_mode)) +
   geom_point(size=-1, aes(fill=osc_mode)) +
   geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5, show.legend=FALSE) +
-  labs(title="f.", y=expression(Delta*" rate (Hz)"), x="") +
+  labs(title="g.", y=expression(Delta*" rate (Hz)"), x="") +
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
@@ -448,32 +449,31 @@ tmp5 %>%
                      label.x=1.3, size=3, show.legend=FALSE) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
   theme(
-    legend.position = c(0.1, 2),
+    legend.position = c(0.15, 2),
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.5, "cm"),
     axis.text.x = element_text(angle = 70, hjust = 1),
     plot.title = element_text(hjust = -1.2, size=18, face="bold")) -> p7
 
 
-# NEW
-
 # -
 layout_matrix <- rbind(
   c(12, 12, 12, 12, 12, 12, 12, 12),
   c(NA, 8, 8, 9, 9, 9, 9, NA),
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, 7),
   c(10, 1, 1, 2, 2, 5, 5, 7), 
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7)
+  c(10, 1, 1, 2, 2, 5, 5, 7), 
+  c(10, 1, 1, 2, 2, 5, 5, 7), 
+  c(10, 1, 1, 2, 2, 5, 5, 7)
+  
 )
 
 p8 <- textGrob("No homeostatsis")
 p9 <- textGrob("Homeostatsis")
-p10 <- textGrob("Synchrony")
+p10 <- textGrob("Coordination")
 p11 <- textGrob("Excitability")
 p12 <- textGrob("Excitatory modulation")
 
@@ -492,7 +492,7 @@ print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_re
 
 # Figure 2. Inhibitory oscillations, sustained and burst 
 
-```{r, fig.width=4.5, fig.height=2.0}
+```{r, fig.width=5, fig.height=2.25}
 shift <- -0.15
 # 23 No H
 # 21 w H
@@ -506,14 +506,14 @@ results202 %>%
 results202 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="a.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="d.", y="Kappa", x="Osc. rate (Hz)") +
   # lims(y=c(0, .15)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.35, size=18, face="bold")) -> p1
@@ -528,14 +528,14 @@ results203 %>%
 results203 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="b.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="e.", y="Kappa", x="Osc. rate (Hz)") +
   # lims(y=c(0, .15)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
@@ -558,7 +558,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(0, 70)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() + 
@@ -581,7 +581,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="e.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="b.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-4, 4)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() +
@@ -600,14 +600,14 @@ results207 %>%
 results207 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(mse_error), SD=sd(mse_error)) -> tmp2
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=mse_error, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="dodgerblue3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="dodgerblue3") +
-  labs(title="c.", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="f.", y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() + 
   # lims(y=c(0, .15)) +
   theme(plot.title = element_text(hjust = -.6, size=18, face="bold")) -> p5
@@ -631,7 +631,7 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) 
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="dodgerblue3") +
   geom_hline(yintercept=0, size=0.2) +
-  labs(title="d.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p6
@@ -649,7 +649,7 @@ tmp5 %>%
   ggplot(aes(x=osc_mode, y=rate_k - rate_ref, color=osc_mode)) +
   geom_point(size=-1, aes(fill=osc_mode)) +
   geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5, show.legend=FALSE) +
-  labs(title="f.", y=expression(Delta*" rate (Hz)"), x="") +
+  labs(title="g.", y=expression(Delta*" rate (Hz)"), x="") +
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
@@ -659,32 +659,29 @@ tmp5 %>%
                      label.x=1.3, size=3, show.legend=FALSE) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
   theme(
-    legend.position = c(0.1, 2),
+    legend.position = c(0.15, 2),
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.5, "cm"),
     axis.text.x = element_text(angle = 70, hjust = 1),
     plot.title = element_text(hjust = -1.2, size=18, face="bold")) -> p7
 
-
-# NEW
-
 # -
 layout_matrix <- rbind(
   c(12, 12, 12, 12, 12, 12, 12, 12),
   c(NA, 8, 8, 9, 9, 9, 9, NA),
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
-  c(10, 1, 1, 2, 2, 5, 5, NA), 
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, NA),
+  c(11, 3, 3, 4, 4, 6, 6, 7),
   c(10, 1, 1, 2, 2, 5, 5, 7), 
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7),
-  c(11, 3, 3, 4, 4, 6, 6, 7)
+  c(10, 1, 1, 2, 2, 5, 5, 7), 
+  c(10, 1, 1, 2, 2, 5, 5, 7), 
+  c(10, 1, 1, 2, 2, 5, 5, 7)
 )
 
 p8 <- textGrob("No homeostatsis")
 p9 <- textGrob("Homeostatsis")
-p10 <- textGrob("Synchrony")
+p10 <- textGrob("Coordination")
 p11 <- textGrob("Excitability")
 p12 <- textGrob("Inhibitory modulation")
 
@@ -706,10 +703,10 @@ print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_re
 # -
 # With H, E
 # Var
-results19 %>% 
+results218 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate, Ca_target) %>% 
-  summarise(M=mean(mse_error), SD=sd(mse_error)) -> tmp1
+  summarise(M=mean(kappa_coord - mse_ref), SD=sd(kappa_coord - mse_ref)) -> tmp1
 
 tmp1 %>% 
 ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.03, 0.032, 0.034)))) +
@@ -724,7 +721,7 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.0
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p1
 
 # Rate
-results19 %>% 
+results218 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate, Ca_target) %>% 
   summarise(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
