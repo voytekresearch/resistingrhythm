@@ -191,6 +191,7 @@ def HHH(time,
     P_target.g_KCa = g_KCa
     P_target.g_Ca = g_Ca
     P_target.Ca_target = Ca_target
+    P_target.Ca = Ca_target
 
     net.add(P_target)
 
