@@ -25,7 +25,7 @@ From the command line (on linux or macOS) run,
 
 then
 
--  `cd resistingrhythm; pip install -e .`.
+-  `cd resistingrhythm; pip install -e .`
 
 # Dependencies
 - A standard Python >3.6 anaconda install (https://www.anaconda.com/download)
