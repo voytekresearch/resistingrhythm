@@ -14,7 +14,7 @@ A copy of the poster can be found [here](). To re-run all experiments:
     - `make osc100 burst100` then
     - `make exp210 exp211 exp212 exp213 exp214 exp215 exp216 exp217 exp218`. 
 
-     - _Note_: you may will to adjust the `$DATA_PATH` variable in the [Makefile](https://github.com/voytekresearch/resistingrhythm/blob/master/resistingrhythm/exp/Makefile).
+     - _Note_: you may need to adjust the `$DATA_PATH` variable in the [Makefile](https://github.com/voytekresearch/resistingrhythm/blob/master/resistingrhythm/exp/Makefile).
 
     - The experimental recipes rely on gnu parallel, and are configured to a 40 core machine. If you have more or fewer cores, adjust the `-j 38` argument in each recipe accordingly. The Makefile is [here](https://github.com/voytekresearch/resistingrhythm/blob/master/resistingrhythm/exp/Makefile). 
     - _Note_: with the current configuration these simulations take about 4 days.
