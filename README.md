@@ -1,9 +1,7 @@
 # resistingrhythm
-
 A study of modulation, oscillation, and homeostasis.
 
 # Publications
-
 This work was presented at SFN2018. A copy of the poster can be found [here](). To re-run all experiments:
 
 1. Install this package and its dependencies (see below).
@@ -22,8 +20,6 @@ This work was presented at SFN2018. A copy of the poster can be found [here](). 
 4. To generate the example traces, open `testing_HHH.ipynb` (found [here](https://github.com/voytekresearch/resistingrhythm/blob/master/resistingrhythm/ipynb/testing_HHH.ipynb)) and re-run all cells. This should take half an hour or so. Step (4) can be completed anytime; it is not dependent on 1-3.
 
 # Installation
-
-
 From the command line (on linux or macOS) run,
 - `git clone git@github.com:voytekresearch/resistingrhythm.git` 
 
