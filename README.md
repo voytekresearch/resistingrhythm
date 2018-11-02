@@ -9,7 +9,7 @@ This work was presented at SFN2018. A copy of the poster can be found [here](). 
 1. Install this package and its dependencies (see below).
 2. At the command line, and from `\exp` directory, run 
 
-    - `make osc100 burst100` then
+    - `make stim3 stim4 osc100 burst100` then
     - `make exp210 exp211 exp212 exp213 exp214 exp215 exp216 exp217 exp218`. 
 
      - _Note_: you may need to adjust the `$DATA_PATH` variable in the [Makefile](https://github.com/voytekresearch/resistingrhythm/blob/master/resistingrhythm/exp/Makefile).
