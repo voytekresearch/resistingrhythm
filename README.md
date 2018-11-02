@@ -4,9 +4,7 @@ A study of modulation, oscillation, and homeostasis.
 
 # Publications
 
-This work was presented at SFN2018. 
-
-A copy of the poster can be found [here](). To re-run all experiments:
+This work was presented at SFN2018. A copy of the poster can be found [here](). To re-run all experiments:
 
 1. Install this package and its dependencies (see below).
 2. At the command line, and from `\exp` directory, run 
