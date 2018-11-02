@@ -341,14 +341,14 @@ results200 %>%
 results200 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="a.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(0, 70)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() + 
@@ -364,14 +364,14 @@ results201 %>%
 results201 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="b.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="b.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(-4, 4)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() +
@@ -413,15 +413,15 @@ results204 %>%
 results204 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="darkgoldenrod3") +
   geom_hline(yintercept=0, size=0.2) +
-  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="c.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p6
@@ -439,7 +439,7 @@ tmp5 %>%
   ggplot(aes(x=osc_mode, y=rate_k - rate_ref, color=osc_mode)) +
   geom_point(size=-1, aes(fill=osc_mode)) +
   geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5, show.legend=FALSE) +
-  labs(title="g.", y=expression(Delta*" rate (Hz)"), x="") +
+  labs(title="g.", y="Norm. rate (Hz)", x="") +
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
@@ -551,14 +551,14 @@ results202 %>%
 results202 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="a.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(0, 70)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() + 
@@ -574,14 +574,14 @@ results203 %>%
 results203 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05)) +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8) +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), width=.15, size=0.2) +
   # geom_boxplot(size=0.3, outlier.colour = NA, alpha=0.5) +
-  labs(title="b.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="b.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(-4, 4)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() +
@@ -623,15 +623,15 @@ results207 %>%
 results207 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
-  mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
-ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
+ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
   geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
                 width=.15, size=0.2, color="darkgoldenrod3") +
   geom_hline(yintercept=0, size=0.2) +
-  labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="c.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p6
@@ -649,7 +649,7 @@ tmp5 %>%
   ggplot(aes(x=osc_mode, y=rate_k - rate_ref, color=osc_mode)) +
   geom_point(size=-1, aes(fill=osc_mode)) +
   geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5, show.legend=FALSE) +
-  labs(title="g.", y=expression(Delta*" rate (Hz)"), x="") +
+  labs(title="g.", y="Norm. rate (Hz)", x="") +
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
@@ -724,14 +724,14 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.0
 results218 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate, Ca_target) %>% 
-  summarise(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
+  summarise(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
 tmp2 %>% 
 ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.03, 0.032, 0.034)))) +
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
-  labs(title="a", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   geom_hline(yintercept=0, size=0.2) +
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
