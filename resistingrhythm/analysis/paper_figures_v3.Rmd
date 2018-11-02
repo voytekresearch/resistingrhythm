@@ -393,10 +393,10 @@ results204 %>%
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
 ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
-  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
-  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="dodgerblue3") +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
-                width=.15, size=0.2, color="dodgerblue3") +
+                width=.15, size=0.2, color="darkgoldenrod3") +
   labs(title="f.", y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() + 
   # lims(y=c(0, .01)) +
@@ -416,10 +416,10 @@ results204 %>%
   mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
 
 ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
-  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
-  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="dodgerblue3") +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
-                width=.15, size=0.2, color="dodgerblue3") +
+                width=.15, size=0.2, color="darkgoldenrod3") +
   geom_hline(yintercept=0, size=0.2) +
   labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
@@ -443,8 +443,8 @@ tmp5 %>%
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
-  scale_fill_manual(values=c("dodgerblue3", "black"), name="Oscillation") +
-  scale_color_manual(values=c("dodgerblue3", "black"), name="Oscillation") +
+  scale_fill_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
   stat_compare_means(method="wilcox.test", label="p.signif", 
                      label.x=1.3, size=3, show.legend=FALSE) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
@@ -603,10 +603,10 @@ results207 %>%
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
 
 ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
-  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
-  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="dodgerblue3") +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.8, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
-                width=.15, size=0.2, color="dodgerblue3") +
+                width=.15, size=0.2, color="darkgoldenrod3") +
   labs(title="f.", y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() + 
   # lims(y=c(0, .15)) +
@@ -626,10 +626,10 @@ results207 %>%
   mutate(M=mean(rate_k - rate_ref), SD=sd(rate_k - rate_ref)) -> tmp2
 
 ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k - rate_ref, group=osc_rate)) +
-  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="dodgerblue3") +
-  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="dodgerblue3") +
+  geom_jitter(alpha=0.2, size=0.2, position = position_jitter(width = .05), color="darkgoldenrod3") +
+  geom_point(data=tmp2, mapping=aes(x=osc_rate - shift, y=M), size=0.6, color="darkgoldenrod3") +
   geom_errorbar(data=tmp2, mapping=aes(x=osc_rate - shift, ymin=M - SD, ymax=M + SD), 
-                width=.15, size=0.2, color="dodgerblue3") +
+                width=.15, size=0.2, color="darkgoldenrod3") +
   geom_hline(yintercept=0, size=0.2) +
   labs(title="c.", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
@@ -653,8 +653,8 @@ tmp5 %>%
   theme_classic() +
   geom_hline(yintercept=0, size=0.2) +
   # lims(y=c(-3, 3)) +
-  scale_fill_manual(values=c("dodgerblue3", "black"), name="Oscillation") +
-  scale_color_manual(values=c("dodgerblue3", "black"), name="Oscillation") +
+  scale_fill_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
   stat_compare_means(method="wilcox.test", label="p.signif", 
                      label.x=1.3, size=3, show.legend=FALSE) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
@@ -706,16 +706,16 @@ print(wilcox.test(x=(tmp3$rate_k - tmp3$rate_ref), y=(tmp4$rate_k - tmp4$rate_re
 results218 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate, Ca_target) %>% 
-  summarise(M=mean(kappa_coord - mse_ref), SD=sd(kappa_coord - mse_ref)) -> tmp1
+  summarise(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp1
 
 tmp1 %>% 
 ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.03, 0.032, 0.034)))) +
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
-  labs(title="a", y="Variance (s)", x="Osc. rate (Hz)") +
+  labs(title="b", y="Kappa", x="Osc. rate (Hz)") +
   scale_color_manual(
-    values=c("paleturquoise3", "paleturquoise4", "black", "indianred4", "indianred1"), 
+    values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     guide=FALSE) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p1
@@ -731,36 +731,34 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.026, 0.028, 0.0
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
-  labs(title="b", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
+  labs(title="a", y=expression(Delta*" rate (Hz)"), x="Osc. rate (Hz)") +
   geom_hline(yintercept=0, size=0.2) +
   scale_color_manual(
-    values=c("paleturquoise3", "paleturquoise4", "black", "indianred4", "indianred1"), 
+    values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     name="Target [Ca]\n(mmolar)") +
   # lims(y=c(0, .01)) 
   # guides(col = guide_legend(ncol = 2)) +
   theme_classic() +
   theme(
-    plot.title = element_text(hjust = -.34, size=18, face="bold"),
-    legend.position = c(1.35, 1.5),
+    plot.title = element_text(hjust = -.5, size=18, face="bold"),
+    legend.position = c(1.35, 0.0),
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.4, "cm")) -> p2
 
-
-# p3 <- textGrob("Homeostatsis")
-p3 <- textGrob("Synchrony")
+p3 <- textGrob("Coordination")
 p4 <- textGrob("Excitability")
-
 
 layout_matrix <- rbind(
   c(6, 6, 6, 6), 
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5),
+  c(4, 2, 2, 5),
   c(3, 1, 1, 5),
   c(3, 1, 1, 5),
   c(3, 1, 1, 5), 
-  c(3, 1, 1, 5), 
-  c(4, 2, 2, 5),
-  c(4, 2, 2, 5),
-  c(4, 2, 2, 5),
-  c(4, 2, 2, 5))
+  c(3, 1, 1, 5) 
+)
 
 p5 <- nullGrob()
 p6 <- textGrob("Calcium level")
