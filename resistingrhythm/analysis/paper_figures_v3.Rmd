@@ -18,12 +18,12 @@ data_path <- "~/Code/resistingrhythm/data/"
 ```{r, message=FALSE}
 # -----------------------------------------------------------------------
 # 16: Burst E, with H
-exp_code <- 204
+exp_code <- 214
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
 stim_codes <- c(3, 4) # 4
 
-results204 <- NULL
+results214 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -41,21 +41,21 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results204 <- rbind(results204, df)
+    results214 <- rbind(results214, df)
   }
 }
 
-results204 %>%
-  filter(rate_k > 0) -> results204
+results214 %>%
+  filter(rate_k > 0) -> results214
 
 # -----------------------------------------------------------------------
 # 15: Sustained E, with H
-exp_code <- 201
+exp_code <- 211
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
-stim_codes <- c(3)# , 4)
+stim_codes <- c(3, 4)
 
-results201 <- NULL
+results211 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -73,21 +73,21 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results201 <- rbind(results201, df)
+    results211 <- rbind(results211, df)
   }
 }
 
-results201 %>%
-  filter(rate_k > 0) -> results201
+results211 %>%
+  filter(rate_k > 0) -> results211
 
 # -----------------------------------------------------------------------
 # 22: Sustained E, with NO H
-exp_code <- 200
+exp_code <- 210
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
-stim_codes <- c(3)#, 4)
+stim_codes <- c(3, 4)
 
-results200 <- NULL
+results210 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -105,21 +105,21 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results200 <- rbind(results200, df)
+    results210 <- rbind(results210, df)
   }
 }
 
-results200 %>%
-  filter(rate_k > 0) -> results200
+results210 %>%
+  filter(rate_k > 0) -> results210
 
 # -----------------------------------------------------------------------
 # 21: Sustained I, with H
-exp_code <- 203
+exp_code <- 213
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
 stim_codes <- c(3, 4)
 
-results203 <- NULL
+results213 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -137,21 +137,21 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results203 <- rbind(results203, df)
+    results213 <- rbind(results213, df)
   }
 }
 
-results203 %>%
-  filter(rate_k > 0) -> results203
+results213 %>%
+  filter(rate_k > 0) -> results213
 
 # -----------------------------------------------------------------------
 # 23: Sustained I, with NO H
-exp_code <- 202
+exp_code <- 212
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
-stim_codes <- c(3)#, 4)
+stim_codes <- c(3, 4)
 
-results202 <- NULL
+results212 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -169,21 +169,22 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results202 <- rbind(results202, df)
+    results212 <- rbind(results212, df)
   }
 }
 
-results202 %>%
-  filter(rate_k > 0) -> results202
+results212 %>%
+  filter(rate_k > 0) -> results212
 
 # -----------------------------------------------------------------------
 # 30: Burst I, with H
-exp_code <- 207
+# HERE
+exp_code <- 217
 osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
 osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
 stim_codes <- c(3, 4)
 
-results207 <- NULL
+results217 <- NULL
 for(i in 1:length(osc_codes)){
   for(s_c in stim_codes){
     o_c <- osc_codes[i]
@@ -201,12 +202,12 @@ for(i in 1:length(osc_codes)){
     df$osc_rate <- rep(o_r, nrow(df))
     df$stim_code <- rep(s_c, nrow(df))
     
-    results207 <- rbind(results207, df)
+    results217 <- rbind(results217, df)
   }
 }
 
-results207 %>%
-  filter(rate_k > 0) -> results207
+results217 %>%
+  filter(rate_k > 0) -> results217
 
 
 # -----------------------------------------------------------------------
@@ -290,10 +291,10 @@ shift <- -0.15
 
 # --------------------------------------------------------
 # No H, E
-results200 %>% 
+results210 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results200 %>% 
+results210 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -306,16 +307,16 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   labs(title="d.", y="Kappa", x="Osc. rate (Hz)") +
   # # lims(y=c(0, .15)) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = -.35, size=18, face="bold")) -> p1
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p1
 
 rm(tmp1, tmp2)
 
 # -
 # With H, E
-results201 %>% 
+results211 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results201 %>% 
+results211 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -328,17 +329,17 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   labs(title="e.", y="Kappa", x="Osc. rate (Hz)") +
   # lims(y=c(0, .01)) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p2
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p2
 
 rm(tmp1, tmp2)
 
 
 # -
 # Rate, no H, E
-results200 %>% 
+results210 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results200 %>% 
+results210 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -352,16 +353,16 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   # lims(y=c(0, 70)) +
   geom_hline(yintercept=0, size=0.2) +
   theme_classic() + 
-  theme(plot.title = element_text(hjust = -.25, size=18, face="bold")) -> p3
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p3
 
 rm(tmp1, tmp2)
 
 # -
 # Rate, with H, E
-results201 %>% 
+results211 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results201 %>% 
+results211 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -384,10 +385,10 @@ rm(tmp1, tmp2)
 # Bursts
 
 # Var
-results204 %>% 
+results214 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results204 %>% 
+results214 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -400,17 +401,17 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=kappa_coord, group=osc_rate)) +
   labs(title="f.", y="Kappa", x="Osc. rate (Hz)") +
   theme_classic() + 
   # lims(y=c(0, .01)) +
-  theme(plot.title = element_text(hjust = -.6, size=18, face="bold")) -> p5
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p5
 
 rm(tmp1, tmp2)
 
 
 # -
 # Rate
-results204 %>% 
+results214 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results204 %>% 
+results214 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -424,15 +425,15 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
   labs(title="c.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
   # lims(y=c(-3, 3)) +
   theme_classic() +
-  theme(plot.title = element_text(hjust = -.4, size=18, face="bold")) -> p6
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p6
 
 # -
 # Rate: burst v sustained
-tmp3 <- results201
-tmp3$osc_mode <- rep("Sustained", nrow(results201))
+tmp3 <- results211
+tmp3$osc_mode <- rep("Sustained", nrow(results211))
 
-tmp4 <- results204
-tmp4$osc_mode <- rep("Burst", nrow(results204))
+tmp4 <- results214
+tmp4$osc_mode <- rep("Burst", nrow(results214))
 
 tmp5 <- rbind(tmp3, tmp4)
 tmp5 %>% 
@@ -453,7 +454,7 @@ tmp5 %>%
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.5, "cm"),
     axis.text.x = element_text(angle = 70, hjust = 1),
-    plot.title = element_text(hjust = -1.2, size=18, face="bold")) -> p7
+    plot.title = element_text(hjust = -1.3, size=18, face="bold")) -> p7
 
 
 # -
@@ -500,10 +501,10 @@ shift <- -0.15
 
 # --------------------------------------------------------
 # No H, E
-results202 %>% 
+results212 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results202 %>% 
+results212 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -522,10 +523,10 @@ rm(tmp1, tmp2)
 
 # -
 # With H, E
-results203 %>% 
+results213 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results203 %>% 
+results213 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -545,10 +546,10 @@ rm(tmp1, tmp2)
 
 # -
 # Rate, no H, E
-results202 %>% 
+results212 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results202 %>% 
+results212 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -568,10 +569,10 @@ rm(tmp1, tmp2)
 
 # -
 # Rate, with H, E
-results203 %>% 
+results213 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results203 %>% 
+results213 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -594,10 +595,10 @@ rm(tmp1, tmp2)
 # Bursts
 
 # Var
-results207 %>% 
+results217 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results207 %>% 
+results217 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp2
@@ -617,10 +618,10 @@ rm(tmp1, tmp2)
 
 # -
 # Rate
-results207 %>% 
+results217 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) -> tmp1
 
-results207 %>% 
+results217 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   group_by(osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
@@ -638,11 +639,11 @@ ggplot(data=tmp1, mapping=aes(x=osc_rate, y=rate_k, group=osc_rate)) +
 
 # -
 # Rate: burst v sustained
-tmp3 <- results203
-tmp3$osc_mode <- rep("Sustained", nrow(results203))
+tmp3 <- results213
+tmp3$osc_mode <- rep("Sustained", nrow(results213))
 
-tmp4 <- results207
-tmp4$osc_mode <- rep("Burst", nrow(results207))
+tmp4 <- results217
+tmp4$osc_mode <- rep("Burst", nrow(results217))
 
 tmp5 <- rbind(tmp3, tmp4)
 tmp5 %>% 
