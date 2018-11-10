@@ -88,29 +88,33 @@ def HHH(time,
     Et = 20 * mvolt
     Cm = 1 * uF  # /cm2
 
-    g_Na = 100 * msiemens
-    g_K = 80 * msiemens
-    g_KCa = 40 * msiemens
-    g_Ca = 0.01 * msiemens
     g_l = 1.0 * msiemens
 
     V_K = -100 * mV  # was 100, changed to match LeMasson
     V_l = -70 * mV
     V_Na = 50 * mV
 
-    # Ca + homeo specific
+    # Ca and Homeostasis values from 
+    # Siegel, M., Marder, E.V.E. & Abbott, L.F., 1994. Activity-dependent 
+    # current distributions in model neurons. , 91(November), pp.11308-11312.
+    # Who modeled a hippocampul neuron.
+
+    # d[Ca]/dt
     delta = 0.6 * umolar  # TODO: was umolar?
     k = 1 / (200.0 * msecond)
     gamma = -4.7e-2 * (mmolar / mamp / msecond)
-
     V_Ca = 150 * mV
     V1 = -50 * mV
     V2 = 10 * mV
+    g_Ca = 0.03 * msiemens
 
-    G_Ca = 3 * msiemens
+    # dg/dt 
     G_Na = 360 * msiemens
-    G_K = 180 * msiemens
-    G_KCa = 90 * msiemens
+    G_K = 120 * msiemens  # Try 90?
+    G_KCa = 60 * msiemens
+    g_Na = G_Na / 2
+    g_K = G_K / 2
+    g_KCa = G_KCa / 2
 
     # ----------------------------------------------------
     eqs = """
@@ -153,7 +157,8 @@ def HHH(time,
     if homeostasis:
         eqs += """ 
         dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
-        dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
+        # dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
+        g_Ca : siemens
         dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
         dg_KCa/dt = (1 / tau_h) * (G_KCa / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_KCa) : siemens 
         """
