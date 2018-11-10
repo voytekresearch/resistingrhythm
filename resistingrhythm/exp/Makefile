@@ -957,4 +957,4 @@ exp228:
 		--joblog '$(DATA_PATH)/exp228.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp228_stim{1}_osc{2}_ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --w_min=5e-6 --w_max=50e-6 --Ca_target={3} --sigma=0 --num_trials=10 --seed_value=42 --verbose' \
-	::: 3 ::: 101 103 105 115 125 135 145 155 ::: 0.026 0.028 0.032 0.034 | tee $(DATA_PATH)/exp228.log
+	::: 3 ::: 101 103 105 115 125 135 145 155 ::: 0.0026 0.0028 0.0032 0.0034 | tee $(DATA_PATH)/exp228.log
