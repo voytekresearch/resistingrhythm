@@ -958,3 +958,26 @@ exp228:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp228_stim{1}_osc{2}_ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --w_min=5e-6 --w_max=50e-6 --Ca_target={3} --sigma=0 --num_trials=10 --seed_value=42 --verbose' \
 	::: 3 ::: 101 103 105 115 125 135 145 155 ::: 0.0026 0.0028 0.0032 0.0034 | tee $(DATA_PATH)/exp228.log
+
+# ----------------------------------------------------------------------------
+# 11-12-2018
+# tau_h ratio exps
+# T = tau_h * (0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
+# f = (12, 16, 20, 24, 28)
+# r = (0, 2, 4, 6)
+exp229:
+	# Osc files
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp229_osc.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py create_osc --t={1} --t_onset=0.0 --n_cycles=500 --rate={3} --f={4} --min_rate=2.0 --n=1000 --name=$(DATA_PATH)/osc_exp229_T{1}_r{3}_f{4} --seed=42' :::: exp229.txt
+	# Stim files
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp229_stim.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py create_stim --t={1} --t_onset={2} --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp229_t{2}_T{1} --seed=23434' :::: exp229.txt
+	# Run exp
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp229.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp229_T{1}_t{2}_r{3}_f{4}.csv --stim_name=$(DATA_PATH)/stim_exp229_t{2}_T{1}.csv --osc_name=$(DATA_PATH)/osc_exp229_T{1}_r{3}_f{4}.csv --N=100 --t={1} --tau_h=4 --burn_t={2} --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' :::: exp229.txt
