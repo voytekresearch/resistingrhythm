@@ -14,7 +14,6 @@ data_path <- "~/Code/resistingrhythm/data/"
 ```
 
 # Load all data
-
 ```{r, message=FALSE}
 # -----------------------------------------------------------------------
 # 16: Burst E, with H
@@ -339,7 +338,7 @@ bind_rows(results220, results222) %>%
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
   labs(title="a.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
-  lims(y=c(0.0, 175.0)) +
+  lims(y=c(0.0, 180.0)) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
   theme_classic() +
   theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
@@ -358,7 +357,7 @@ bind_rows(results221, results223) %>%
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
   labs(title="b.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
-  lims(y=c(0.0, 175.0)) +
+  lims(y=c(0.0, 180.0)) +
   theme_classic() +
   theme(
     legend.position = c(-.6, -0.2),
@@ -369,7 +368,6 @@ bind_rows(results221, results223) %>%
 
 
 # --------------------------------------------------------
-# Bursts
 bind_rows(results224, results227)  %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
@@ -387,9 +385,7 @@ bind_rows(results224, results227)  %>%
     theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
           legend.position="none") -> p5
 
-
-# 
-# Rate
+# -
 bind_rows(results224, results227)  %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
@@ -401,7 +397,7 @@ bind_rows(results224, results227)  %>%
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
     labs(title="c.", y="Pop. rate (Hz)", x="Osc. rate (Hz)") +
-    lims(y=c(0.0, 175.0)) +
+    lims(y=c(0.0, 180.0)) +
     theme_classic() +
   theme(
     legend.position = c(1.35, .5),
@@ -411,7 +407,6 @@ bind_rows(results224, results227)  %>%
     plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p6
 
 # -
-# Rate: burst v sustained
 tmp3 <- results221
 tmp3$osc_mode <- rep("Sustained", nrow(results221))
 tmp4 <- results224
@@ -428,11 +423,17 @@ bind_rows(tmp3, tmp4) %>%
   scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
   stat_compare_means(method="wilcox.test", label="p.signif", 
                      label.x=1.3, size=3, show.legend=FALSE) +
-  lims(y=c(0.0, 175.0)) +
+  lims(y=c(0.0, 180.0)) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
   theme(plot.title = element_text(hjust = -.1, size=18, face="bold"), 
           legend.position="none",
           axis.text.x = element_text(angle = 70, hjust = 1)) -> p7
+
+# -
+p8 <- textGrob("No homeostatsis")
+p9 <- textGrob("Homeostatsis")
+p10 <- textGrob("Coordination")
+p11 <- textGrob("Excitability")
 
 # -
 layout_matrix <- rbind(
@@ -446,24 +447,17 @@ layout_matrix <- rbind(
   c(10, 1, 1, NA, 2, 2, 5, 5, 7), 
   c(10, 1, 1, NA, 2, 2, 5, 5, 7)
 )
-
-p8 <- textGrob("No homeostatsis")
-p9 <- textGrob("Homeostatsis")
-p10 <- textGrob("Coordination")
-p11 <- textGrob("Excitability")
-p <- grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout_matrix=layout_matrix)
-plot(p)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout_matrix=layout_matrix)
 
 # -
-png(file="fig2.png", bg="white", width=9.0, height=4.5, unit="in", res=300)
-plot(p)
-dev.off()
+# png(file="fig2.png", bg="white", width=9.0, height=4.5, unit="in", res=300)
+# plot(p)
+# dev.off()
 ```
 
 ```{r}
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
-
 
 # Figure: Kap v Err
 ```{r, fig.width=3.25, fig.height=1.1}
@@ -487,7 +481,6 @@ tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
 
 bind_rows(tmp1, tmp2) %>% 
 ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
-  # No H
   geom_point(size=0.2) +
   geom_errorbar(mapping=aes(x=M_kappa, ymin=M_error - SD_error, ymax=M_error + SD_error),
                 width=0.004, size=0.2) +
@@ -535,6 +528,10 @@ ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
         legend.title=element_blank()) -> p2
 
 # -
+p3 <- textGrob("Sustained")
+p4 <- textGrob("Burst", gp=gpar(col="darkgoldenrod3"))
+
+# -
 layout_matrix <- rbind(
   c(3, 3, 4, 4, NA),
   c(1, 1, 2, 2, 2),
@@ -542,17 +539,12 @@ layout_matrix <- rbind(
   c(1, 1, 2, 2, 2),
   c(1, 1, 2, 2, 2)
 )
-p3 <- textGrob("Sustained")
-p4 <- textGrob("Burst", gp=gpar(col="darkgoldenrod3"))
-
 grid.arrange(p1, p2, p3, p4, layout_matrix=layout_matrix)
 ```
 
 # Figure: Calcium control
 ```{r, fig.width=2.4, fig.height=1.8}
 # -
-# With H, E
-# Var
 results228 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
@@ -570,10 +562,9 @@ tmp1 %>%
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     guide=FALSE) +
   theme_classic() +
-  # ylim(0, .35) +
   theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p1
 
-# Rate
+# -
 results228 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
@@ -581,7 +572,8 @@ results228 %>%
   summarise(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
 
 tmp2 %>% 
-ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
+ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, 
+                                         levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
@@ -589,8 +581,6 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.0026, 0.0028, 0
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     name="Target [Ca]\n(mmolar)") +
-  # lims(y=c(0, .01)) 
-  # guides(col = guide_legend(ncol = 2)) +
   theme_classic() +
   theme(
     plot.title = element_text(hjust = -.5, size=18, face="bold"),
@@ -598,9 +588,11 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, levels = c(0.0026, 0.0028, 0
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.4, "cm")) -> p2
 
+# -
 p3 <- textGrob("Coordination")
 p4 <- textGrob("Excitability")
 
+# -
 layout_matrix <- rbind(
   c(6, 6, 6, 6), 
   c(4, 2, 2, 5),
@@ -612,16 +604,14 @@ layout_matrix <- rbind(
   c(3, 1, 1, 5), 
   c(3, 1, 1, 5) 
 )
-
 p5 <- nullGrob()
 p6 <- textGrob("Target Calcium")
-p <- grid.arrange(p1, p2, p3, p4, p5, p6,layout_matrix=layout_matrix)
-plot(p)
+grid.arrange(p1, p2, p3, p4, p5, p6, layout_matrix=layout_matrix)
 
 # -
 # png(file="fig5.png", bg="white", width=4.2, height=3.8, unit="in", res=300)
 # plot(p)
 # dev.off()
 
-rm(p1, p2, p3, p4, p5, tmp1, tmp2)
+rm(p1, p2, p3, p4, p5, p6, tmp1, tmp2)
 ```
