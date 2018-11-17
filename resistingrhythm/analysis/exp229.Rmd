@@ -1,0 +1,89 @@
+---
+title: "Analysis : exp229 analysis"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load all data
+```{r, message=FALSE}
+# -----------------------------------------------------------------------
+# 16: Burst E, with H
+tau_h <- 4.0
+exp_code <- 229
+run_time_codes <- c('1.0', '2.0', '3.0', '4.0', '5.0', '6.0', '7.0', '8.0')
+onset_time_codes <- c('0.5', '1.5', '2.5', '3.5', '4.5', '5.5', '6.5', '7.5')
+freq_codes <- c('8', '12', '16', '20', '24', '28')
+osc_rate_codes <- c('0', '2', '4', '6')
+
+results229 <- NULL
+for(i in 1:length(run_time_codes)){
+  for(f_c in freq_codes){
+    for(o_r in osc_rate_codes){
+      r_t <- run_time_codes[i]
+      o_t <- onset_time_codes[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_T", r_t, 
+                         "_t", o_t,
+                         "_r", o_r,
+                         "_f", f_c,
+                         ".csv", sep=""))  
+      # Add metadata
+      df$run_time <- rep(r_t, nrow(df))
+      df$frac_tau_h <- rep(as.character(as.numeric(r_t)/tau_h, nrow(df)))
+      df$onset_time <- rep(o_t, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$freq <- rep(f_c, nrow(df))
+      df$synapse <- rep("Excitatory", nrow(df))
+      results229 <- rbind(results229, df)
+    }
+  }
+}
+
+results229$freq <- factor(results229$freq, levels = freq_codes)
+results229$run_time <- factor(results229$run_time, levels = run_time_codes)
+results229$osc_rate <- factor(results229$osc_rate, levels = osc_rate_codes)
+```
+
+```{r, fig.width=1.5, fig.height=1.2}
+null_rate <- mean(filter(results229, osc_rate == "0")$rate_k)
+results229 %>% 
+  filter(osc_rate != "0") %>%
+  ggplot(aes(x=frac_tau_h, y=rate_k)) +
+    geom_boxplot() +
+    theme_classic2() +
+    scale_color_brewer(palette="PuOr", direction=-1) +
+    labs(x="Frac. tau_h", y="Pop. rate") +
+    theme(legend.position = "none")
+```
+
+```{r}
+results229 %>% 
+  filter(osc_rate == "2") %>% 
+  ggplot(aes(x=freq, y=rate_k, color=frac_tau_h)) +
+  geom_boxplot() +
+  theme_classic2() +
+  scale_color_brewer(palette="BrBG", direction=-1) +
+  labs(x="Frequency (Hz)", y="Pop. rate") 
+```
+
+```{r}
+results229 %>% 
+  filter(osc_rate != "0") %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, color=frac_tau_h)) +
+  geom_boxplot() +
+  theme_classic2() +
+  scale_color_brewer(palette="BrBG", direction=-1) +
+  labs(x="Osc. rate", y="Pop. rate") 
+```
