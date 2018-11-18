@@ -961,6 +961,8 @@ exp228:
 
 # ----------------------------------------------------------------------------
 # 11-12-2018
+# Do f and r_o matter. So some dose-response exps.
+#
 # tau_h ratio exps
 # T = tau_h * (0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0)
 # T = (1, 2, 3, 4, 5, 6, 7, 8)
@@ -1002,3 +1004,42 @@ exp230:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp230_T{1}_t{2}_r{3}_f{4}.csv --stim_name=$(DATA_PATH)/stim_exp230_t{2}_T{1}.csv --osc_name=$(DATA_PATH)/osc_exp230_T{1}_r{3}_f{4}.csv --N=100 --t={1} --tau_h=4 --burn_t={2} --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' :::: exp229.txt
 
+
+# ----------------------------------------------------------------------------
+# 11-14-2018
+# Long tau_h: do bursts matter when tau_h is realistic? More dose-response exp
+exp231:
+	# ------------------------------------------------------------------------
+	# Stim/osc file generation
+	# Osc:
+	# 4 cycle
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=8 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp231_c4 --seed=42
+	# 8 cycle
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=8 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp231_c8 --seed=42
+	# 480 cycles (tonic: 1 min)
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=8 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp231_c480 --seed=42
+	# Stim:
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=0.5 --t_onset=0.0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c4 --seed=23434
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=1.0 --t_onset=0.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c8 --seed=23434
+	# 480 cycles
+	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=55.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c480 --seed=23434
+	# ------------------------------------------------------------------------
+	# Exp
+	# 4 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c4.csv --stim_name=$(DATA_PATH)/stim_exp231_c4.csv --osc_name=$(DATA_PATH)/burst_exp231_c4.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+	# 8 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c8.csv --stim_name=$(DATA_PATH)/stim_exp231_c8.csv --osc_name=$(DATA_PATH)/burst_exp231_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+	# 480 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=55.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+
+# Re-run exp231 w/ no H (this exp requires files created in 231).
+exp232:
+	# Exp
+	# 4 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c4.csv --stim_name=$(DATA_PATH)/stim_exp231_c4.csv --osc_name=$(DATA_PATH)/burst_exp231_c4.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+	# 8 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c8.csv --stim_name=$(DATA_PATH)/stim_exp231_c8.csv --osc_name=$(DATA_PATH)/burst_exp231_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+	# 480 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=55.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
