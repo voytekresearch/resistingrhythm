@@ -1024,7 +1024,7 @@ exp231:
 	# 4 cycles
 	python homeostasis_experiments.py create_stim --t=1.0 --t_onset=0.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c8 --seed=23434
 	# 480 cycles
-	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=55.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c480 --seed=23434
+	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=59.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp231_c480 --seed=23434
 	# ------------------------------------------------------------------------
 	# Exp
 	# 4 cycle
@@ -1032,7 +1032,7 @@ exp231:
 	# 8 cycle
 	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c8.csv --stim_name=$(DATA_PATH)/stim_exp231_c8.csv --osc_name=$(DATA_PATH)/burst_exp231_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
 	# 480 cycle
-	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=55.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+	python homeostasis_experiments.py run $(DATA_PATH)/exp231_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
 
 # Re-run exp231 w/ no H (this exp requires files created in 231).
 exp232:
@@ -1042,4 +1042,4 @@ exp232:
 	# 8 cycle
 	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c8.csv --stim_name=$(DATA_PATH)/stim_exp231_c8.csv --osc_name=$(DATA_PATH)/burst_exp231_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
 	# 480 cycle
-	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=55.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
