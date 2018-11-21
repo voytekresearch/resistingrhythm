@@ -1,0 +1,99 @@
+---
+title: "Analysis : exp231 analysis"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(tidyverse)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load all data
+```{r, message=FALSE}
+# 231
+tau_h <- 600
+exp_code <- 231
+n_cycles <- c("4", "8", "480")
+
+results231 <- NULL
+for(i in 1:length(n_cycles)){
+  n_c <- n_cycles[i]
+  
+  # Load the csv
+  df <- read_csv(paste(data_path, 
+                       "exp", as.character(exp_code), 
+                       "_c", n_c, 
+                       ".csv", sep=""))  
+  # Add metadata
+  df$n_cycles <- rep(n_c, nrow(df))
+  df$frac_tau_h <- rep(as.character(
+    (
+      round(as.numeric(n_c)*(1/8)/tau_h, digits=3)
+    ), nrow(df)
+    )
+  )
+  df$osc_rate <- rep("6", nrow(df))
+  df$freq <- rep("b", nrow(df))
+  df$synapse <- rep("Excitatory", nrow(df))
+  df$homeo <- rep("Homeostasis", nrow(df))
+  if(n_c <= 8){
+    df$mode <- rep("Burst", nrow(df))
+  } else {
+    df$mode <- rep("Tonic", nrow(df))
+  }
+  
+  results231 <- rbind(results231, df)
+}
+
+exp_code <- 232
+results232 <- NULL
+for(i in 1:length(n_cycles)){
+  n_c <- n_cycles[i]
+  
+  # Load the csv
+  df <- read_csv(paste(data_path, 
+                       "exp", as.character(exp_code), 
+                       "_c", n_c, 
+                       ".csv", sep=""))  
+  # Add metadata
+  df$n_cycles <- rep(n_c, nrow(df))
+  df$frac_tau_h <- rep(as.character(
+    (
+      round(as.numeric(n_c)*(1/8)/tau_h, digits=3)
+    ), nrow(df)
+    )
+  )
+  df$osc_rate <- rep("6", nrow(df))
+  df$freq <- rep("b", nrow(df))
+  df$synapse <- rep("Excitatory", nrow(df))
+  df$homeo <- rep("No homeostasis", nrow(df))
+  if(n_c <= 8){
+    df$mode <- rep("Burst", nrow(df))
+  } else {
+    df$mode <- rep("Tonic", nrow(df))
+  }
+  
+  results232 <- rbind(results232, df)
+}
+
+rm(df, n_c, i, exp_code)
+```
+
+```{r, fig.width=2.2, fig.height=1.1}
+rbind(results231, results232) %>% 
+  ggplot(aes(x=frac_tau_h, y=rate_k, color=homeo, group=interaction(homeo, frac_tau_h))) +
+  geom_boxplot() +
+  scale_color_manual(values=c("black", "grey"), name="") 
+```
+
+```{r, fig.width=2.2, fig.height=1.1}
+rbind(results231, results232) %>% 
+  ggplot(aes(x=frac_tau_h, y=kappa_coord, color=homeo, group=interaction(homeo, frac_tau_h))) +
+  geom_boxplot() +
+  scale_color_manual(values=c("black", "grey"), name="") 
+```
