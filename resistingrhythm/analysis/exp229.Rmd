@@ -70,7 +70,7 @@ results229 %>%
 
 ```{r}
 results229 %>% 
-  filter(osc_rate == "2") %>% 
+  # filter(osc_rate == "2") %>% 
   ggplot(aes(x=freq, y=rate_k, color=frac_tau_h)) +
   geom_boxplot() +
   theme_classic2() +
