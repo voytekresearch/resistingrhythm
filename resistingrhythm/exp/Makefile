@@ -1008,6 +1008,7 @@ exp230:
 # ----------------------------------------------------------------------------
 # 11-14-2018
 # Long tau_h: do bursts matter when tau_h is realistic? More dose-response exp
+# 192bc077ad5f1f8b8129bf4661f114110f1d7cb5
 exp231:
 	# ------------------------------------------------------------------------
 	# Stim/osc file generation
