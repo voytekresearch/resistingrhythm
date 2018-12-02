@@ -464,15 +464,17 @@ dev.off()
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
 
-# Figure: Kap v Err
-```{r, fig.width=3, fig.height=1.1}
-# -
+# Figure: Error
+```{r, fig.width=3.2, fig.height=3.1}
+# ------------------------------------------------------------
+# Kappa
 results220 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(osc_rate) %>% 
   mutate(
-    M_error=mean(abs_error), SD_error=sd(abs_error), 
+    M_error=mean(mse_error), SD_error=sd(mse_error), 
+    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
     M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp1
 tmp1$mode <- rep("No homeostatsis", nrow(tmp1))
 results221 %>% 
@@ -480,10 +482,12 @@ results221 %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(osc_rate) %>% 
   mutate(
-    M_error=mean(abs_error), SD_error=sd(abs_error), 
+    M_error=mean(mse_error), SD_error=sd(mse_error), 
+    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
     M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp2
 tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
 
+# Kappa
 bind_rows(tmp1, tmp2) %>% 
 ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
   geom_point(size=0.2) +
@@ -499,24 +503,43 @@ ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
   theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
         legend.position = "none") -> p1
 
-# -
+# Rate
+bind_rows(tmp1, tmp2) %>% 
+ggplot(mapping=aes(x=M_rate_k, y=M_error, color=mode)) +
+  geom_point(size=0.2) +
+  geom_errorbar(mapping=aes(x=M_rate_k, ymin=M_error - SD_error, ymax=M_error + SD_error),
+                width=0.004, size=0.2) +
+  geom_errorbarh(mapping=aes(y=M_error, xmin=M_rate_k - SD_rate_k, xmax=M_rate_k + SD_rate_k),
+                 height=0.002, size=0.2) +
+  scale_color_manual(values=c("black", "darkgrey")) +
+  labs(title="c.", y="Log error (s)", x="Pop. rate") +
+  # lims(x=c(0.0, 0.25)) +
+  scale_y_log10() + annotation_logticks() +
+  theme_classic2() + 
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+        legend.position = "none") -> p3
+
+# ---------------------------------------------------------------------
 results220 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(osc_rate) %>% 
   mutate(
-    M_error=mean(abs_error), SD_error=sd(abs_error), 
-    M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp1
+      M_error=mean(mse_error), SD_error=sd(mse_error), 
+      M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
+      M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp1
 tmp1$mode <- rep("No homeostatsis", nrow(tmp1))
 results224 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(osc_rate) %>% 
   mutate(
-    M_error=mean(abs_error), SD_error=sd(abs_error), 
+    M_error=mean(mse_error), SD_error=sd(mse_error), 
+    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
     M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp2
 tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
 
+# Kappa
 bind_rows(tmp1, tmp2) %>% 
 ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
   geom_point(size=0.2) +
@@ -532,22 +555,44 @@ ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
   theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
         legend.title=element_blank()) -> p2
 
+# Rate
+bind_rows(tmp1, tmp2) %>% 
+ggplot(mapping=aes(x=M_rate_k, y=M_error, color=mode)) +
+  geom_point(size=0.2) +
+  geom_errorbar(mapping=aes(x=M_rate_k, ymin=M_error - SD_error, ymax=M_error + SD_error),
+                width=0.004, size=0.2) +
+  geom_errorbarh(mapping=aes(y=M_error, xmin=M_rate_k - SD_rate_k, xmax=M_rate_k + SD_rate_k),
+                 height=0.002, size=0.2) +
+  scale_color_manual(values=c("black", "darkgrey")) +
+  labs(title="d.", y="Log error (s)", x="Pop. rate") +
+  # lims(x=c(0.0, 0.25)) +
+  theme_classic2() + 
+  scale_y_log10() +
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+        legend.title=element_blank()) -> p4
+
+
+
 # -
-p3 <- textGrob("Tonic")
-p4 <- textGrob("Burst", gp=gpar(col="darkgoldenrod3"))
+p5 <- textGrob("Tonic")
+p6 <- textGrob("Burst", gp=gpar(col="darkgoldenrod3"))
 
 # -
 layout_matrix <- rbind(
-  c(3, 3, 4, 4, NA),
-  c(1, 1, 2, 2, 2),
-  c(1, 1, 2, 2, 2),
-  c(1, 1, 2, 2, 2),
-  c(1, 1, 2, 2, 2)
+  c(5, 5, 5, 6, 6, 6, 6, NA),
+  c(1, 1, 1, 2, 2, 2, 2, 2),
+  c(1, 1, 1, 2, 2, 2, 2, 2),
+  c(1, 1, 1, 2, 2, 2, 2, 2),
+  c(1, 1, 1, 2, 2, 2, 2, 2),
+  c(3, 3, 3, 4, 4, 4, 4, 4),
+  c(3, 3, 3, 4, 4, 4, 4, 4),
+  c(3, 3, 3, 4, 4, 4, 4, 4),
+  c(3, 3, 3, 4, 4, 4, 4, 4)
 )
-grid.arrange(p1, p2, p3, p4, layout_matrix=layout_matrix)
+grid.arrange(p1, p2, p3, p4, p5, p6, layout_matrix=layout_matrix)
 
-png(file="fig3.png", bg="white", width=6, height=2.1, unit="in", res=300)
-grid.arrange(p1, p2, p3, p4, layout_matrix=layout_matrix)
+png(file="fig3.png", bg="white", width=6.4, height=2.2, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, layout_matrix=layout_matrix)
 dev.off()
 ```
 
