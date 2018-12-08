@@ -69,12 +69,12 @@ def HHH(time,
 
     # While concentration vars are said to be
     # passed in 'molar',
-    # we correct for the way units in brian2 
+    # we correct for the way units in brian2
     # define liter and how that interacts with
     # the float() values of numbers who've been
-    # touched by volume units. 
+    # touched by volume units.
     # For example, if you passed 1 and we convert to
-    # 1 liter internally, then cast back to float the 
+    # 1 liter internally, then cast back to float the
     # '1' becomes 0.001.
     # that is
     # > float(1 * liter)
@@ -94,8 +94,8 @@ def HHH(time,
     V_l = -70 * mV
     V_Na = 50 * mV
 
-    # Ca and Homeostasis values from 
-    # Siegel, M., Marder, E.V.E. & Abbott, L.F., 1994. Activity-dependent 
+    # Ca and Homeostasis values from
+    # Siegel, M., Marder, E.V.E. & Abbott, L.F., 1994. Activity-dependent
     # current distributions in model neurons. , 91(November), pp.11308-11312.
     # Who modeled a hippocampul neuron.
 
@@ -107,8 +107,9 @@ def HHH(time,
     V1 = -50 * mV
     V2 = 10 * mV
     g_Ca = 0.03 * msiemens
+    G_Ca = g_Ca * 2
 
-    # dg/dt 
+    # dg/dt
     G_Na = 360 * msiemens
     G_K = 120 * msiemens  # Try 90?
     G_KCa = 60 * msiemens
@@ -157,8 +158,8 @@ def HHH(time,
     if homeostasis:
         eqs += """ 
         dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
-        # dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
-        g_Ca : siemens
+        dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
+        # g_Ca : siemens
         dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
         dg_KCa/dt = (1 / tau_h) * (G_KCa / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_KCa) : siemens 
         """
