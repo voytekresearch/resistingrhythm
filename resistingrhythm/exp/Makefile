@@ -1087,3 +1087,158 @@ exp233:
 		--joblog '$(DATA_PATH)/exp233_c480.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 		'python homeostasis_experiments.py run $(DATA_PATH)/exp233_c480_f{} --stim_name=$(DATA_PATH)/stim_exp233_c480.csv --osc_name=$(DATA_PATH)/osc_exp233_c480_f{}.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+
+
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
+# For the 220-230 series the dg_CA/dt term was commented out,
+# and these were run w/ fixed Ca conductance. This is not correct?
+# Rerun select.
+# b8a0e310a6ba0ea188b233fc6b6b28549687bafc
+
+# ----------------------------------------------------------------------------
+# Excitatory
+# no H
+exp234:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp234.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp234_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp220.log
+
+# H
+exp235:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp235.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp235_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp235.log
+
+# Inhibitory
+# no H
+exp236:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp236.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp236_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp236.log
+
+# H
+exp237:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp237.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp237_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp237.log
+
+
+# ----------------------------------------------------------------------------
+# Excitatory burst w H
+exp238:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp238.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp238_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp238.log
+
+# Inhibitory burst w H
+exp239:
+	parallel -j 38 -v \
+		--joblog '$(DATA_PATH)/exp239.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp239_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/burst{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 135 140 145 150 155 160 | tee $(DATA_PATH)/exp239.log
+
+
+# ----------------------------------------------------------------------------
+# Vary calcium, sustained E w/ H.
+# 0.026 0.028 0.032 0.034
+exp240:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp240.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp240_stim{1}_osc{2}_ca{3} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --w_min=5e-6 --w_max=50e-6 --Ca_target={3} --sigma=0 --num_trials=10 --seed_value=42 --verbose' \
+	::: 3 ::: 101 103 105 115 125 135 145 155 ::: 0.0026 0.0028 0.0032 0.0034 | tee $(DATA_PATH)/exp240.log
+
+# ----------------------------------------------------------------------------
+# Realistic tau_h
+exp241:
+	# ------------------------------------------------------------------------
+	# Stim/osc file generation
+	# Osc:
+	# 4 cycle
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=8 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp241_c4 --seed=42
+	# 8 cycle
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=8 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp241_c8 --seed=42
+	# 480 cycles (tonic: 1 min)
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=8 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp241_c480 --seed=42
+	# Stim:
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=0.5 --t_onset=0.0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp241_c4 --seed=23434
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=1.0 --t_onset=0.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp241_c8 --seed=23434
+	# 480 cycles
+	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=59.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp241_c480 --seed=23434
+	# ------------------------------------------------------------------------
+	# Exp
+	# 4 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp241_c4.csv --stim_name=$(DATA_PATH)/stim_exp241_c4.csv --osc_name=$(DATA_PATH)/burst_exp241_c4.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+	# 8 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp241_c8.csv --stim_name=$(DATA_PATH)/stim_exp241_c8.csv --osc_name=$(DATA_PATH)/burst_exp241_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+	# 480 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp241_c480.csv --stim_name=$(DATA_PATH)/stim_exp241_c480.csv --osc_name=$(DATA_PATH)/osc_exp241_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True
+
+# Re-run exp231 w/ no H (this exp requires files created in 231).
+exp242:
+	# Exp
+	# 4 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp242_c4.csv --stim_name=$(DATA_PATH)/stim_exp241_c4.csv --osc_name=$(DATA_PATH)/burst_exp241_c4.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+	# 8 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp242_c8.csv --stim_name=$(DATA_PATH)/stim_exp241_c8.csv --osc_name=$(DATA_PATH)/burst_exp241_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+	# 480 cycle
+	python homeostasis_experiments.py run $(DATA_PATH)/exp242_c480.csv --stim_name=$(DATA_PATH)/stim_exp241_c480.csv --osc_name=$(DATA_PATH)/osc_exp241_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+
+
+# ----------------------------------------------------------------------------
+# Rerun freq dependence using a realistic tau_h
+exp243:
+	# Stim/osc file generation
+	# Osc:
+	# 4 cycle
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=12 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c4_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=20 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c4_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=28 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c4_f28 --seed=42
+	# 8 cycle
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=12 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c8_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=20 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c8_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=28 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp243_c8_f28 --seed=42
+	# 480 cycles (tonic: 1 min)
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=12 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp243_c480_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=20 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp243_c480_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=28 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp243_c480_f28 --seed=42
+	# Stim:
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=0.5 --t_onset=0.0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp243_c4 --seed=23434
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=1.0 --t_onset=0.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp243_c8 --seed=23434
+	# 480 cycles
+	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=59.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp243_c480 --seed=23434
+	# ------------------------------------------------------------------------
+	# Exp
+	# 4 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp243_c4.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp243_c4_f{} --stim_name=$(DATA_PATH)/stim_exp243_c4.csv --osc_name=$(DATA_PATH)/burst_exp243_c4_f{}.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+	# 8 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp243_c8.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp243_c8_f{} --stim_name=$(DATA_PATH)/stim_exp243_c8.csv --osc_name=$(DATA_PATH)/burst_exp243_c8_f{}.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+	# 480 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp243_c480.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp243_c480_f{} --stim_name=$(DATA_PATH)/stim_exp243_c480.csv --osc_name=$(DATA_PATH)/osc_exp243_c480_f{}.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+
