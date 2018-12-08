@@ -60,12 +60,35 @@ results229$osc_rate <- factor(results229$osc_rate, levels = osc_rate_codes)
 ```
 
 ```{r, fig.width=1.4, fig.height=0.8}
-# null_rate <- mean(filter(results229, osc_rate == "0")$rate_k)
 results229 %>% 
+  filter(osc_rate == "6", freq =="8") %>% 
   ggplot(aes(x=frac_tau_h, y=rate_k)) +
-    geom_boxplot() +
+    geom_jitter(size=0.01) +
     theme_classic2() +
     labs(x="Frac. tau_h", y="Pop. rate") +
+    theme(legend.position = "right") 
+```
+
+```{r, fig.width=2, fig.height=1}
+results229 %>% 
+  filter(osc_rate == "6", freq =="8") %>% 
+  group_by(osc_rate, frac_tau_h) %>%
+  summarise(M=mean(rate_k), SD=sd(rate_k)) %>%
+  ggplot(aes(x=frac_tau_h, y=M)) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.2, size=0.8)  +
+  labs(y="Pop. rate", x="tau_h") +
+  lims(y=c(0, 160))
+```
+
+```{r, fig.width=2.2, fig.height=1.2}
+results229 %>% 
+  filter(frac_tau_h == "2") %>% 
+  filter(osc_rate != "0") %>% 
+  ggplot(aes(x=osc_rate, y=rate_k)) +
+    geom_boxplot() +
+    theme_classic2() +
+    labs(x="Osc rate", y="Pop. rate") +
     theme(legend.position = "right") 
 ```
 
@@ -83,7 +106,7 @@ results229 %>%
 
 ```{r, fig.width=1.2, fig.height=0.6}
 results229 %>% 
-  # filter(osc_rate == "4") %>%
+  filter(osc_rate == "6") %>%
   ggplot(aes(x=freq, y=rate_k, color=as.numeric(frac_tau_h), group=interaction(freq, frac_tau_h))) +
   geom_jitter(size=0.02, width=.2, alpha=0.5, outlier.colour = NA) +
   # geom_boxplot() +
