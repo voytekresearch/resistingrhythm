@@ -4,7 +4,10 @@ output: html_notebook
 ---
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(readr)
 library(gridExtra)
 library(grid)
 library(ggpubr)
@@ -87,7 +90,7 @@ rm(df, n_c, i, exp_code)
 ```{r, fig.width=2.2, fig.height=1.1}
 rbind(results231, results232) %>% 
   ggplot(aes(x=frac_tau_h, y=rate_k, color=homeo, group=interaction(homeo, frac_tau_h))) +
-  geom_boxplot() +
+  geom_boxplot(size=0.6) +
   scale_color_manual(values=c("black", "grey"), name="") 
 ```
 
