@@ -1044,3 +1044,46 @@ exp232:
 	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c8.csv --stim_name=$(DATA_PATH)/stim_exp231_c8.csv --osc_name=$(DATA_PATH)/burst_exp231_c8.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
 	# 480 cycle
 	python homeostasis_experiments.py run $(DATA_PATH)/exp232_c480.csv --stim_name=$(DATA_PATH)/stim_exp231_c480.csv --osc_name=$(DATA_PATH)/osc_exp231_c480.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=False
+
+
+# ----------------------------------------------------------------------------
+# Rerun freq dependence using a realistic tau_h
+exp233:
+	# Stim/osc file generation
+	# Osc:
+	# 4 cycle
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=12 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c4_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=20 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c4_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=0.5 --t_onset=0 --f=28 --n_cycles=4 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c4_f28 --seed=42
+	# 8 cycle
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=12 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c8_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=20 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c8_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=1.0 --t_onset=0 --f=28 --n_cycles=8 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/burst_exp233_c8_f28 --seed=42
+	# 480 cycles (tonic: 1 min)
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=12 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp233_c480_f12 --seed=42
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=20 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp233_c480_f20 --seed=42
+	python homeostasis_experiments.py create_osc --t=60.0 --t_onset=0 --f=28 --n_cycles=480 --min_rate=2 --rate=6 --n=1000 --name=$(DATA_PATH)/osc_exp233_c480_f28 --seed=42
+	# Stim:
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=0.5 --t_onset=0.0 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp233_c4 --seed=23434
+	# 4 cycles
+	python homeostasis_experiments.py create_stim --t=1.0 --t_onset=0.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp233_c8 --seed=23434
+	# 480 cycles
+	python homeostasis_experiments.py create_stim --t=60.0 --t_onset=59.5 --w=20 --rate=6 --n=1000 --name=$(DATA_PATH)/stim_exp233_c480 --seed=23434
+	# ------------------------------------------------------------------------
+	# Exp
+	# 4 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp233_c4.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp233_c4_f{} --stim_name=$(DATA_PATH)/stim_exp233_c4.csv --osc_name=$(DATA_PATH)/burst_exp233_c4_f{}.csv --N=100 --t=0.5 --tau_h=600 --burn_t=0.0 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+	# 8 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp233_c8.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp233_c8_f{} --stim_name=$(DATA_PATH)/stim_exp233_c8.csv --osc_name=$(DATA_PATH)/burst_exp233_c8_f{}.csv --N=100 --t=1.0 --tau_h=600 --burn_t=0.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
+	# 480 cycle
+	parallel -j 3 -v \
+		--joblog '$(DATA_PATH)/exp233_c480.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+		'python homeostasis_experiments.py run $(DATA_PATH)/exp233_c480_f{} --stim_name=$(DATA_PATH)/stim_exp233_c480.csv --osc_name=$(DATA_PATH)/osc_exp233_c480_f{}.csv --N=100 --t=60 --tau_h=600 --burn_t=59.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=20 --seed_value=42 --verbose --homeostasis=True' ::: 12 20 28
