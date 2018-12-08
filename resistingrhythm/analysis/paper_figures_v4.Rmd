@@ -4,7 +4,10 @@ output: html_notebook
 ---
 
 ```{r, message=FALSE}
-library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(readr)
 library(gridExtra)
 library(grid)
 library(ggpubr)
