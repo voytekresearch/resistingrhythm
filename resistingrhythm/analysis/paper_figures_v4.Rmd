@@ -372,7 +372,7 @@ bind_rows(results220, results222) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=0.8) +
+    geom_point(size=1.25) +
     geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                   width=.15, size=0.2) +
     scale_color_manual(values=c("black", "grey")) +
@@ -389,7 +389,7 @@ bind_rows(results221, results223) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=0.8) +
+    geom_point(size=1.25) +
     geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                   width=.15, size=0.2) +
     scale_color_manual(values=c("black", "grey")) +
@@ -406,7 +406,7 @@ bind_rows(results220, results222) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-  geom_point(size=0.8) +
+  geom_point(size=1.25) +
   geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
@@ -425,7 +425,7 @@ bind_rows(results221, results223) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-  geom_point(size=0.8) +
+  geom_point(size=1.25) +
   geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey"), name="Tonic") +
@@ -446,7 +446,7 @@ bind_rows(results224, results227)  %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=0.8) +
+    geom_point(size=1.25) +
     geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
@@ -463,7 +463,7 @@ bind_rows(results224, results227)  %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=0.8) +
+    geom_point(size=1.25) +
     geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1"), name="Burst") +
@@ -471,7 +471,7 @@ bind_rows(results224, results227)  %>%
     lims(y=c(0.0, 180.0)) +
     theme_classic2() +
   theme(
-    legend.position = c(1.35, .5),
+    legend.position = c(1.5, -1.25),
     legend.title = element_text(colour = 'darkgoldenrod3'),
     legend.background = element_rect(colour ="black"),
     legend.key.size = unit(.5, "cm"),
@@ -516,14 +516,14 @@ p11 <- textGrob("Excitability")
 # -
 layout_matrix <- rbind(
   c(NA, 8, 8, 8, NA, 9, 9, 9, 9, 9, 9, NA, NA),
-  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, NA, NA),
-  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, NA, NA),
-  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, NA, NA),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
   c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
   c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, 7, 7), 
-  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, 7, 7), 
-  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, 7, 7), 
-  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, 7, 7)
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA), 
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA), 
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA)
 )
 grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout_matrix=layout_matrix)
 
@@ -563,7 +563,7 @@ tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
 # Kappa
 bind_rows(tmp1, tmp2) %>% 
 ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
-  geom_point(size=0.2) +
+  geom_point(size=1.25) +
   geom_errorbar(mapping=aes(x=M_kappa, ymin=M_error - SD_error, ymax=M_error + SD_error),
                 width=0.004, size=0.2) +
   geom_errorbarh(mapping=aes(y=M_error, xmin=M_kappa - SD_kappa, xmax=M_kappa + SD_kappa),
@@ -615,7 +615,7 @@ tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
 # Kappa
 bind_rows(tmp1, tmp2) %>% 
 ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
-  geom_point(size=0.2) +
+  geom_point(size=1.25) +
   geom_errorbar(mapping=aes(x=M_kappa, ymin=M_error - SD_error, ymax=M_error + SD_error),
                 width=0.004, size=0.2) +
   geom_errorbarh(mapping=aes(y=M_error, xmin=M_kappa - SD_kappa, xmax=M_kappa + SD_kappa),
@@ -719,7 +719,7 @@ rbind(results231, results232) %>%
   geom_boxplot(size=0.6) +
   stat_compare_means(method="wilcox.test", label="p.signif", 
                      label.x=1.3, size=3, show.legend=FALSE) +
-  labs(title="c.", y="Pop. rate", x=TeX("$t_{oscillation} / \\tau_{homeostasis}$")) +
+  labs(title="c.", y="Pop. rate", x=TeX("$t_{oscillation} / \\tau_{h}$")) +
   scale_color_manual(values=c("black", "grey"), name=NA) +
   theme_classic2() +
   theme(
