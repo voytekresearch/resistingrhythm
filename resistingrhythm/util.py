@@ -7,7 +7,10 @@ from scipy.signal import square
 from fakespikes import neurons, rates
 from fakespikes import util as fsutil
 
+import resistingrhythm
+
 import numpy as np
+from scipy import signal
 
 
 def filter_spikes(ns, ts, window):
@@ -249,6 +252,62 @@ def current_pulse(t=1, t_onset=0.8, t_offset=0.9, I=10e-9, dt=1e-5, name=None):
 def load_current(filename):
     x = np.loadtxt(filename)
     return x
+
+
+def poisson_hippocampus_theta(t=1,
+                              t_onset=0.2,
+                              n_cycles=8,
+                              rate=6,
+                              n=10,
+                              dt=1e-3,
+                              name=None,
+                              seed=None):
+    """Simulate a Poisson population based on LFP from CA1."""
+    # Requested rate
+    sampling_rate = int(1 / dt)
+
+    # Load LFP
+    base_path = os.path.split(resistingrhythm.__file__)[0]
+    lfp_raw = np.load(os.path.join(base_path, 'data/ca1.npy'))
+    native_sampling_rate = int(1252)  # sampling rate in ../data/ca1.npy
+
+    # Limit to t; lfp_raw is 41 Mb on disk.
+    times = np.arange(0,
+                      len(lfp_raw) / native_sampling_rate,
+                      1 / native_sampling_rate)
+    lfp_raw = lfp_raw[times <= t]
+
+    # Resample lfp?
+    if native_sampling_rate != sampling_rate:
+        lfp = signal.resample(
+            lfp_raw, int(
+                (lfp_raw.size / native_sampling_rate) * sampling_rate))
+    else:
+        lfp = lfp_raw
+
+    # Normalize lfp -> (0, 1)
+    lfp = (lfp - np.min(lfp)) / (np.max(lfp) - np.min(lfp))
+
+    # Recreate time
+    times = np.arange(0, len(lfp) / sampling_rate, 1 / sampling_rate)
+
+    # Truncate lFP to burst parameters.
+    f = 8  # fixed here; approximate.
+    burst_l = (1 / float(f)) * n_cycles
+    m = np.logical_not(
+        np.logical_and(times >= t_onset, times <= (t_onset + burst_l)))
+    lfp[m] = 0
+
+    # Make spikes
+    nrns = neurons.Spikes(n, t, dt=dt, refractory=dt, seed=None)
+    firing_rate = nrns.poisson(rate * lfp)
+    ns, ts = fsutil.to_spiketimes(times[0:-1], firing_rate)
+
+    if name is not None:
+        write_spikes(name, ns, ts)
+        return None
+    else:
+        return ns, ts
 
 
 def poisson_oscillation(t=1,
