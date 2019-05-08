@@ -42,7 +42,7 @@ def HHH(time,
         record_traces=True,
         progress_report=None,
         seed_value=None):
-    """Homeostasis in HH neurons."""
+    """Homeostasis in Hippocampal HH neurons."""
     prefs.codegen.target = 'numpy'
 
     prng = np.random.RandomState(seed_value)
