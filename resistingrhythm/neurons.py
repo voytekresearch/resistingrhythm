@@ -96,9 +96,8 @@ def HHH(time,
     V_Na = 50 * mV
 
     # Ca and Homeostasis values from
-    # Siegel, M., Marder, E.V.E. & Abbott, L.F., 1994. Activity-dependent
-    # current distributions in model neurons. , 91(November), pp.11308-11312.
-    # Who modeled a hippocampul neuron.
+    # Siegel, M., Marder, & Abbott, L.F., 1994. Activity-dependent
+    # current distributions in model neurons. 91, pp.11308-11312.
 
     # d[Ca]/dt
     delta = 0.6 * umolar  # TODO: was umolar?
