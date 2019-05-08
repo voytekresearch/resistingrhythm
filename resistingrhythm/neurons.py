@@ -26,6 +26,9 @@ def HHH(time,
         external_current=None,
         Ca_target=50e-9,
         tau_h=10,
+        g_l=1.0e-3,
+        g_Ca=0.03e-3,
+        sigma=0,
         N=1,
         w_in=0.8e-9,
         tau_in=5e-3,
@@ -35,7 +38,6 @@ def HHH(time,
         tau_osc=5e-3,
         V_osc=0,
         p_connection=0.1,
-        sigma=0,
         burn_time=0,
         time_step=1e-5,
         homeostasis=True,
@@ -87,8 +89,7 @@ def HHH(time,
     # HH general params, in misc units
     Et = 20 * mvolt
     Cm = 1 * uF  # /cm2
-
-    g_l = 1.0 * msiemens
+    g_l *= siemens
 
     V_K = -100 * mV  # was 100, changed to match LeMasson
     V_l = -70 * mV
@@ -106,7 +107,7 @@ def HHH(time,
     V_Ca = 150 * mV
     V1 = -50 * mV
     V2 = 10 * mV
-    g_Ca = 0.03 * msiemens
+    g_Ca *= siemens
     G_Ca = g_Ca * 2
 
     # dg/dt
