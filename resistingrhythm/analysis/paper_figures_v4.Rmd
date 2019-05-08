@@ -22,8 +22,8 @@ data_path <- "~/Code/resistingrhythm/data/"
 # -----------------------------------------------------------------------
 # 16: Burst E, with H
 exp_code <- 224
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4) # 4
 
 results224 <- NULL
@@ -54,8 +54,8 @@ results224 %>%
 # -----------------------------------------------------------------------
 # 15: Sustained E, with H
 exp_code <- 221
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4)
 
 results221 <- NULL
@@ -87,8 +87,8 @@ results221 %>%
 # -----------------------------------------------------------------------
 # 22: Sustained E, with NO H
 exp_code <- 220
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4)
 
 results220 <- NULL
@@ -120,8 +120,8 @@ results220 %>%
 # -----------------------------------------------------------------------
 # 21: Sustained I, with H
 exp_code <- 223
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4)
 
 results223 <- NULL
@@ -153,8 +153,8 @@ results223 %>%
 # -----------------------------------------------------------------------
 # 23: Sustained I, with NO H
 exp_code <- 222
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4)
 
 results222 <- NULL
@@ -187,8 +187,8 @@ results222 %>%
 # 30: Burst I, with H
 # HERE
 exp_code <- 227
-osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130, 135, 140, 145, 150, 155, 160)
-osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0)
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
 stim_codes <- c(3, 4)
 
 results227 <- NULL
@@ -221,8 +221,8 @@ results227 %>%
 # -----------------------------------------------------------------------
 # Calcium exp, E, sustained
 exp_code <- 228
-osc_codes <- c(105, 115, 125, 135, 145, 155)
-osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+osc_codes <- c(105, 115, 125)
+osc_rates <- c(0.5, 1.5, 2.5)
 stim_codes <- c(3)
 
 ca_targets <- c(0.0026, 0.0028, 0.0032, 0.0034)
@@ -258,8 +258,8 @@ for(i in 1:length(osc_codes)){
 # -----------------------------------------------------------------------
 # # Add default Ca value, from exp
 exp_code <- 221
-osc_codes <- c(105, 115, 125, 135, 145, 155)
-osc_rates <- c(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+osc_codes <- c(105, 115, 125)
+osc_rates <- c(0.5, 1.5, 2.5)
 stim_codes <- c(3)
 ca_targets <- c(0.003, 0.003, 0.003, 0.003)
 
@@ -535,134 +535,6 @@ dev.off()
 
 ```{r}
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
-```
-
-# Figure: Error
-```{r, fig.width=3.2, fig.height=1.2}
-# ------------------------------------------------------------
-# Kappa
-results220 %>% 
-  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
-  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
-  group_by(osc_rate) %>% 
-  mutate(
-    M_error=mean(mse_error), SD_error=sd(mse_error), 
-    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
-    M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp1
-tmp1$mode <- rep("No homeostatsis", nrow(tmp1))
-results221 %>% 
-  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
-  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
-  group_by(osc_rate) %>% 
-  mutate(
-    M_error=mean(mse_error), SD_error=sd(mse_error), 
-    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
-    M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp2
-tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
-
-# Kappa
-bind_rows(tmp1, tmp2) %>% 
-ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
-  geom_point(size=1.25) +
-  geom_errorbar(mapping=aes(x=M_kappa, ymin=M_error - SD_error, ymax=M_error + SD_error),
-                width=0.004, size=0.2) +
-  geom_errorbarh(mapping=aes(y=M_error, xmin=M_kappa - SD_kappa, xmax=M_kappa + SD_kappa),
-                 height=0.002, size=0.2) +
-  scale_color_manual(values=c("black", "darkgrey")) +
-  labs(title="a.", y="Log error (s)", x="Kappa") +
-  lims(x=c(0.0, 0.25)) +
-  scale_y_log10() + annotation_logticks() +
-  theme_classic2() + 
-  theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
-        legend.position = "none") -> p1
-
-# Rate
-# bind_rows(tmp1, tmp2) %>% 
-# ggplot(mapping=aes(x=M_rate_k, y=M_error, color=mode)) +
-#   geom_point(size=0.2) +
-#   geom_errorbar(mapping=aes(x=M_rate_k, ymin=M_error - SD_error, ymax=M_error + SD_error),
-#                 width=0.004, size=0.2) +
-#   geom_errorbarh(mapping=aes(y=M_error, xmin=M_rate_k - SD_rate_k, xmax=M_rate_k + SD_rate_k),
-#                  height=0.002, size=0.2) +
-#   scale_color_manual(values=c("black", "darkgrey")) +
-#   labs(title="c.", y="Log error (s)", x="Pop. rate") +
-#   # lims(x=c(0.0, 0.25)) +
-#   scale_y_log10() + annotation_logticks() +
-#   theme_classic2() + 
-#   theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
-#         legend.position = "none") -> p3
-
-# ---------------------------------------------------------------------
-results220 %>% 
-  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
-  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
-  group_by(osc_rate) %>% 
-  mutate(
-      M_error=mean(mse_error), SD_error=sd(mse_error), 
-      M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
-      M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp1
-tmp1$mode <- rep("No homeostatsis", nrow(tmp1))
-results224 %>% 
-  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
-  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
-  group_by(osc_rate) %>% 
-  mutate(
-    M_error=mean(mse_error), SD_error=sd(mse_error), 
-    M_rate_k=mean(rate_k), SD_rate_k=sd(rate_k), 
-    M_kappa=mean(kappa_coord), SD_kappa=sd(kappa_coord)) -> tmp2
-tmp2$mode <- rep("Homeostatsis", nrow(tmp2))
-
-# Kappa
-bind_rows(tmp1, tmp2) %>% 
-ggplot(mapping=aes(x=M_kappa, y=M_error, color=mode)) +
-  geom_point(size=1.25) +
-  geom_errorbar(mapping=aes(x=M_kappa, ymin=M_error - SD_error, ymax=M_error + SD_error),
-                width=0.004, size=0.2) +
-  geom_errorbarh(mapping=aes(y=M_error, xmin=M_kappa - SD_kappa, xmax=M_kappa + SD_kappa),
-                 height=0.002, size=0.2) +
-  scale_color_manual(values=c("black", "darkgrey")) +
-  labs(title="b.", y="Log error (s)", x="Kappa") +
-  lims(x=c(0.0, 0.25)) + annotation_logticks() +
-  theme_classic2() + 
-  scale_y_log10() +
-  theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
-        legend.title=element_blank()) -> p2
-
-# Rate
-# bind_rows(tmp1, tmp2) %>% 
-# ggplot(mapping=aes(x=M_rate_k, y=M_error, color=mode)) +
-#   geom_point(size=0.2) +
-#   geom_errorbar(mapping=aes(x=M_rate_k, ymin=M_error - SD_error, ymax=M_error + SD_error),
-#                 width=0.004, size=0.2) +
-#   geom_errorbarh(mapping=aes(y=M_error, xmin=M_rate_k - SD_rate_k, xmax=M_rate_k + SD_rate_k),
-#                  height=0.002, size=0.2) +
-#   scale_color_manual(values=c("black", "darkgrey")) +
-#   labs(title="d.", y="Log error (s)", x="Pop. rate") +
-#   # lims(x=c(0.0, 0.25)) +
-#   theme_classic2() + 
-#   scale_y_log10() +
-#   theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
-#         legend.title=element_blank()) -> p4
-
-
-
-# -
-p5 <- textGrob("Tonic")
-p6 <- textGrob("Burst", gp=gpar(col="darkgoldenrod3"))
-
-# -
-layout_matrix <- rbind(
-  c(3, 3, 3, 4, 4, 4, 4, NA),
-  c(1, 1, 1, 2, 2, 2, 2, 2),
-  c(1, 1, 1, 2, 2, 2, 2, 2),
-  c(1, 1, 1, 2, 2, 2, 2, 2),
-  c(1, 1, 1, 2, 2, 2, 2, 2)
-)
-grid.arrange(p1, p2, p5, p6, layout_matrix=layout_matrix)
-
-png(file="fig3.png", bg="white", width=6.4, height=2.4, unit="in", res=300)
-grid.arrange(p1, p2, p5, p6, layout_matrix=layout_matrix)
-dev.off()
 ```
 
 # Figure: Control
