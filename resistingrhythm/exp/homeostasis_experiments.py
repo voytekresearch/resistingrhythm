@@ -10,6 +10,7 @@ from resistingrhythm.neurons import HHH
 from resistingrhythm.util import filter_spikes
 from resistingrhythm.util import poisson_impulse
 from resistingrhythm.util import poisson_oscillation
+from resistingrhythm.util import poisson_hippocampus_theta
 from resistingrhythm.util import current_pulse
 from resistingrhythm.util import load_spikes
 from resistingrhythm.util import load_current
@@ -146,26 +147,27 @@ def run(run_name,
         # -
         if verbose:
             print(">>> Running the modulation model")
-        results_k = HHH(t,
-                        ns_stim,
-                        ts_stim,
-                        ns_osc,
-                        ts_osc,
-                        external_current=external_current,
-                        N=N,
-                        Ca_target=Ca_target,
-                        bias_in=bias_in,
-                        sigma=sigma,
-                        w_in=w,
-                        w_osc=w,
-                        V_osc=V_osc,
-                        tau_osc=tau_osc,
-                        tau_h=tau_h,
-                        time_step=time_step,
-                        burn_time=burn_t,
-                        seed_value=seed_value + k,
-                        record_traces=True,
-                        homeostasis=homeostasis)
+        results_k = HHH(
+            t,
+            ns_stim,
+            ts_stim,
+            ns_osc,
+            ts_osc,
+            external_current=external_current,
+            N=N,
+            Ca_target=Ca_target,
+            bias_in=bias_in,
+            sigma=sigma,
+            w_in=w,
+            w_osc=w,
+            V_osc=V_osc,
+            tau_osc=tau_osc,
+            tau_h=tau_h,
+            time_step=time_step,
+            burn_time=burn_t,
+            seed_value=seed_value + k,
+            record_traces=True,
+            homeostasis=homeostasis)
 
         # -
         if verbose:
@@ -231,6 +233,7 @@ if __name__ == "__main__":
     fire.Fire({
         'create_stim': poisson_impulse,
         'create_osc': poisson_oscillation,
+        'create_hippocampus_theta': poisson_hippocampus_theta,
         'create_current': current_pulse,
         'run': run
     })
