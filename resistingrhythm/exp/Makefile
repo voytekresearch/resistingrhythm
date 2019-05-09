@@ -1,8 +1,8 @@
 SHELL=/bin/bash -O expand_aliases
 # DATA_PATH=/Users/type/Code/resistingrhythm/data/
-# DATA_PATH=/home/ejp/src/resistingrhythm/data
+DATA_PATH=/home/ejp/src/resistingrhythm/data
 # DATA_PATH=/home/ubuntu/src/resistingrhythm/data
-DATA_PATH=/home/stitch/Code/resistingrhythm/data
+# DATA_PATH=/home/stitch/Code/resistingrhythm/data
 # DATA_PATH=/Users/qualia/Code/resistingrhythm/data
 
 create_data_path:
