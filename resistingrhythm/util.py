@@ -258,6 +258,7 @@ def poisson_hippocampus_theta(t=1,
                               t_onset=0.2,
                               n_cycles=8,
                               rate=6,
+                              min_rate=0,
                               n=10,
                               dt=1e-3,
                               name=None,
@@ -296,7 +297,7 @@ def poisson_hippocampus_theta(t=1,
     burst_l = (1 / float(f)) * n_cycles
     m = np.logical_not(
         np.logical_and(times >= t_onset, times <= (t_onset + burst_l)))
-    lfp[m] = 0
+    lfp[m] = min_rate
 
     # Make spikes
     nrns = neurons.Spikes(n, t, dt=dt, refractory=dt, seed=None)
