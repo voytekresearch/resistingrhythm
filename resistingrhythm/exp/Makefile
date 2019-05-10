@@ -1377,12 +1377,12 @@ exp248:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp248_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/lowgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp248.log
 
-# Inhibitory burst w H
+# No H
 exp249:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp249.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp249_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/lowgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp249_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/lowgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp249.log
 
 # ---------------------------------------------------------------------------
@@ -1396,12 +1396,12 @@ exp250:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp250_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/highgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp250.log
 
-# Inhibitory burst w H
+# No H
 exp251:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp251.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp251_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/highgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp251_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/highgamma{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp251.log
 
 # ----------------------------------------------------------------------------
@@ -1415,12 +1415,12 @@ exp252:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp252_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/ripple{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp252.log
 
-# Inhibitory burst w H
+# No H
 exp253:
 	parallel -j 12 -v \
 		--joblog '$(DATA_PATH)/exp253.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
-	'python homeostasis_experiments.py run $(DATA_PATH)/exp253_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/ripple{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --V_osc=-80e-3 --tau_osc=10e-3 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp253_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/ripple{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 100 101 102 103 104 105 110 115 120 125 130 | tee $(DATA_PATH)/exp253.log
 
 
