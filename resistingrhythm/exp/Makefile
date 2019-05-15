@@ -1583,6 +1583,10 @@ exp269:
 # 5-8-2019
 # sigma: 360e-9 380e-9 400e-9 420e-9 440e-9
 
+# SUM: 5-15-19 these runs were producing Nans. Killed them. Up dt to handle the 
+# noise-driven numerical instability? Or just drop? Don't really need them for 
+# rev. response
+
 # Excitatory
 # no H
 exp270:
