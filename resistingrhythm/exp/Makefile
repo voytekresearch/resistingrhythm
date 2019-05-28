@@ -1331,6 +1331,10 @@ exp243:
 # shape control. osc_rate: 100 101 102 103 104 105 110 115 120 125 130
 # stim 3,4
 
+# SUM:
+# - H cond is not the what is expected based on exp220/221. 
+# - See 278/279 for debugging these of reults.
+
 # Excitatory
 # no H
 exp244:
@@ -1368,6 +1372,12 @@ exp247:
 
 # ---------------------------------------------------------------------------
 # 5-8-2019
+
+# SUM:
+# - Things look like expected. 
+# For bursts w/ and wout/ H, freq doesn't change the trend, but does change the
+# overall strength of kappa and rate, as expected.
+
 # 60 Hz gamma
 # Excitatory burst w H
 exp248:
@@ -1428,7 +1438,13 @@ exp253:
 # 5-8-2019
 # freq: 6,7,9,10
 
-# 6
+#  SUM:
+# - H cond is not the what is expected based on exp220/221. 
+# - See 278/279 for debugging these of reults.
+# - Putting aside the H effect, f=6-9 look self-consistent. f=10 is quite 
+#   different than all other exp conditions?
+# - Given H issue all this will have to be re-run. Just focus on 7 and 9?
+#   Faster run. Makes the point?
 
 # Excitatory
 # no H
@@ -1609,6 +1625,12 @@ exp271:
 # 5-8-2019
 # g_L: 0.9e-3, 0.95e-3, 1.05e-3, 1.1e-3
 
+# SUM: 
+# - Results for all conds are the _same_. 
+# - Is a param not getting passed through?
+# - H cond is not the what is expected based on exp220/221. 
+# - See 278/279 for debugging these of reults.
+
 # Excitatory
 # no H
 exp272:
@@ -1630,6 +1652,12 @@ exp273:
 # ---------------------------------------------------------------------------
 # 5-8-2019
 # g_Ca: 0.027e-3, 0.028e-3, 0.029e-3, 0.031e-3, 0.032e-3, 0.033e-3
+
+# SUM: 
+# - Results for all conds are the _same_. 
+# - Is a param not getting passed through?
+# - H cond is not the what is expected based on exp220/221. 
+# - See 278/279 for debugging these of reults.
 
 # Excitatory
 # no H
