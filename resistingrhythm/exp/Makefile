@@ -1650,7 +1650,7 @@ exp275:
 
 
 # ----------------------------------------------------------------------------
-# Exp2445/45 (LFP exp) was quite different from the eq. sin wave version.
+# Exp244/45 (LFP exp) was quite different from the eq. sin wave version.
 # Re-run the sin verion as a control; There have been several code changes
 # since this it was last run.
 #
