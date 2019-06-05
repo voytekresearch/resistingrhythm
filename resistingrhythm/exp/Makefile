@@ -1720,8 +1720,8 @@ exp279:
 # 
 # Re-run stim/osc:
 # make osc100
-
-# Finally, run the below
+# make stim3 stim4
+# Finally, paste in and run the below
 
 # Excitatory
 # no H
