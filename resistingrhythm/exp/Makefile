@@ -1682,7 +1682,16 @@ exp275:
 # Re-run the sin verion as a control; There have been several code changes
 # since this it was last run.
 #
-# That is, direct repeat of exp220 and exp221
+# That is, direct repeat of exp220 and exp221. The std for H+AMPA result.
+#
+# SUM: Hell. 
+#
+# These are off compared to 220/221! 
+#
+# Something dramatic has changed in the code or stim generation. 
+# Rather than suppressing activity, H is just slightly diminishing rate/kappa. 
+# Either something is wrong, or there is parameter sensitivity I don't yet 
+# understand.
 
 # Excitatory
 # no H

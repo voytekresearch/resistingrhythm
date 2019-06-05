@@ -1,0 +1,108 @@
+---
+title: "Analysis : exp278-279 analysis"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(readr)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load all data
+
+- Explore gamma=60Hz, gamma=90Hz, ripple=150 Hz
+
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+exp_code <- 278
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results278 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results278 <- rbind(results278, df)
+  }
+}
+results278 %>%
+  filter(rate_k > 0) -> results278
+
+# 22: Burst E, NO H @ 8 hz
+exp_code <- 279
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results279 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results279 <- rbind(results279, df)
+  }
+}
+results279 %>%
+  filter(rate_k > 0) -> results279
+
+results <- rbind(results278, results279)
+```
+
+```{r, fig.width=4, fig.height=1.2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate))) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() +
+  facet_grid(.~homeo, scales = "free")
+```
+
+```{r, fig.width=4, fig.height=1.2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate))) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() +
+  facet_grid(.~homeo, scales = "free")
+```
+
