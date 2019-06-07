@@ -1747,3 +1747,30 @@ exp281:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp281_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp281.log
+
+
+# ----------------------------------------------------------------------------
+# Based on 280-1 results (which require working on an old branch)
+# Here:
+# - I exposed G_KCa, and am going zero it out here. 
+# This should return expected H+AMPA effect. 
+# - Note: I arb. choose the value of G_KCa that disrupted the expected effects. 
+# - Need to do sensitivity tests on this important param, once I confirm 
+# effect recovery with these two runs.
+
+# Excitatory
+# no H
+exp282:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp282.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp282_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp282.log
+
+# H
+exp283:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp283.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp283_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp283.log
