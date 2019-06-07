@@ -1723,6 +1723,14 @@ exp279:
 # make stim3 stim4
 # Finally, paste in and run the below
 
+# SUM: 280/281 does return the expected effects. Hmm. Large g_CA does swamp 
+# out strong H effects on action potential intiation. This makes sense. The emp.
+# question is how strong is any Ca corrective currents in real neurons?
+# - Need to do a senstivity sweep. 
+# - Present w/out. Then sweep and show how it effects things.
+# - Doesn't rule our H effect at all. Of course any H effect is directly 
+#   to Ca flux when Ca is the sensor.
+
 # Excitatory
 # no H
 exp280:
