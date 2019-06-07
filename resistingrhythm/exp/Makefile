@@ -1751,8 +1751,11 @@ exp281:
 
 # ----------------------------------------------------------------------------
 # Based on 280-1 results (which require working on an old branch)
+# eea7799b9f1d20b9fe9d6f412b1258d37d69a501
+
 # Here:
 # - I exposed G_KCa, and am going zero it out here. 
+#
 # This should return expected H+AMPA effect. 
 # - Note: I arb. choose the value of G_KCa that disrupted the expected effects. 
 # - Need to do sensitivity tests on this important param, once I confirm 
