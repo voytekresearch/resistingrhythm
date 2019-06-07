@@ -1,0 +1,644 @@
+---
+title: "Analysis : exp234-242 g_Ca dynamic reactivation"
+output: html_notebook
+---
+
+```{r, message=FALSE}
+library(ggplot2)
+library(latex2exp)
+library(dplyr)
+library(magrittr)
+library(readr)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load all data
+
+I turned d(g_Ca)/dt back on but don't have record of confirming everything way. I've been using sims without it...
+```{r, message=FALSE}
+# -----------------------------------------------------------------------
+# 16: Burst E, with H
+exp_code <- 238
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results224 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    results224 <- rbind(results224, df)
+  }
+}
+
+results224 %>%
+  filter(rate_k > 0) -> results224
+
+# -----------------------------------------------------------------------
+# 15: Sustained E, with H
+exp_code <- 221
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results221 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    
+    results221 <- rbind(results221, df)
+  }
+}
+
+results221 %>%
+  filter(rate_k > 0) -> results221
+
+# -----------------------------------------------------------------------
+# 22: Sustained E, with NO H
+exp_code <- 220
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results220 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    
+    results220 <- rbind(results220, df)
+  }
+}
+
+results220 %>%
+  filter(rate_k > 0) -> results220
+
+# -----------------------------------------------------------------------
+# 21: Sustained I, with H
+exp_code <- 223
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results223 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("GABA", nrow(df))
+    
+    results223 <- rbind(results223, df)
+  }
+}
+
+results223 %>%
+  filter(rate_k > 0) -> results223
+
+# -----------------------------------------------------------------------
+# 23: Sustained I, with NO H
+exp_code <- 222
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results222 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("GABA", nrow(df))
+    
+    results222 <- rbind(results222, df)
+  }
+}
+
+results222 %>%
+  filter(rate_k > 0) -> results222
+
+# -----------------------------------------------------------------------
+# 30: Burst I, with H
+# HERE
+exp_code <- 227
+osc_codes <- c(100, 101, 102, 103, 104, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results227 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("GABA", nrow(df))
+    
+    results227 <- rbind(results227, df)
+  }
+}
+
+results227 %>%
+  filter(rate_k > 0) -> results227
+
+
+# -----------------------------------------------------------------------
+# Calcium exp, E, sustained
+exp_code <- 228
+osc_codes <- c(105, 115, 125)
+osc_rates <- c(0.5, 1.5, 2.5)
+stim_codes <- c(3)
+
+ca_targets <- c(0.0026, 0.0028, 0.0032, 0.0034)
+
+results228 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(ca in ca_targets){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      
+      # Load the csv
+      df <- read_csv(paste(data_path,
+                           "exp", as.character(exp_code),
+                           "_stim", as.character(s_c),
+                           "_osc", as.character(o_c),
+                           "_ca", as.character(ca),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$Ca_target <- rep(ca, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      
+      results228 <- rbind(results228, df)
+    }
+  }
+}
+
+# -----------------------------------------------------------------------
+# # Add default Ca value, from exp
+exp_code <- 221
+osc_codes <- c(105, 115, 125)
+osc_rates <- c(0.5, 1.5, 2.5)
+stim_codes <- c(3)
+ca_targets <- c(0.003, 0.003, 0.003, 0.003)
+
+df <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(ca in ca_targets){
+
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+
+      # Load the csv
+      df <- read_csv(paste(data_path,
+                           "exp", as.character(exp_code),
+                           "_stim", as.character(s_c),
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$Ca_target <- rep(ca, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      
+      results228 <- rbind(results228, df)
+    }
+  }
+}
+
+# Clean up
+rm(df, exp_code, i, o_c, o_r, osc_codes, osc_rates, s_c, stim_codes)
+
+# 231
+tau_h <- 600
+exp_code <- 231
+n_cycles <- c("4", "8", "480")
+
+results231 <- NULL
+for(i in 1:length(n_cycles)){
+  n_c <- n_cycles[i]
+  
+  # Load the csv
+  df <- read_csv(paste(data_path, 
+                       "exp", as.character(exp_code), 
+                       "_c", n_c, 
+                       ".csv", sep=""))  
+  # Add metadata
+  df$n_cycles <- rep(n_c, nrow(df))
+  df$frac_tau_h <- rep(as.character(
+    (
+      round(as.numeric(n_c)*(1/8)/tau_h, digits=3)
+    ), nrow(df)
+    )
+  )
+  df$osc_rate <- rep("6", nrow(df))
+  df$freq <- rep("b", nrow(df))
+  df$synapse <- rep("Excitatory", nrow(df))
+  df$homeo <- rep("Homeostasis", nrow(df))
+  if(n_c <= 8){
+    df$mode <- rep("Burst", nrow(df))
+  } else {
+    df$mode <- rep("Tonic", nrow(df))
+  }
+  
+  results231 <- rbind(results231, df)
+}
+
+# Realistic tau_h and oscillation.
+exp_code <- 232
+results232 <- NULL
+for(i in 1:length(n_cycles)){
+  n_c <- n_cycles[i]
+  
+  # Load the csv
+  df <- read_csv(paste(data_path, 
+                       "exp", as.character(exp_code), 
+                       "_c", n_c, 
+                       ".csv", sep=""))  
+  # Add metadata
+  df$n_cycles <- rep(n_c, nrow(df))
+  df$frac_tau_h <- rep(as.character(
+    (
+      round(as.numeric(n_c)*(1/8)/tau_h, digits=3)
+    ), nrow(df)
+    )
+  )
+  df$osc_rate <- rep("6", nrow(df))
+  df$freq <- rep("b", nrow(df))
+  df$synapse <- rep("Excitatory", nrow(df))
+  df$homeo <- rep("No homeostasis", nrow(df))
+  if(n_c <= 8){
+    df$mode <- rep("Burst", nrow(df))
+  } else {
+    df$mode <- rep("Tonic", nrow(df))
+  }
+  
+  results232 <- rbind(results232, df)
+}
+
+rm(df, n_c, i, exp_code)
+```
+
+# Figure: Main results
+```{r fig.height=2.25, fig.width=6}
+# Kappa no H, E
+bind_rows(results220, results222) %>%
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>% 
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+    geom_point(size=1.25) +
+    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
+                  width=.15, size=0.2) +
+    scale_color_manual(values=c("black", "grey")) +
+    lims(y=c(0.0, 0.2)) +
+    labs(title="b.", y="Kappa", x="Osc. rate") +
+    theme_classic2() +
+    theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+          legend.position="none") -> p1
+
+# Kappa with H, E
+bind_rows(results221, results223) %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+    geom_point(size=1.25) +
+    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
+                  width=.15, size=0.2) +
+    scale_color_manual(values=c("black", "grey")) +
+    lims(y=c(0.0, 0.2)) +
+    labs(title="d.", y="Kappa", x="Osc. rate") +
+    theme_classic2() +
+    theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+          legend.position="none") -> p2
+
+# Rate no H, E
+bind_rows(results220, results222) %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>% 
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+  geom_point(size=1.25) +
+  geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
+                width=.15, size=0.2) +
+  scale_color_manual(values=c("black", "grey")) +
+  labs(title="a.", y="Pop. rate", x="Osc. rate") +
+  lims(y=c(0.0, 180.0)) +
+  guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
+  theme_classic2() +
+  theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+        legend.position="none") -> p3
+
+# -
+# Rate, with H, E
+bind_rows(results221, results223) %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+  geom_point(size=1.25) +
+  geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+                width=.15, size=0.2) +
+  scale_color_manual(values=c("black", "grey"), name="Tonic") +
+  labs(title="c.", y="Pop. rate", x="Osc. rate") +
+  lims(y=c(0.0, 180.0)) +
+  theme_classic2() +
+  theme(
+    legend.position = c(-.5, -0.2),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.5, "cm"),
+    plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p4
+
+
+# --------------------------------------------------------
+bind_rows(results224, results227)  %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+    geom_point(size=1.25) +
+    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+                width=.15, size=0.2) +
+    scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
+    lims(y=c(0.0, 0.2)) +
+    labs(title="f.", y="Kappa", x="Osc. rate") +
+    theme_classic2() +
+    theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
+          legend.position="none") -> p5
+
+# -
+bind_rows(results224, results227)  %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(synapse, osc_rate) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
+    geom_point(size=1.25) +
+    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+                width=.15, size=0.2) +
+    scale_color_manual(values=c("darkgoldenrod3", "goldenrod1"), name="Burst") +
+    labs(title="e.", y="Pop. rate", x="Osc. rate") +
+    lims(y=c(0.0, 180.0)) +
+    theme_classic2() +
+  theme(
+    legend.position = c(1.5, -1.25),
+    legend.title = element_text(colour = 'darkgoldenrod3'),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.5, "cm"),
+    plot.title = element_text(hjust = -.3, size=18, face="bold")) -> p6
+
+# -
+tmp3 <- results221
+tmp3$osc_mode <- rep("Tonic", nrow(tmp3))
+tmp4 <- results224
+tmp4$osc_mode <- rep("Burst", nrow(tmp4))
+
+tmp5 <- results223
+tmp5$osc_mode <- rep("Tonic", nrow(tmp5))
+tmp6 <- results227
+tmp6$osc_mode <- rep("Burst", nrow(tmp6))
+
+bind_rows(tmp3, tmp4, tmp5, tmp6) %>% 
+  # filter(synapse=="AMPA") %>% 
+  ggplot(aes(x=osc_mode, y=rate_k, color=osc_mode)) +
+  geom_point(size=-1, aes(fill=osc_mode)) +
+  geom_boxplot(notch = TRUE, width=0.4,  outlier.size=0.05, outlier.alpha=0.5, show.legend=FALSE) +
+  facet_grid(.~synapse) +
+  labs(title="g.", y="Pop. rate", x="") +
+  theme_classic2() +
+  scale_fill_manual(values=c("black", "black"), name="Oscillation") +
+  scale_color_manual(values=c("black", "black"), name="Oscillation") +
+  stat_compare_means(method="wilcox.test", label="p.signif", 
+                     label.x=1.3, size=3, show.legend=FALSE) +
+  # lims(y=c(0.0, 180.0)) +
+  guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
+  theme(plot.title = element_text(hjust = -.1, size=18, face="bold"), 
+          legend.position="none",
+          strip.background = element_blank(),
+          axis.text.x = element_text(angle = 70, hjust = 1)) -> p7
+
+# -
+p8 <- textGrob("No homeostatsis")
+p9 <- textGrob("Homeostatsis")
+p10 <- textGrob("Synchrony")
+p11 <- textGrob("Excitability")
+
+# -
+layout_matrix <- rbind(
+  c(NA, 8, 8, 8, NA, 9, 9, 9, 9, 9, 9, NA, NA),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(11, 3, 3, 3, NA, 4, 4, 4, 6, 6, 6, 7, 7),
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, 7, 7), 
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA), 
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA), 
+  c(10, 1, 1, 1, NA, 2, 2, 2, 5, 5, 5, NA, NA)
+)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout_matrix=layout_matrix)
+
+# -
+png(file="fig2.png", bg="white", width=12.0, height=4.5, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, layout_matrix=layout_matrix)
+dev.off()
+```
+
+```{r}
+print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
+```
+
+# Figure: Control
+```{r, fig.width=2.4, fig.height=2.8}
+# -
+results228 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(osc_rate, Ca_target) %>% 
+  summarise(M=mean(kappa_coord), SD=sd(kappa_coord)) -> tmp1
+
+tmp1 %>% 
+  ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, 
+                                           levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  labs(title="b.", y="Kappa", x="Osc. rate") +
+  scale_color_manual(
+    values=c("plum1", "plum2", "black", "plum3", "plum4"), 
+    guide=FALSE) +
+  theme_classic2() +
+  theme(plot.title = element_text(hjust = -.5, size=18, face="bold")) -> p1
+
+# -
+results228 %>% 
+  filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
+  mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
+  group_by(osc_rate, Ca_target) %>% 
+  summarise(M=mean(rate_k), SD=sd(rate_k)) -> tmp2
+
+tmp2 %>% 
+ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target, 
+                                         levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  labs(title="a.", y="Pop. rate", x="Osc. rate") +
+  scale_color_manual(
+    values=c("plum1", "plum2", "black", "plum3", "plum4"), 
+    name="Target [Ca]\n(mmolar)") +
+  theme_classic2() +
+  theme(
+    plot.title = element_text(hjust = -.5, size=18, face="bold"),
+    legend.position = c(1.35, -0.5),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.4, "cm")) -> p2
+
+# -----------------------------------------------------------------------------------
+# Frac of tau_h
+# rate
+rbind(results231, results232) %>% 
+  ggplot(aes(x=frac_tau_h, y=rate_k, color=homeo, group=interaction(homeo, frac_tau_h))) +
+  geom_boxplot(size=0.6) +
+  stat_compare_means(method="wilcox.test", label="p.signif", 
+                     label.x=1.3, size=3, show.legend=FALSE) +
+  labs(title="c.", y="Pop. rate", x=TeX("$t_{oscillation} / \\tau_{h}$")) +
+  scale_color_manual(values=c("black", "grey"), name=NA) +
+  theme_classic2() +
+  theme(
+    plot.title = element_text(hjust = -.5, size=18, face="bold"),
+    legend.background = element_rect(colour ="black"),
+    legend.position = c(1.35, 0.5),
+    legend.title=element_blank(),
+    legend.key.size = unit(.3, "cm")) -> p6
+
+# -
+p3 <- textGrob("")
+p4 <- textGrob("Target [Ca]\nperturbation")
+p8 <- textGrob(TeX("Biological $\\tau_h$"))
+p5 <- nullGrob()
+p9 <- nullGrob()
+
+# -
+# layout_matrix <- rbind(
+#   c(4, 2, 2, 5), 6, 6, 5),
+#   c(4, 2, 2, 5), 6, 6, 5),
+#   c(4, 2, 2, 5), 6, 6, 5),
+#   c(4, 2, 2, 5), 6, 6, 5),
+#   c(3, 1, 1, 5), 7, 7, 5),
+#   c(3, 1, 1, 5), 7, 7, 5),
+#   c(3, 1, 1, 5), 7, 7, 5), 
+#   c(3, 1, 1, 5), 7, 7, 5) 
+# )
+
+layout_matrix <- rbind(
+  c(4, 2, 2, 5), 
+  c(4, 2, 2, 5), 
+  c(4, 2, 2, 5), 
+  c(4, 2, 2, 5), 
+  c(3, 1, 1, 5), 
+  c(3, 1, 1, 5), 
+  c(3, 1, 1, 5),  
+  c(3, 1, 1, 9), 
+  c(8, 6, 6, 9),
+  c(8, 6, 6, 9),
+  c(8, 6, 6, 9),
+  c(8, 6, 6, 9)
+)
+grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, layout_matrix=layout_matrix)
+
+png(file="fig4.png", bg="white", width=4.8, height=5.6, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, layout_matrix=layout_matrix)
+dev.off()
+```
