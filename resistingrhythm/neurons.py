@@ -28,6 +28,7 @@ def HHH(time,
         tau_h=10,
         g_l=1.0e-3,
         g_Ca=0.03e-3,
+        G_Ca=60e-3,
         G_KCa=60e-3,
         sigma=0,
         N=1,
@@ -84,6 +85,7 @@ def HHH(time,
     # 0.001
     # **To correct for that, we use mmolar in all our unit conversions.**
     Ca_target *= mmolar
+    Ca = Ca_target
     tau_h *= second
 
     # ----------------------------------------------------
@@ -108,13 +110,14 @@ def HHH(time,
     V1 = -50 * mV
     V2 = 10 * mV
     g_Ca *= siemens
-    G_Ca = g_Ca * 2
+    G_Ca *= siemens
 
     # dg/dt
     G_Na = 360 * msiemens
     G_K = 120 * msiemens  # Try 90?
     G_KCa *= siemens
-    g_Na = G_Na / 2
+
+    g_Na = G_Na / 2  # Init
     g_K = G_K / 2
     g_KCa = G_KCa / 2
 
