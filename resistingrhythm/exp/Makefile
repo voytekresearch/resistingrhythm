@@ -1779,3 +1779,28 @@ exp283:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp283_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp283.log
+
+
+# ----------------------------------------------------------------------------
+# Debug conts.
+# 5d85c2da11476471f1f2ac23a4176ea8b36e5f5d
+
+# Commented out d_Ca dynamics.
+
+# Excitatory
+# no H
+exp284:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp284.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp284_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp284.log
+
+# H
+exp285:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp285.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp285_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp285.log
+
