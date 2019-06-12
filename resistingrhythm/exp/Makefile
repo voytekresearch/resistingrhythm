@@ -1761,6 +1761,8 @@ exp281:
 # - Need to do sensitivity tests on this important param, once I confirm 
 # effect recovery with these two runs.
 
+# SUM: Huh. H effect abolished again. It's not G_KCa afterall? Or, bug?
+
 # Excitatory
 # no H
 exp282:
