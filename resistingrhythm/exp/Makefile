@@ -1787,6 +1787,8 @@ exp283:
 
 # Commented out d_Ca dynamics.
 
+# SUM: TADA! Obv. Ca flux cancels out all other channel effects. Need to do sensitivity for this as part of the control figures.
+
 # Excitatory
 # no H
 exp284:
