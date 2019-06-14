@@ -1806,3 +1806,27 @@ exp285:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp285_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --G_KCa=0 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp285.log
 
+
+# ----------------------------------------------------------------------------
+# Rerun above w/ 
+# - dg_CA off but G_KCA at its default.
+# - confirm dynamic_gate flag is behaving as expected.
+# - Should be last control. Sigh.
+
+# Excitatory
+# no H
+exp286:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp286.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp286_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp286.log
+
+# H
+exp287:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp287.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp287_stim{1}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 105 110 115 120 125 130 | tee $(DATA_PATH)/exp287.log
+
