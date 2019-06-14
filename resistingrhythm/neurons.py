@@ -43,6 +43,7 @@ def HHH(time,
         burn_time=0,
         time_step=1e-5,
         homeostasis=True,
+        dynamic_calcium_gate=False,
         record_traces=True,
         progress_report=None,
         seed_value=None):
@@ -162,11 +163,15 @@ def HHH(time,
     if homeostasis:
         eqs += """ 
         dg_Na/dt = (1 / tau_h) * (G_Na / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Na) : siemens 
-        # dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens 
-        g_Ca : siemens
         dg_K/dt = (1 / tau_h) * (G_K / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_K) : siemens 
         dg_KCa/dt = (1 / tau_h) * (G_KCa / (1 + exp(-1 * (Ca - Ca_target)/delta)) - g_KCa) : siemens 
         """
+        if dynamic_calcium_gate:
+            eqs += """dg_Ca/dt = (1 / tau_h) * (G_Ca / (1 + exp(1 * (Ca - Ca_target)/delta)) - g_Ca) : siemens
+            """
+        else:
+            eqs += """g_Ca : siemens
+            """
     else:
         eqs += """
         g_Na : siemens

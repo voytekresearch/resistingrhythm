@@ -41,6 +41,7 @@ def run(run_name,
         num_trials=2,
         seed_value=42,
         homeostasis=True,
+        dynamic_calcium_gate=False,
         verbose=False):
     """Run a HHH experiment"""
 
@@ -147,7 +148,8 @@ def run(run_name,
             burn_time=burn_t,
             seed_value=seed_value + k,
             record_traces=True,
-            homeostasis=homeostasis)
+            homeostasis=homeostasis,
+            dynamic_calcium_gate=dynamic_calcium_gate)
 
         ns_ref, ts_ref = filter_spikes(results_ref["ns"], results_ref["ts"],
                                        a_window)
@@ -179,7 +181,8 @@ def run(run_name,
             burn_time=burn_t,
             seed_value=seed_value + k,
             record_traces=True,
-            homeostasis=homeostasis)
+            homeostasis=homeostasis,
+            dynamic_calcium_gate=dynamic_calcium_gate)
 
         # -
         if verbose:
