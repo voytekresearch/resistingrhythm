@@ -1809,6 +1809,8 @@ exp285:
 
 # ----------------------------------------------------------------------------
 # Rerun above w/ 
+# 7c7b9b637f2a3d9513bafc9a4272bcfd32de516b
+
 # - dg_CA off but G_KCA at its default.
 # - confirm dynamic_gate flag is behaving as expected.
 # - Should be last control. Sigh.
