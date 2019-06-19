@@ -1813,6 +1813,8 @@ exp285:
 # - confirm dynamic_gate flag is behaving as expected.
 # - Should be last control. Sigh.
 
+# SUM: Models look consistent w/ 220/221! 
+
 # Excitatory
 # no H
 exp286:
