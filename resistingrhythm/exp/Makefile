@@ -2155,7 +2155,7 @@ exp318:
 		--joblog '$(DATA_PATH)/exp318.parallel.log' \
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp318_stim{1}_gCa{3}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --g_Ca={3} --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
-	::: 3 4 ::: 100 101 115 130 ::: 0.027e-3 0.028e-3 0.029e-3 0.031e-3 0.032e-3 0.033e-3 | tee $(DATA_PATH)/exp319.log
+	::: 3 4 ::: 100 101 115 130 ::: 0.027e-3 0.028e-3 0.029e-3 0.031e-3 0.032e-3 0.033e-3 | tee $(DATA_PATH)/exp318.log
 
 # H
 exp319:
