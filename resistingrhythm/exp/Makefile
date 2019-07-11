@@ -2209,3 +2209,28 @@ exp323:
 		--nice 19 --delay 2 --colsep ',' \
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp323_stim{1}_GCa{3}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --G_Ca={3} --dynamic_calcium_gate=True --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
 	::: 3 4 ::: 100 101 115 130 ::: 0.1e-3 1e-3 15e-3 30e-3 45e-3 60e-3 | tee $(DATA_PATH)/exp323.log
+
+# ---------------------------------------------------------------------------
+# 7-11-2019
+#
+# For exp322 (G_Ca sweep), even G=0.1e-3 completely abolished H effects.
+# This does make sense. Ca changes don't directly effect excibility, in the 
+# model anyway. Question is for bio-plausibility of this model,
+# how sensitive H to G_Ca? TO find out let's sweep several orders of mag.
+
+# Excitatory
+# no H
+exp324:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp324.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp324_stim{1}_GCa{3}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --G_Ca={3} --dynamic_calcium_gate=True --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
+	::: 3 4 ::: 100 101 115 130 ::: 1e-9 1e-8 1e-7 1e-6 1e-5 1e-4 1e-3 | tee $(DATA_PATH)/exp324.log
+
+# H
+exp325:
+	parallel -j 12 -v \
+		--joblog '$(DATA_PATH)/exp325.parallel.log' \
+		--nice 19 --delay 2 --colsep ',' \
+	'python homeostasis_experiments.py run $(DATA_PATH)/exp325_stim{1}_GCa{3}_osc{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/osc{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.5 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --G_Ca={3} --dynamic_calcium_gate=True --num_trials=10 --seed_value=42 --verbose --homeostasis=True' \
+	::: 3 4 ::: 100 101 115 130 ::: 1e-9 1e-8 1e-7 1e-6 1e-5 1e-4 1e-3 | tee $(DATA_PATH)/exp325.log
