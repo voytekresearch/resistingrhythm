@@ -1,0 +1,1465 @@
+---
+title: "Analysis : exp249-253 analysis"
+output: html_notebook
+---
+
+# Header
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(readr)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load 6-10 Hz
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 287
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results289 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results289 <- rbind(results289, df)
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results288 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results288 <- rbind(results288, df)
+  }
+}
+results288 %>%
+  filter(rate_k > 0) -> results288
+
+# ----------------------------------------------------------------------
+# @ 6 Hz
+#
+# No H
+exp_code <- 298
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results298 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(6, nrow(df))
+    results298 <- rbind(results298, df)
+  }
+}
+results298 %>%
+  filter(rate_k > 0) -> results298
+
+# H
+exp_code <- 299
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results299 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(6, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    
+    results299 <- rbind(results299, df)
+  }
+}
+results299 %>%
+  filter(rate_k > 0) -> results299
+
+# ----------------------------------------------------------------------
+# @ 7 Hz
+#
+# No H
+exp_code <- 302
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results302 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(7, nrow(df))
+    results302 <- rbind(results302, df)
+  }
+}
+results302 %>%
+  filter(rate_k > 0) -> results302
+
+# H
+exp_code <- 303
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results303 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(7, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results303 <- rbind(results303, df)
+  }
+}
+results303 %>%
+  filter(rate_k > 0) -> results303
+
+
+# ----------------------------------------------------------------------
+# @ 9 Hz
+#
+# No H
+exp_code <- 306
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results306 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(9, nrow(df))
+    results306 <- rbind(results306, df)
+  }
+}
+results306 %>%
+  filter(rate_k > 0) -> results306
+
+# H
+exp_code <- 307
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results307 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(9, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results307 <- rbind(results307, df)
+  }
+}
+results307 %>%
+  filter(rate_k > 0) -> results307
+
+# ----------------------------------------------------------------------
+# @ 10 Hz
+#
+# No H
+exp_code <- 310
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results310 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(10, nrow(df))
+    results310 <- rbind(results310, df)
+  }
+}
+results310 %>%
+  filter(rate_k > 0) -> results310
+
+# H
+exp_code <- 311
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4)
+
+results311 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(10, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results311 <- rbind(results311, df)
+  }
+}
+results311 %>%
+  filter(rate_k > 0) -> results311
+
+# ------------------------------------------------------------------------------------
+# Join results
+results <- rbind(
+  results288, 
+  results289, 
+  results298, 
+  results299, 
+  results302, 
+  results303, 
+  results306, 
+  results307, 
+  results310, 
+  results311)
+```
+
+
+### Plot
+```{r}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() +
+  facet_grid(.~freq, scales = "free")
+```
+
+
+```{r, fig.width=4, fig.height=1.2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() + 
+  facet_grid(.~freq, scales = "free")
+```
+
+# Load lfp
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+# Load 8 Hz sin
+exp_code <- 287
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results287 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results287 <- rbind(results287, df)
+  }
+}
+results287 %>%
+  filter(rate_k > 0) -> results287
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results286 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results286 <- rbind(results286, df)
+  }
+}
+results286 %>%
+  filter(rate_k > 0) -> results286
+
+# ----------------------------------------------------------------------
+# Load LFP theta AMPA
+# 16: Burst E, with H
+exp_code <- 289
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results289 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("lfp", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results289 <- rbind(results289, df)
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 288
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results288 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("lfp", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results288 <- rbind(results288, df)
+  }
+}
+
+results <- rbind(
+  results286,
+  results287,
+  results288,
+  results289
+)
+```
+
+## Plot
+```{r, fig.width=4, fig.height=1.2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() +
+  facet_grid(.~waveform, scales = "free")
+```
+
+
+```{r, fig.width=4, fig.height=1.2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() + 
+  facet_grid(.~waveform, scales = "free")
+```
+
+# Load fast bursts
+```{r, message=FALSE}
+# -----------------------------------------------------------------------
+# Classic 8 Hz AMPA burst
+
+exp_code <- 214
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results214 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    
+    results214 <- rbind(results214, df)
+  }
+}
+
+results214 %>%
+  filter(rate_k > 0) -> results214
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results286 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results286 <- rbind(results286, df)
+  }
+}
+results286 %>%
+  filter(rate_k > 0) -> results286
+
+# --------------------------------------------------------------------------
+exp_code <- 292
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results292 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    
+    results292 <- rbind(results292, df)
+  }
+}
+
+results292 %>%
+  filter(rate_k > 0) -> results292
+
+exp_code <- 293
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results293 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    
+    results293 <- rbind(results293, df)
+  }
+}
+
+results293 %>%
+  filter(rate_k > 0) -> results293
+
+# --------------------------------------------------------------------------
+# 90 Hz
+exp_code <- 294
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results294 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    
+    results294 <- rbind(results294, df)
+  }
+}
+
+results294 %>%
+  filter(rate_k > 0) -> results294
+
+exp_code <- 295
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results295 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    
+    results295 <- rbind(results295, df)
+  }
+}
+
+results295 %>%
+  filter(rate_k > 0) -> results295
+
+# --------------------------------------------------------------------------
+# 150 Hz
+
+exp_code <- 296
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results296 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(150, nrow(df))
+    
+    results296 <- rbind(results296, df)
+  }
+}
+
+results296 %>%
+  filter(rate_k > 0) -> results296
+
+exp_code <- 297
+osc_codes <- c(100, 105, 110, 115, 120, 125, 130)
+osc_rates <- c(0, 0.5, 1.0, 1.5, 2.0, 2.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results297 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$waveform <- rep("cos", nrow(df))
+    df$freq <- rep(150, nrow(df))
+    
+    results297 <- rbind(results297, df)
+  }
+}
+
+results297 %>%
+  filter(rate_k > 0) -> results297
+
+results <- rbind(
+  results214,
+  results286,
+  results292,
+  results293,
+  results294,
+  results295,
+  results296,
+  results297
+)
+```
+
+## Plot
+```{r, fig.height=2.0, fig.width=2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() +
+  facet_grid(freq~., scales = "free")
+```
+
+
+```{r, fig.height=2.0, fig.width=2}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=homeo)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_grey() + 
+  facet_grid(freq~., scales = "free")
+```
+
+
+# Load g_L
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 287
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results289 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    df$g <- rep("1.0e-3", nrow(df))
+    results289 <- rbind(results289, df)
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results288 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$g <- rep("1.0e-3", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results288 <- rbind(results288, df)
+  }
+}
+results288 %>%
+  filter(rate_k > 0) -> results288
+
+
+# ----------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 317
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+g_Ls <- c("0.9e-3", "0.95e-3", "1.05e-3", "1.1e-3")
+
+results317 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results317 <- rbind(results317, df)
+    }
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 316
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results316 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results316 <- rbind(results316, df)
+    }
+  }
+}
+results316 %>%
+  filter(rate_k > 0) -> results316
+
+
+results <- rbind(
+  results288,
+  results289,
+  results316,
+  results317
+)
+
+results$g <- factor(results$g, 
+                        levels=c("0.9e-3", "0.95e-3", "1.0e-3", "1.05e-3", "1.1e-3"))
+```
+
+## Plot
+```{r, fig.height=1.2, fig.width=1.8}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~., scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=1.8}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~., scales = "free")
+```
+
+# Load g_Ca
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 287
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results289 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    df$g <- rep("0.030e-3", nrow(df))
+    results289 <- rbind(results289, df)
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results288 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$g <- rep("0.030e-3", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results288 <- rbind(results288, df)
+  }
+}
+results288 %>%
+  filter(rate_k > 0) -> results288
+
+
+# ----------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 319
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+g_Cas <- c("0.027e-3", "0.028e-3", "0.029e-3", "0.031e-3", "0.032e-3", "0.033e-3")
+
+results319 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Cas){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results319 <- rbind(results319, df)
+    }
+  }
+}
+results319 %>%
+  filter(rate_k > 0) -> results319
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 318
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results318 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Cas){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results318 <- rbind(results318, df)
+    }
+  }
+}
+results318 %>%
+  filter(rate_k > 0) -> results318
+
+
+results <- rbind(
+  results288,
+  results289,
+  results318,
+  results319
+)
+
+results$g <- factor(results$g, 
+                        levels=c("0.027e-3", "0.028e-3", "0.029e-3", "0.030e-3", "0.031e-3", "0.032e-3", "0.033e-3"))
+```
+
+## Plot
+```{r, fig.height=1.2, fig.width=1.8}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~., scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=1.8}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~., scales = "free")
+```
+
+
+# Load g_KCa
+```{r, message=FALSE}
+# ----------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 321
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+g_KCas <- c("0.1e-3", "1e-3", "15e-3", "30e-3", "45e-3", "60e-3")
+
+results321 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_KCas){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_GKCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results321 <- rbind(results321, df)
+    }
+  }
+}
+results321 %>%
+  filter(rate_k > 0) -> results321
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 320
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results320 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_KCas){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_GKCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results320 <- rbind(results320, df)
+    }
+  }
+}
+results320 %>%
+  filter(rate_k > 0) -> results320
+
+
+results <- rbind(
+  results320,
+  results321
+)
+
+results$g <- factor(results$g, 
+                        levels=c("0.1e-3", "1e-3", "15e-3", "30e-3", "45e-3", "60e-3"))
+```
+
+## Plot
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.6) +
+  theme_classic() +
+  scale_color_viridis_d() +
+  facet_grid(homeo~g, scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~g, scales = "free")
+```
+
+# Load G_Ca
+```{r, message=FALSE}
+# ----------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 323
+osc_codes <- c(100, 101, 115,130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+G_Cas <- c("0.1e-3", "1e-3", "15e-3", "30e-3", "45e-3", "60e-3")
+
+results323 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in G_Cas){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_GCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results323 <- rbind(results323, df)
+    }
+  }
+}
+results323 %>%
+  filter(rate_k > 0) -> results323
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 322
+osc_codes <- c(100, 101, 115, 130)
+osc_rates <- c(0, 0.01, 1.5, 3.0)
+stim_codes <- c(3, 4) # 4
+
+results322 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in G_Cas){
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_GCa", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results322 <- rbind(results322, df)
+    }
+  }
+}
+results322 %>%
+  filter(rate_k > 0) -> results322
+
+results <- rbind(
+  results322,
+  results323
+)
+
+results$g <- factor(results$g, 
+                        levels=c("0.1e-3", "1e-3", "15e-3", "30e-3", "45e-3", "60e-3"))
+```
+
+## Plot
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.6) +
+  theme_classic() +
+  scale_color_viridis_d() +
+  facet_grid(homeo~g, scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=g)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~g, scales = "free")
+```
