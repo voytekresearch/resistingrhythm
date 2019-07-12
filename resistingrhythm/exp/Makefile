@@ -1840,7 +1840,7 @@ exp287:
 # ----------------------------------------------------------------------------
 # 6-19-2019
 
-# Reviewer controls (v3). H effect restored. Ca dynamics snuffed.
+# Reviewer controls (v3). H effect restored. gCa/dt dynamics snuffed.
 # 573291b0b5724d948feb5b229f5d7c246689b6b7
 
 # -
