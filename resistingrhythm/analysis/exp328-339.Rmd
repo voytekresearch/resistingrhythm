@@ -518,12 +518,41 @@ results %>%
 ```
 
 
-```{r, fig.height=2.5, fig.width=2.25}
+```{r, fig.height=2, fig.width=2.25}
 results %>% 
-  filter(osc_rate < 1.5, freq < 150) %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
   ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=homeo)) +
   geom_boxplot() +
   theme_classic() +
   scale_color_grey() +
-  facet_grid(freq~kind, scales = "free")
+  lims(y=c(0, 150)) +
+  facet_grid(kind~freq, scales = "free")
+```
+
+
+# H only plots
+```{r, fig.height=1.3, fig.width=2.5}
+results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  ggplot(aes(x=as.factor(osc_rate), y=rate_k, group=interaction(osc_rate, kind), color=kind)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  # lims(y=c(0, 100)) +
+  labs(y="Pop. rate", x="Osc. rate", tag="a.") +
+  facet_grid(.~freq, scales = "free")
+```
+
+```{r, fig.height=1.3, fig.width=2.5}
+results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  ggplot(aes(x=as.factor(osc_rate), y=kappa_coord, group=interaction(osc_rate, kind), color=kind)) +
+  geom_boxplot() +
+  theme_classic() +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  # lims(y=c(0.0, .12)) +
+  labs(y="Kappa", x="Osc. rate", tag="b.") +
+  facet_grid(.~freq, scales = "free")
 ```
