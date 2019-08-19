@@ -507,6 +507,7 @@ rm(results220, results221, results328, results329, results330, results331, resul
 ```
 
 
+# Plot all
 ```{r, fig.height=2.5, fig.width=2.25}
 results %>% 
   filter(osc_rate < 1.5, freq < 150) %>% 
@@ -516,7 +517,6 @@ results %>%
   scale_color_grey() +
   facet_grid(freq~kind, scales = "free")
 ```
-
 
 ```{r, fig.height=2, fig.width=2.25}
 results %>% 
@@ -531,6 +531,7 @@ results %>%
 
 
 # H only plots
+## Box
 ```{r, fig.height=1.3, fig.width=2.5}
 results %>% 
   filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
@@ -555,4 +556,46 @@ results %>%
   # lims(y=c(0.0, .12)) +
   labs(y="Kappa", x="Osc. rate", tag="b.") +
   facet_grid(.~freq, scales = "free")
+```
+
+## Mean
+```{r, fig.height=1.1, fig.width=2.6}
+freq_labels <- as_labeller(c('60' = "60 Hz", '90' = "90 Hz"))
+
+results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  group_by(freq, osc_rate, kind) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
+  geom_point() +
+  theme_classic() +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  labs(y="Pop. rate", x="Osc. rate", tag="a.") +
+  lims(y=c(0, 100)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background = element_blank()) +
+  facet_grid(.~freq, scales = "free", labeller=freq_labels)
+```
+
+```{r, fig.height=1.1, fig.width=2.6}
+results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  group_by(freq, osc_rate, kind) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
+  geom_point() +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
+  theme_classic() +
+  facet_grid(.~freq, scales = "free", labeller = freq_labels) +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  lims(y=c(0.0, .12)) +
+  theme(panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background = element_blank()) +
+  labs(y="Kappa", x="Osc. rate", tag="b.") 
+  
 ```
