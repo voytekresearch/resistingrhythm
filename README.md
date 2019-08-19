@@ -1,5 +1,5 @@
 # resistingrhythm
-Code for [Homeostatic mechanisms may shape the type and duration of oscillatory modulation](https://www.biorxiv.org/content/10.1101/615450v1) _bioArxiv_ 615450v1 2019
+Code for [Homeostatic mechanisms may shape the type and duration of oscillatory modulation](https://www.biorxiv.org/content/10.1101/615450v1) _bioArxiv_ 615450v1 (2019)
 
 A computational study of modulation, oscillation, and homeostasis. 
 
