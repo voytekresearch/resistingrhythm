@@ -631,7 +631,7 @@ for(i in 1:length(osc_codes)){
     df$synapse <- rep("AMPA", nrow(df))
     df$homeo <- rep("Homeostasis", nrow(df))
     df$freq <- rep(90, nrow(df))
-    df$kind <- rep("Sustained", nrow(df))
+    df$kind <- rep("Tonic", nrow(df))
     
     results334 <- rbind(results334, df)
   }
