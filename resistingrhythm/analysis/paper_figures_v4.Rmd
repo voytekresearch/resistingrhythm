@@ -17,7 +17,8 @@ library(cowplot)
 data_path <- "~/Code/resistingrhythm/data/"
 ```
 
-# Load all data
+# Load data
+## Main Theta (and controls)
 ```{r, message=FALSE}
 # -----------------------------------------------------------------------
 # 16: Burst E, with H
@@ -359,11 +360,292 @@ for(i in 1:length(n_cycles)){
   
   results232 <- rbind(results232, df)
 }
-
 rm(df, n_c, i, exp_code)
 ```
 
-# Figure: Main results
+## Main gamma
+```{r}
+# ----------------------------------------------------------------------
+# @ 60 Hz, burst
+#
+# No H
+exp_code <- 329
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results329 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    df$kind <- rep("Burst", nrow(df))
+    
+    results329 <- rbind(results329, df)
+  }
+}
+
+# H
+exp_code <- 328
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results328 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    df$kind <- rep("Burst", nrow(df))
+    
+    results328 <- rbind(results328, df)
+  }
+}
+
+# ----------------------------------------------------------------------
+# @ 60 Hz, sustained
+#
+# No H
+exp_code <- 331
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results331 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    df$kind <- rep("Tonic", nrow(df))
+    
+    results331 <- rbind(results331, df)
+  }
+}
+results331 %>%
+  filter(rate_k > 0) -> results331
+
+# H
+exp_code <- 330
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results330 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(60, nrow(df))
+    df$kind <- rep("Tonic", nrow(df))
+    
+    results330 <- rbind(results330, df)
+  }
+}
+
+# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# ----------------------------------------------------------------------
+# @ 90 Hz, burst
+#
+# No H
+exp_code <- 333
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results333 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    df$kind <- rep("Burst", nrow(df))
+    
+    results333 <- rbind(results333, df)
+  }
+}
+
+# H
+exp_code <- 332
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results332 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    df$kind <- rep("Burst", nrow(df))
+    
+    results332 <- rbind(results332, df)
+  }
+}
+
+# ----------------------------------------------------------------------
+# @ 90 Hz, sustained
+#
+# No H
+exp_code <- 335
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results335 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    df$kind <- rep("Tonic", nrow(df))
+    
+    results335 <- rbind(results335, df)
+  }
+}
+
+# H
+exp_code <- 334
+osc_codes <- c("0", "0.5", "1", "1.5", "3", "6", "12")
+osc_rates <- c(0, 0.5, 1, 1.5, 3, 6, 12)
+stim_codes <- c(3, 4)
+
+results334 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_burst", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(90, nrow(df))
+    df$kind <- rep("Sustained", nrow(df))
+    
+    results334 <- rbind(results334, df)
+  }
+}
+
+gamma_results <- rbind(
+  results328, results329, 
+  results330, results331, 
+  results332, results333, 
+  results334, results335
+)
+```
+
+# Figure: Theta results
 ```{r fig.height=2.25, fig.width=6}
 # Kappa no H, E
 bind_rows(results220, results222) %>%
@@ -373,8 +655,7 @@ bind_rows(results220, results222) %>%
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
     geom_point(size=1.25) +
-    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
-                  width=.15, size=0.2) +
+    geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse)) +
     scale_color_manual(values=c("black", "grey")) +
     lims(y=c(0.0, 0.2)) +
     labs(title="b.", y="Kappa", x="Osc. rate") +
@@ -390,7 +671,7 @@ bind_rows(results221, results223) %>%
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
     geom_point(size=1.25) +
-    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
+    geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                   width=.15, size=0.2) +
     scale_color_manual(values=c("black", "grey")) +
     lims(y=c(0.0, 0.2)) +
@@ -407,7 +688,7 @@ bind_rows(results220, results222) %>%
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
   geom_point(size=1.25) +
-  geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
   labs(title="a.", y="Pop. rate", x="Osc. rate") +
@@ -426,7 +707,7 @@ bind_rows(results221, results223) %>%
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
   geom_point(size=1.25) +
-  geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey"), name="Tonic") +
   labs(title="c.", y="Pop. rate", x="Osc. rate") +
@@ -447,7 +728,7 @@ bind_rows(results224, results227)  %>%
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
     geom_point(size=1.25) +
-    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+    geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
     lims(y=c(0.0, 0.2)) +
@@ -464,7 +745,7 @@ bind_rows(results224, results227)  %>%
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
   ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
     geom_point(size=1.25) +
-    geom_errorbar(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
+    geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1"), name="Burst") +
     labs(title="e.", y="Pop. rate", x="Osc. rate") +
@@ -537,6 +818,57 @@ dev.off()
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
 
+# Figure: Gamma (AMPA)
+```{r, fig.height=2.1, fig.width=2.6}
+freq_labels <- as_labeller(c('60' = "60 Hz", '90' = "90 Hz"))
+gamma_results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  group_by(freq, osc_rate, kind) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
+  geom_point() +
+  theme_classic() +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  labs(y="Pop. rate", x="Osc. rate", tag="a.") +
+  lims(y=c(0, 100)) +
+  theme(legend.position = "right",
+        plot.tag = element_text(size=16, face="bold"),
+        legend.background = element_rect(colour ="black"),
+        panel.spacing = unit(1, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background = element_blank()) +
+  facet_grid(.~freq, scales = "free", labeller=freq_labels) -> p1
+
+gamma_results %>% 
+  filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
+  filter(homeo == "Homeostasis") %>% 
+  group_by(freq, osc_rate, kind) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
+  geom_point() +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
+  theme_classic() +
+  facet_grid(.~freq, scales = "free", labeller = freq_labels) +
+  scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
+  lims(y=c(0.0, .12)) +
+  theme(legend.position = "none",
+        plot.tag = element_text(size=16, face="bold"),
+        panel.spacing = unit(1, "lines"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        strip.background = element_blank()) +
+  labs(y="Kappa", x="Osc. rate", tag="b.") -> p2
+
+layout_matrix <- rbind(
+  c(1, 1, 1, 1, 1),
+  c(2, 2, 2, 2, NA)
+)
+grid.arrange(p1, p2, layout_matrix=layout_matrix)
+```
+
 # Figure: Control
 ```{r, fig.width=2.4, fig.height=2.8}
 # -
@@ -551,7 +883,7 @@ tmp1 %>%
                                            levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
   geom_line(size=0.8) +
   geom_point(size=1.5) +
-  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  geom_linerange(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
   labs(title="b.", y="Kappa", x="Osc. rate") +
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
@@ -571,7 +903,7 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target,
                                          levels = c(0.0026, 0.0028, 0.003, 0.0032, 0.0034)))) +
   geom_line(size=0.8) +
   geom_point(size=1.5) +
-  geom_errorbar(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
+  geom_linerange(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
   labs(title="a.", y="Pop. rate", x="Osc. rate") +
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
