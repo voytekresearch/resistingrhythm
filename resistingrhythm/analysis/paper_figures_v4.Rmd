@@ -1138,8 +1138,9 @@ bind_rows(results220, results222) %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>% 
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M, color=synapse)) +
+    geom_line(size=0.8) +
+    geom_point(size=1.5) +
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse)) +
     scale_color_manual(values=c("black", "grey")) +
     lims(y=c(0.0, 0.2)) +
@@ -1154,8 +1155,9 @@ bind_rows(results221, results223) %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M, color=synapse)) +
+    geom_line(size=0.8) +
+    geom_point(size=1.5) +
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                   width=.15, size=0.2) +
     scale_color_manual(values=c("black", "grey")) +
@@ -1171,8 +1173,9 @@ bind_rows(results220, results222) %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>% 
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-  geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M,color=synapse)) +
+  geom_line(size=0.8) +
+    geom_point(size=1.5) +
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
@@ -1190,8 +1193,9 @@ bind_rows(results221, results223) %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-  geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M, color=synapse)) +
+  geom_line(size=0.8) +
+    geom_point(size=1.5) +
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey"), name="Tonic") +
@@ -1211,8 +1215,9 @@ bind_rows(results224, results227)  %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M, color=synapse)) +
+    geom_line(size=0.8) +
+    geom_point(size=1.5) +
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
@@ -1228,8 +1233,9 @@ bind_rows(results224, results227)  %>%
   mutate(kappa_coord=replace(kappa_coord, rate_k < 1, NA)) %>%
   group_by(synapse, osc_rate) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
-  ggplot(mapping=aes(x=osc_rate, y=M, group=osc_rate, color=synapse)) +
-    geom_point(size=1.25) +
+  ggplot(mapping=aes(x=osc_rate, y=M, color=synapse)) +
+    geom_line(size=0.8) +
+    geom_point(size=1.5) +
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1"), name="Burst") +
