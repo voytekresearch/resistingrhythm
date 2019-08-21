@@ -1310,7 +1310,7 @@ print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
 
 # Figure: Gamma (AMPA)
-```{r, fig.height=2.1, fig.width=2.6}
+```{r, fig.height=2.1, fig.width=2.8}
 freq_labels <- as_labeller(c('60' = "60 Hz", '90' = "90 Hz"))
 gamma_results %>% 
   filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
@@ -1325,7 +1325,7 @@ gamma_results %>%
   scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
   labs(y="Pop. rate", x="Osc. rate", tag="a.") +
   lims(y=c(0, 100)) +
-  theme(legend.position = "right",
+  theme(legend.position = c(1.17, -0.5),
         plot.tag = element_text(size=16, face="bold"),
         legend.background = element_rect(colour ="black"),
         panel.spacing = unit(1, "lines"),
@@ -1355,11 +1355,13 @@ gamma_results %>%
         strip.background = element_blank()) +
   labs(y="Kappa", x="Osc. rate", tag="b.") -> p2
 
+pn <- nullGrob()
+
 layout_matrix <- rbind(
-  c(1, 1, 1, 1, 1),
-  c(2, 2, 2, 2, NA)
+  c(1, 1, 1, 1, 3),
+  c(2, 2, 2, 2, 3)
 )
-grid.arrange(p1, p2, layout_matrix=layout_matrix)
+grid.arrange(p1, p2, pn,layout_matrix=layout_matrix)
 ```
 
 # Figure: Control
