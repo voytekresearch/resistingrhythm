@@ -2176,6 +2176,8 @@ exp319:
 # G_KCa sweep
 # 0.1e-3 1e-3 15e-3 30e-3 45e-3 60e-3
 
+# SUM: exact replicates. (Which in retro was the obvious result)
+
 # Excitatory
 # no H
 exp320:
@@ -2198,6 +2200,8 @@ exp321:
 # ---------------------------------------------------------------------------
 # G_Ca sweep
 # 0.1e-3 1e-3 15e-3 30e-3 45e-3 60e-3
+
+# SUM: exact replicates. (Which in retro was the obvious result)
 
 # Excitatory
 # no H
@@ -2223,6 +2227,10 @@ exp323:
 # This does make sense. Ca changes don't directly effect excibility, in the 
 # model anyway. Question is for bio-plausibility of this model,
 # how sensitive H to G_Ca? TO find out let's sweep several orders of mag.
+
+# SUM: Even 1e-9 blocks all H effects. In retro this is necessary. 
+# Should I explore the 1e-12 range, or drop this. Not sure it clarifies or 
+# confuses the point. 
 
 # Excitatory
 # no H
@@ -2278,6 +2286,7 @@ exp327:
 # specific exps, a change in how I've been doing this up until now. 
 # Also, explore rate up top 12. Fast osc need more samples to drive.
 
+# SUM: Looks consistent w/ past exps.
 
 # ----------------------------------------------------------------------------
 # 60 Hz gamma
