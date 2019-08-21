@@ -1478,7 +1478,7 @@ results_control_leak %>%
   geom_point(size=1.5) +
   theme_classic() +
   theme(
-    legend.position = c(1.4, -0.4),
+    legend.position = c(1.35, -0.4),
     legend.key.size = unit(.4, "cm"),
     legend.background = element_rect(colour ="black"),
     plot.tag = element_text(size=18, face="bold")) +
@@ -1527,8 +1527,8 @@ layout_matrix <- rbind(
   c(8, 6, 6, 9, 13, 14, 14, 9),
   c(8, 6, 6, 9, 13, 14, 14, 9),
   c(8, 6, 6, 9, 13, 14, 14, 9),
-  c(9, 9, 9, 9, 9,  15, 15, 9),
-  c(9, 9, 9, 9, 9,  15, 15, 9),
+  c(8, 6, 6, 9, 9,  15, 15, 9),
+  c(8, 6, 6, 9, 9,  15, 15, 9),
   c(9, 9, 9, 9, 9,  15, 15, 9),
   c(9, 9, 9, 9, 9,  15, 15, 9)
 )
