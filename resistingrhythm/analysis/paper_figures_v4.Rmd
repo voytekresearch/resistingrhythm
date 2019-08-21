@@ -363,8 +363,8 @@ for(i in 1:length(n_cycles)){
 rm(df, n_c, i, exp_code)
 ```
 
-## Main gamma
-```{r}
+## Gamma
+```{r, message=FALSE}
 # ----------------------------------------------------------------------
 # @ 60 Hz, burst
 #
@@ -645,6 +645,491 @@ gamma_results <- rbind(
 )
 ```
 
+## Leak
+```{r, message=FALSE}
+# Main exp
+# -----------------------------------------------------------------------
+# 15: Sustained E, with H
+exp_code <- 221
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4)
+
+results221b <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$g_L <- rep("1.0e-3", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results221b <- rbind(results221b, df)
+  }
+}
+
+results221b %>%
+  filter(rate_k > 0) -> results221b
+
+# ----------------------------------------------------------------------
+# gL perturb exps
+# H
+exp_code <- 317
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4) # 4
+g_Ls <- c("0.9e-3", "0.95e-3", "1.05e-3", "1.1e-3")
+
+results317 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g_L <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results317 <- rbind(results317, df)
+    }
+  }
+}
+results317 %>%
+  filter(rate_k > 0) -> results317
+
+# no H
+exp_code <- 316
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4) # 4
+g_Ls <- c("0.9e-3", "0.95e-3", "1.05e-3", "1.1e-3")
+
+results316 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g_L <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results316 <- rbind(results316, df)
+    }
+  }
+}
+results316 %>%
+  filter(rate_k > 0) -> results316
+
+results_control_leak <- rbind(
+  results316,
+  results317,
+  results221b
+)
+
+results_control_leak$g_L <- factor(
+  results_control_leak$g_L, levels=c("0.9e-3", "0.95e-3", "1.0e-3", "1.05e-3", "1.1e-3"))
+```
+
+## Theta drift
+```{r, message=FALSE}
+# ----------------------------------------------------------------------
+# Load 8 Hz theta AMPA
+# 16: Burst E, with H
+exp_code <- 287
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4) # 4
+
+results289 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results289 <- rbind(results289, df)
+  }
+}
+results289 %>%
+  filter(rate_k > 0) -> results289
+
+# Load 8 Hz theta AMPA
+# 16: Burst E, no H
+exp_code <- 286
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4) # 4
+
+results288 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results288 <- rbind(results288, df)
+  }
+}
+results288 %>%
+  filter(rate_k > 0) -> results288
+
+# ----------------------------------------------------------------------
+# @ 6 Hz
+#
+# No H
+exp_code <- 298
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results298 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(6, nrow(df))
+    results298 <- rbind(results298, df)
+  }
+}
+results298 %>%
+  filter(rate_k > 0) -> results298
+
+# H
+exp_code <- 299
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results299 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(6, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    
+    results299 <- rbind(results299, df)
+  }
+}
+results299 %>%
+  filter(rate_k > 0) -> results299
+
+# ----------------------------------------------------------------------
+# @ 7 Hz
+#
+# No H
+exp_code <- 302
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results302 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(7, nrow(df))
+    results302 <- rbind(results302, df)
+  }
+}
+results302 %>%
+  filter(rate_k > 0) -> results302
+
+# H
+exp_code <- 303
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results303 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(7, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results303 <- rbind(results303, df)
+  }
+}
+results303 %>%
+  filter(rate_k > 0) -> results303
+
+
+# ----------------------------------------------------------------------
+# @ 9 Hz
+#
+# No H
+exp_code <- 306
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results306 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(9, nrow(df))
+    results306 <- rbind(results306, df)
+  }
+}
+results306 %>%
+  filter(rate_k > 0) -> results306
+
+# H
+exp_code <- 307
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results307 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(9, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results307 <- rbind(results307, df)
+  }
+}
+results307 %>%
+  filter(rate_k > 0) -> results307
+
+# ----------------------------------------------------------------------
+# @ 10 Hz
+#
+# No H
+exp_code <- 310
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results310 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$homeo <- rep("No homeostasis", nrow(df))
+    df$freq <- rep(10, nrow(df))
+    results310 <- rbind(results310, df)
+  }
+}
+results310 %>%
+  filter(rate_k > 0) -> results310
+
+# H
+exp_code <- 311
+osc_codes <- c(100, 105, 110, 115)
+osc_rates <- c(0, 0.5, 1.0, 1.5)
+stim_codes <- c(3, 4)
+
+results311 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_lfp", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$freq <- rep(10, nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    results311 <- rbind(results311, df)
+  }
+}
+results311 %>%
+  filter(rate_k > 0) -> results311
+
+# ------------------------------------------------------------------------------------
+# Join results
+results_control_drift <- rbind(
+  results288, 
+  results289, 
+  results298, 
+  results299, 
+  results302, 
+  results303, 
+  results306, 
+  results307, 
+  results310, 
+  results311)
+```
+
 # Figure: Theta results
 ```{r fig.height=2.25, fig.width=6}
 # Kappa no H, E
@@ -826,9 +1311,10 @@ gamma_results %>%
   filter(homeo == "Homeostasis") %>% 
   group_by(freq, osc_rate, kind) %>% 
   mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
-  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
+  ggplot(aes(x=osc_rate, y=M, color=kind)) +
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
-  geom_point() +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
   theme_classic() +
   scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
   labs(y="Pop. rate", x="Osc. rate", tag="a.") +
@@ -847,8 +1333,9 @@ gamma_results %>%
   filter(homeo == "Homeostasis") %>% 
   group_by(freq, osc_rate, kind) %>% 
   mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
-  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, kind), color=kind)) +
-  geom_point() +
+  ggplot(aes(x=osc_rate, y=M, color=kind)) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=kind), size=.4) +
   theme_classic() +
   facet_grid(.~freq, scales = "free", labeller = freq_labels) +
@@ -870,7 +1357,7 @@ grid.arrange(p1, p2, layout_matrix=layout_matrix)
 ```
 
 # Figure: Control
-```{r, fig.width=2.4, fig.height=2.8}
+```{r, fig.width=5, fig.height=3.6}
 # -
 results228 %>% 
   filter(osc_rate < 0.1 | osc_rate > 0.4) %>% 
@@ -923,50 +1410,121 @@ rbind(results231, results232) %>%
   geom_boxplot(size=0.6) +
   stat_compare_means(method="wilcox.test", label="p.signif", 
                      label.x=1.3, size=3, show.legend=FALSE) +
-  labs(title="c.", y="Pop. rate", x=TeX("$t_{oscillation} / \\tau_{h}$")) +
+  labs(tag="c.", y="Pop. rate", x=TeX("$t_{oscillation} / \\tau_{h}$")) +
   scale_color_manual(values=c("black", "grey"), name=NA) +
   theme_classic2() +
   theme(
-    plot.title = element_text(hjust = -.5, size=18, face="bold"),
+    plot.tag = element_text(size=18, face="bold"),
     legend.background = element_rect(colour ="black"),
     legend.position = c(1.35, 0.5),
     legend.title=element_blank(),
     legend.key.size = unit(.3, "cm")) -> p6
 
-# -
+# -----------------------------------------------------------------------------------
+# Freq Theta drift
+results_control_drift %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, freq) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(aes(x=osc_rate, y=M, color=as.factor(freq))) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=as.factor(freq)), size=.4) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  theme_classic() +
+  labs(tag="d.", y="Pop. rate", x="Osc. rate") +
+  lims(y=c(0.0, 100.0)) +
+  theme(
+    legend.position = c(1.35, -0.4),
+    legend.key.size = unit(.4, "cm"),
+    legend.background = element_rect(colour ="black"),
+    plot.tag = element_text(size=18, face="bold")) +
+  scale_color_manual(
+    values=c("darkslategray3", "darkslategray4", "black", "darkolivegreen4", "darkolivegreen3"), 
+    name="Freq. (Hz)") -> p10
+
+results_control_drift %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, freq) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(aes(x=osc_rate, y=M, color=as.factor(freq))) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=as.factor(freq)), size=.4) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  theme_classic() +
+  labs(tag="e.", y="Kappa", x="Osc. rate") +
+  lims(y=c(0.0, 0.2)) +
+  theme(legend.position = "none",
+        plot.tag = element_text(size=18, face="bold")) +
+  scale_color_manual(
+    values=c("darkslategray3", "darkslategray4", "black", "darkolivegreen4", "darkolivegreen3"), 
+    name="Freq. (Hz)") -> p11
+
+# -----------------------------------------------------------------------------------
+results_control_leak %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, homeo, g_L) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(aes(x=osc_rate, y=M, color=g_L)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=g_L), size=.4) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  theme_classic() +
+  theme(
+    legend.position = c(1.4, -0.4),
+    legend.key.size = unit(.4, "cm"),
+    legend.background = element_rect(colour ="black"),
+    plot.tag = element_text(size=18, face="bold")) +
+  labs(tag="f.", y="Pop. rate", x="Osc. rate") +
+  scale_color_manual(
+    values=c("darkorange3", "darkorange4", "black", "gold4", "gold3"), 
+    name="g_L (siemens)") -> p14
+
+results_control_leak %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, homeo, g_L) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(aes(x=osc_rate, y=M, color=g_L)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=g_L), size=.4) +
+  geom_line(size=0.8) +
+  geom_point(size=1.5) +
+  theme_classic() +
+  theme(legend.position = "none",
+        plot.tag = element_text(size=18, face="bold")) +
+  labs(tag="g.", y="Kappa", x="Osc. rate") +
+  theme(plot.tag = element_text(size=16, face="bold")) + 
+  scale_color_manual(
+    values=c("darkorange3", "darkorange4", "black", "gold4", "gold3"), 
+    name="g_L (siemens)") -> p15
+
+
+# -----------------------------------------------------------------------------------
 p3 <- textGrob("")
 p4 <- textGrob("Target [Ca]\nperturbation")
 p8 <- textGrob(TeX("Biological $\\tau_h$"))
 p5 <- nullGrob()
 p9 <- nullGrob()
-
-# -
-# layout_matrix <- rbind(
-#   c(4, 2, 2, 5), 6, 6, 5),
-#   c(4, 2, 2, 5), 6, 6, 5),
-#   c(4, 2, 2, 5), 6, 6, 5),
-#   c(4, 2, 2, 5), 6, 6, 5),
-#   c(3, 1, 1, 5), 7, 7, 5),
-#   c(3, 1, 1, 5), 7, 7, 5),
-#   c(3, 1, 1, 5), 7, 7, 5), 
-#   c(3, 1, 1, 5), 7, 7, 5) 
-# )
+p12 <- textGrob("Theta drift")
+p13 <- textGrob("Conductance\nperturbation")
 
 layout_matrix <- rbind(
-  c(4, 2, 2, 5), 
-  c(4, 2, 2, 5), 
-  c(4, 2, 2, 5), 
-  c(4, 2, 2, 5), 
-  c(3, 1, 1, 5), 
-  c(3, 1, 1, 5), 
-  c(3, 1, 1, 5),  
-  c(3, 1, 1, 9), 
-  c(8, 6, 6, 9),
-  c(8, 6, 6, 9),
-  c(8, 6, 6, 9),
-  c(8, 6, 6, 9)
+  c(4, 2, 2, 5, 12, 10, 10, 9), 
+  c(4, 2, 2, 5, 12, 10, 10, 9), 
+  c(4, 2, 2, 5, 12, 10, 10, 9), 
+  c(4, 2, 2, 5, 12, 10, 10, 9), 
+  c(3, 1, 1, 5, 9,  11, 11, 9), 
+  c(3, 1, 1, 5, 9,  11, 11, 9), 
+  c(3, 1, 1, 5, 9,  11, 11, 9),  
+  c(3, 1, 1, 9, 9,  11, 11, 9), 
+  c(8, 6, 6, 9, 13, 14, 14, 9),
+  c(8, 6, 6, 9, 13, 14, 14, 9),
+  c(8, 6, 6, 9, 13, 14, 14, 9),
+  c(8, 6, 6, 9, 13, 14, 14, 9),
+  c(9, 9, 9, 9, 9,  15, 15, 9),
+  c(9, 9, 9, 9, 9,  15, 15, 9),
+  c(9, 9, 9, 9, 9,  15, 15, 9),
+  c(9, 9, 9, 9, 9,  15, 15, 9)
 )
-grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, layout_matrix=layout_matrix)
+grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, p10, p11, p12, p13, p14, p15, layout_matrix=layout_matrix)
 
 png(file="fig4.png", bg="white", width=4.8, height=5.6, unit="in", res=300)
 grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, layout_matrix=layout_matrix)
