@@ -1,0 +1,201 @@
+---
+title: "Analysis : exp316-7 g_L analysis"
+output: html_notebook
+---
+
+# Header
+```{r, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(magrittr)
+library(readr)
+library(gridExtra)
+library(grid)
+library(ggpubr)
+library(cowplot)
+
+data_path <- "~/Code/resistingrhythm/data/"
+```
+
+# Load G_Ca
+```{r, message=FALSE}
+# Main exp
+# -----------------------------------------------------------------------
+# 15: Sustained E, with H
+exp_code <- 221
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4)
+
+results221 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    o_c <- osc_codes[i]
+    o_r <- osc_rates[i]
+    
+    # Load the csv
+    df <- read_csv(paste(data_path, 
+                         "exp", as.character(exp_code), 
+                         "_stim", as.character(s_c), 
+                         "_osc", as.character(o_c),
+                         ".csv", sep=""))
+    
+    # Add metadata
+    df$osc_code <- rep(o_c, nrow(df))
+    df$osc_rate <- rep(o_r, nrow(df))
+    df$synapse <- rep("AMPA", nrow(df))
+    df$stim_code <- rep(s_c, nrow(df))
+    df$g_L <- rep("1.0e-3", nrow(df))
+    df$homeo <- rep("Homeostasis", nrow(df))
+    df$freq <- rep(8, nrow(df))
+    results221 <- rbind(results221, df)
+  }
+}
+
+results221 %>%
+  filter(rate_k > 0) -> results221
+
+# ----------------------------------------------------------------------
+# gL perturb exps
+# H
+exp_code <- 317
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4) # 4
+g_Ls <- c("0.9e-3", "0.95e-3", "1.05e-3", "1.1e-3")
+
+results317 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g_L <- rep(g, nrow(df))
+      df$homeo <- rep("Homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results317 <- rbind(results317, df)
+    }
+  }
+}
+results317 %>%
+  filter(rate_k > 0) -> results317
+
+# no H
+exp_code <- 316
+osc_codes <- c(100, 115)
+osc_rates <- c(0, 1.5)
+stim_codes <- c(3, 4) # 4
+g_Ls <- c("0.9e-3", "0.95e-3", "1.05e-3", "1.1e-3")
+
+results316 <- NULL
+for(i in 1:length(osc_codes)){
+  for(s_c in stim_codes){
+    for(g in g_Ls){
+      
+      o_c <- osc_codes[i]
+      o_r <- osc_rates[i]
+      
+      # Load the csv
+      # exp316_stim{1}_gl{3}_osc
+      df <- read_csv(paste(data_path, 
+                           "exp", as.character(exp_code), 
+                           "_stim", as.character(s_c), 
+                           "_gl", as.character(g), 
+                           "_osc", as.character(o_c),
+                           ".csv", sep=""))
+      
+      
+      # Add metadata
+      df$osc_code <- rep(o_c, nrow(df))
+      df$osc_rate <- rep(o_r, nrow(df))
+      df$stim_code <- rep(s_c, nrow(df))
+      df$synapse <- rep("AMPA", nrow(df))
+      df$g_L <- rep(g, nrow(df))
+      df$homeo <- rep("No homeostasis", nrow(df))
+      df$freq <- rep(8, nrow(df))
+      
+      results316 <- rbind(results316, df)
+    }
+  }
+}
+results316 %>%
+  filter(rate_k > 0) -> results316
+
+results <- rbind(
+  results316,
+  results317,
+  results221
+)
+
+results$g_L <- factor(results$g_L, levels=c("0.9e-3", "0.95e-3", "1.0e-3", "1.05e-3", "1.1e-3"))
+```
+
+# Plot
+## Individual points
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=kappa_coord, group=interaction(osc_rate, homeo), color=g_L)) +
+  geom_point(size=.5, alpha=0.6) +
+  theme_classic() +
+  scale_color_viridis_d() +
+  facet_grid(homeo~., scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=3.5}
+results %>% 
+  ggplot(aes(x=osc_rate, y=rate_k, group=interaction(osc_rate, homeo), color=g_L)) +
+  geom_point(size=.5, alpha=0.5) +
+  theme_classic() +
+  scale_color_viridis_d() + 
+  facet_grid(homeo~., scales = "free")
+```
+
+## Means
+```{r, fig.height=1.2, fig.width=1.2}
+results %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, homeo, g_L) %>% 
+  mutate(M=mean(kappa_coord), SD=sd(kappa_coord)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, homeo), color=g_L)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=g_L), size=.4) +
+  geom_point(size=.5, alpha=0.6) +
+  theme_classic() +
+  scale_color_viridis_d() +
+  labs(tag="a.", y="Kappa", x="Osc. rate") +
+  theme(plot.tag = element_text(size=16, face="bold"))
+  # facet_grid(homeo~., scales = "free")
+```
+
+
+```{r, fig.height=1.2, fig.width=1.25}
+results %>% 
+  filter(homeo=="Homeostasis") %>% 
+  group_by(osc_rate, homeo, g_L) %>% 
+  mutate(M=mean(rate_k), SD=sd(rate_k)) %>% 
+  ggplot(aes(x=osc_rate, y=M, group=interaction(osc_rate, homeo), color=g_L)) +
+  geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=g_L), size=.4) +
+  geom_point(size=.5, alpha=0.6) +
+  theme_classic() +
+  scale_color_viridis_d() +
+  labs(tag="b.", y="Pop. rate", x="Osc. rate") +
+  theme(plot.tag = element_text(size=16, face="bold"))
+  # facet_grid(homeo~., scales = "free")
+```
