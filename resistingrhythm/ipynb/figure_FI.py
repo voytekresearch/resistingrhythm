@@ -163,7 +163,8 @@ from fakespikes.rates import square_pulse
 # In[2]:
 
 # Load some input
-osc_name = "/Users/qualia/Code/resistingrhythm/data/osc115.csv"
+# osc_name = "/Users/qualia/Code/resistingrhythm/data/osc115.csv"
+osc_name = "/home/ejp/src/resistingrhythm/data/osc115.csv"
 ns_osc, ts_osc = load_spikes(osc_name)
 
 # In[3]:
