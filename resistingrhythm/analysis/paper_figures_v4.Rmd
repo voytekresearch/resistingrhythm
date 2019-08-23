@@ -1130,6 +1130,10 @@ results_control_drift <- rbind(
   results311)
 ```
 
+## FI curve
+```{r, message=FALSE}
+results_fi <- read_csv("../ipynb/FI_curves.csv")
+```
 # Figure: Theta results
 ```{r fig.height=2.25, fig.width=6}
 # Kappa no H, E
@@ -1308,6 +1312,31 @@ dev.off()
 ```{r}
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
+# Figure: FI 
+```{r, fig.height=0.9, fig.width=1.9}
+win <- 50e-3
+N <- 100
+us <- 1e6
+results_fi %>% 
+ggplot() +
+  geom_line(aes(x=impulse*us, y=rate_ref/win/N, color="No homeostatis"), size=0.8) +
+  geom_line(aes(x=impulse*us, y=rate_h/win/N, color="Homeostatis"), size=0.8) +
+  labs(tag="a.", y="Avg. rate", x=TeX("Impulse ($\\mu$siemens)")) +
+  lims(x=c(0, 10)) +
+  scale_colour_manual(values=c("black", "grey")) +
+  theme_classic() +
+  theme(
+    legend.title = element_blank(),
+    plot.tag = element_text(size=18, face="bold"),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.5, "cm")
+  ) -> p1
+print(p1)
+
+png(file="fig3.png", bg="white", width=3.8, height=1.8, unit="in", res=300)
+print(p1)
+dev.off()
+```
 
 # Figure: Gamma (AMPA)
 ```{r, fig.height=2.1, fig.width=2.8}
@@ -1362,6 +1391,10 @@ layout_matrix <- rbind(
   c(2, 2, 2, 2, 3)
 )
 grid.arrange(p1, p2, pn,layout_matrix=layout_matrix)
+
+png(file="fig4.png", bg="white", width=5.6, height=4.2, unit="in", res=300)
+grid.arrange(p1, p2, pn,layout_matrix=layout_matrix)
+dev.off()
 ```
 
 # Figure: Control
@@ -1534,7 +1567,7 @@ layout_matrix <- rbind(
 )
 grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, p10, p11, p12, p13, p14, p15, layout_matrix=layout_matrix)
 
-png(file="fig4.png", bg="white", width=4.8, height=5.6, unit="in", res=300)
-grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, layout_matrix=layout_matrix)
+png(file="fig5.png", bg="white", width=10, height=7.2, unit="in", res=300)
+grid.arrange(p1, p2, p3, p4, p5, p6, p8, p9, p10, p11, p12, p13, p14, p15, layout_matrix=layout_matrix)
 dev.off()
 ```
