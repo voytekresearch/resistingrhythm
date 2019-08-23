@@ -2414,3 +2414,9 @@ exp339:
 	'python homeostasis_experiments.py run $(DATA_PATH)/exp339_stim{1}_burst{2} --stim_name=$(DATA_PATH)/stim{1}.csv --osc_name=$(DATA_PATH)/exp338{2}.csv --N=100 --t=20 --tau_h=4 --burn_t=19.98 --Ca_target=0.003 --w_min=5e-6 --w_max=50e-6 --sigma=0 --num_trials=10 --seed_value=42 --verbose --homeostasis=False' \
 	::: 3 4 ::: 0 0.5 1 1.5 3 6 12 | tee $(DATA_PATH)/exp339.log
 
+# ----------------------------------------------------------------------------
+# 8-22-2019
+# Generate FI curve data
+exp440:
+	python ../ipynb/figure_FI.py
+	
