@@ -2228,9 +2228,8 @@ exp323:
 # model anyway. Question is for bio-plausibility of this model,
 # how sensitive H to G_Ca? TO find out let's sweep several orders of mag.
 
-# SUM: Even 1e-9 blocks all H effects. In retro this is necessary. 
-# Should I explore the 1e-12 range, or drop this. Not sure it clarifies or 
-# confuses the point. 
+# SUM: Even 1e-9 blocks all H effects. In retro this is necessary and would
+# act an relief valve to any possible interesting H effects. 
 
 # Excitatory
 # no H
