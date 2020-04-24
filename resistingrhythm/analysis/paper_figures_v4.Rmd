@@ -1148,7 +1148,7 @@ bind_rows(results220, results222) %>%
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse)) +
     scale_color_manual(values=c("black", "grey")) +
     lims(y=c(0.0, 0.2)) +
-    labs(title="b.", y="Kappa", x="Osc. rate") +
+    labs(title="b.", y="Kappa", x="Osc. modulation") +
     theme_classic2() +
     theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
           legend.position="none") -> p1
@@ -1166,7 +1166,7 @@ bind_rows(results221, results223) %>%
                   width=.15, size=0.2) +
     scale_color_manual(values=c("black", "grey")) +
     lims(y=c(0.0, 0.2)) +
-    labs(title="d.", y="Kappa", x="Osc. rate") +
+    labs(title="d.", y="Kappa", x="Osc. modulation") +
     theme_classic2() +
     theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
           legend.position="none") -> p2
@@ -1183,7 +1183,7 @@ bind_rows(results220, results222) %>%
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse),
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey")) +
-  labs(title="a.", y="Pop. rate", x="Osc. rate") +
+  labs(title="a.", y="Pop. rate", x="Osc. modulation") +
   lims(y=c(0.0, 180.0)) +
   guides(fill = guide_legend(override.aes = list(shape = 15, size = 7, alpha=0.8))) +
   theme_classic2() +
@@ -1203,7 +1203,7 @@ bind_rows(results221, results223) %>%
   geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
   scale_color_manual(values=c("black", "grey"), name="Tonic") +
-  labs(title="c.", y="Pop. rate", x="Osc. rate") +
+  labs(title="c.", y="Pop. rate", x="Osc. modulation") +
   lims(y=c(0.0, 180.0)) +
   theme_classic2() +
   theme(
@@ -1226,7 +1226,7 @@ bind_rows(results224, results227)  %>%
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1")) +
     lims(y=c(0.0, 0.2)) +
-    labs(title="f.", y="Kappa", x="Osc. rate") +
+    labs(title="f.", y="Kappa", x="Osc. modulation") +
     theme_classic2() +
     theme(plot.title = element_text(hjust = -.3, size=18, face="bold"),
           legend.position="none") -> p5
@@ -1243,7 +1243,7 @@ bind_rows(results224, results227)  %>%
     geom_linerange(mapping=aes(x=osc_rate, ymin=M - SD, ymax=M + SD, color=synapse), 
                 width=.15, size=0.2) +
     scale_color_manual(values=c("darkgoldenrod3", "goldenrod1"), name="Burst") +
-    labs(title="e.", y="Pop. rate", x="Osc. rate") +
+    labs(title="e.", y="Pop. rate", x="Osc. modulation") +
     lims(y=c(0.0, 180.0)) +
     theme_classic2() +
   theme(
@@ -1312,35 +1312,9 @@ dev.off()
 ```{r}
 print(wilcox.test(x=tmp3$rate_k, y=tmp4$rate_k))
 ```
-# Figure: FI 
-```{r, fig.height=0.9, fig.width=1.9}
-win <- 50e-3
-N <- 100
-us <- 1e6
-results_fi %>% 
-ggplot() +
-  geom_line(aes(x=impulse*us, y=rate_ref/win/N, color="No homeostatis"), size=0.8) +
-  geom_line(aes(x=impulse*us, y=rate_h/win/N, color="Homeostatis"), size=0.8) +
-  labs(tag="a.", y="Avg. rate", x=TeX("Impulse ($\\mu$siemens)")) +
-  lims(x=c(0, 10)) +
-  scale_colour_manual(values=c("black", "grey")) +
-  theme_classic() +
-  theme(
-    legend.title = element_blank(),
-    plot.tag = element_text(size=18, face="bold"),
-    legend.background = element_rect(colour ="black"),
-    legend.key.size = unit(.5, "cm")
-  ) -> p1
-print(p1)
-
-png(file="fig3.png", bg="white", width=3.8, height=1.8, unit="in", res=300)
-print(p1)
-dev.off()
-```
-
 # Figure: Gamma (AMPA)
 ```{r, fig.height=2.1, fig.width=2.8}
-freq_labels <- as_labeller(c('60' = "60 Hz", '90' = "90 Hz"))
+freq_labels <- as_labeller(c('60' = "Gamma, 60 Hz", '90' = "Gamma, 90 Hz"))
 gamma_results %>% 
   filter(osc_rate < 1.5, freq < 150, freq > 8) %>% 
   filter(homeo == "Homeostasis") %>% 
@@ -1352,7 +1326,7 @@ gamma_results %>%
   geom_point(size=1.5) +
   theme_classic() +
   scale_color_manual(values=c("darkgoldenrod3", "black"), name="Oscillation") +
-  labs(y="Pop. rate", x="Osc. rate", tag="a.") +
+  labs(y="Pop. rate", x="Osc. modulation", tag="a.") +
   lims(y=c(0, 100)) +
   theme(legend.position = c(1.17, -0.5),
         plot.tag = element_text(size=16, face="bold"),
@@ -1382,7 +1356,7 @@ gamma_results %>%
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         strip.background = element_blank()) +
-  labs(y="Kappa", x="Osc. rate", tag="b.") -> p2
+  labs(y="Kappa", x="Osc. modulation", tag="b.") -> p2
 
 pn <- nullGrob()
 
@@ -1392,10 +1366,37 @@ layout_matrix <- rbind(
 )
 grid.arrange(p1, p2, pn,layout_matrix=layout_matrix)
 
-png(file="fig4.png", bg="white", width=5.6, height=4.2, unit="in", res=300)
+png(file="fig3.png", bg="white", width=5.6, height=4.2, unit="in", res=300)
 grid.arrange(p1, p2, pn,layout_matrix=layout_matrix)
 dev.off()
 ```
+
+# Figure: FI 
+```{r, fig.height=0.9, fig.width=1.9}
+win <- 50e-3
+N <- 100
+uamp <- 1e6
+results_fi %>% 
+ggplot() +
+  geom_line(aes(x=impulse*uamp, y=rate_ref/win/N, color="No homeostatis"), size=0.8) +
+  geom_line(aes(x=impulse*uamp, y=rate_h/win/N, color="Homeostatis"), size=0.8) +
+  labs(tag="a.", y="Pop. rate", x=TeX("Impulse ($\\mu$amps)")) +
+  lims(x=c(0, 10)) +
+  scale_colour_manual(values=c("black", "grey")) +
+  theme_classic() +
+  theme(
+    legend.title = element_blank(),
+    plot.tag = element_text(size=18, face="bold"),
+    legend.background = element_rect(colour ="black"),
+    legend.key.size = unit(.5, "cm")
+  ) -> p1
+print(p1)
+
+png(file="fig4.png", bg="white", width=3.8, height=1.8, unit="in", res=300)
+print(p1)
+dev.off()
+```
+
 
 # Figure: Control
 ```{r, fig.width=5, fig.height=3.6}
@@ -1412,7 +1413,7 @@ tmp1 %>%
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_linerange(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
-  labs(title="b.", y="Kappa", x="Osc. rate") +
+  labs(title="b.", y="Kappa", x="Osc. modulation") +
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     guide=FALSE) +
@@ -1432,7 +1433,7 @@ ggplot(aes(x=osc_rate, y=M, color=factor(Ca_target,
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   geom_linerange(aes(ymin=M - SD, ymax=M + SD), alpha=0.5, width=.1, size=0.4)  +
-  labs(title="a.", y="Pop. rate", x="Osc. rate") +
+  labs(title="a.", y="Pop. rate", x="Osc. modulation") +
   scale_color_manual(
     values=c("plum1", "plum2", "black", "plum3", "plum4"), 
     name="Target [Ca]\n(mmolar)") +
@@ -1472,7 +1473,7 @@ results_control_drift %>%
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   theme_classic() +
-  labs(tag="d.", y="Pop. rate", x="Osc. rate") +
+  labs(tag="d.", y="Pop. rate", x="Osc. modulation") +
   lims(y=c(0.0, 100.0)) +
   theme(
     legend.position = c(1.35, -0.4),
@@ -1492,7 +1493,7 @@ results_control_drift %>%
   geom_line(size=0.8) +
   geom_point(size=1.5) +
   theme_classic() +
-  labs(tag="e.", y="Kappa", x="Osc. rate") +
+  labs(tag="e.", y="Kappa", x="Osc. modulation") +
   lims(y=c(0.0, 0.2)) +
   theme(legend.position = "none",
         plot.tag = element_text(size=18, face="bold")) +
@@ -1515,7 +1516,7 @@ results_control_leak %>%
     legend.key.size = unit(.4, "cm"),
     legend.background = element_rect(colour ="black"),
     plot.tag = element_text(size=18, face="bold")) +
-  labs(tag="f.", y="Pop. rate", x="Osc. rate") +
+  labs(tag="f.", y="Pop. rate", x="Osc. modulation") +
   scale_color_manual(
     values=c("darkorange3", "darkorange4", "black", "gold4", "gold3"), 
     name="g_L (siemens)") -> p14
@@ -1531,7 +1532,7 @@ results_control_leak %>%
   theme_classic() +
   theme(legend.position = "none",
         plot.tag = element_text(size=18, face="bold")) +
-  labs(tag="g.", y="Kappa", x="Osc. rate") +
+  labs(tag="g.", y="Kappa", x="Osc. modulation") +
   theme(plot.tag = element_text(size=16, face="bold")) + 
   scale_color_manual(
     values=c("darkorange3", "darkorange4", "black", "gold4", "gold3"), 
