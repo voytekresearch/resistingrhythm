@@ -164,7 +164,9 @@ from fakespikes.rates import square_pulse
 
 # Load some input
 # osc_name = "/Users/qualia/Code/resistingrhythm/data/osc115.csv"
-osc_name = "/home/ejp/src/resistingrhythm/data/osc115.csv"
+# osc_name = "/home/ejp/src/resistingrhythm/data/osc115.csv"
+osc_name = "/home/stitch/Code/resistingrhythm/data/osc115.csv"
+
 ns_osc, ts_osc = load_spikes(osc_name)
 
 # Drop anything after 4 seconds
@@ -254,18 +256,19 @@ for i, a in enumerate(a_range):
     rates_2.append(r_2)
     vars_1.append(s_1)
     vars_2.append(s_2)
-    
+
     # Progress bar....
     print(f"Rate 1 (no): {r_1}. Rate 2 (yes): {r_2}")
 
 # In[16]:
 
 fi = {
-    'rate_ref': rates_1, 
-    'rate_h': rates_2, 
-    'var_ref' : vars_1,
-    'var_h' : vars_2,
-    'impulse': a_range}
+    'rate_ref': rates_1,
+    'rate_h': rates_2,
+    'var_ref': vars_1,
+    'var_h': vars_2,
+    'impulse': a_range
+}
 
 # to npy
 np.save('FI_curves', fi)
