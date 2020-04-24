@@ -167,10 +167,12 @@ from fakespikes.rates import square_pulse
 osc_name = "/home/ejp/src/resistingrhythm/data/osc115.csv"
 ns_osc, ts_osc = load_spikes(osc_name)
 
-# In[3]:
+# Drop anything after 4 seconds
+m = ts_osc > 4
+ns_osc, ts_osc = ns_osc[m], ts_osc[m]
 
 # Shared parameters
-time = 4
+time = 5
 N = 100
 tau_h = 1
 
@@ -181,7 +183,7 @@ w = (5e-6, 50e-6)
 dt = 1e-5
 
 # Impulse desgin
-t_pulse = 3.75
+t_pulse = 4.5
 w_pulse = .1
 a_start = 0.1e-5
 a_stop = 1.0e-5
@@ -243,17 +245,28 @@ for i, a in enumerate(a_range):
         time_step=dt,
         seed_value=42)
 
-    # Extract rates, and save
-    r_1 = (results_1['ts'] > 3.5).sum()
-    r_2 = (results_2['ts'] > 3.5).sum()
+    # Extract rates and SD, and save
+    r_1 = (results_1['ts'] > 4.5).mean()
+    r_2 = (results_2['ts'] > 4.5).mean()
+    s_1 = (results_1['ts'] > 4.5).std()
+    s_2 = (results_2['ts'] > 4.5).std()
     rates_1.append(r_1)
     rates_2.append(r_2)
-
+    vars_1.append(s_1)
+    vars_2.append(s_2)
+    
+    # Progress bar....
     print(f"Rate 1 (no): {r_1}. Rate 2 (yes): {r_2}")
 
 # In[16]:
 
-fi = {'rate_ref': rates_1, 'rate_h': rates_2, 'impulse': a_range}
+fi = {
+    'rate_ref': rates_1, 
+    'rate_h': rates_2, 
+    'var_ref' : vars_1,
+    'var_h' : vars_2,
+    'impulse': a_range}
+
 # to npy
 np.save('FI_curves', fi)
 # to csv
