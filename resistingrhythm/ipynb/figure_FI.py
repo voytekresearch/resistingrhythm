@@ -194,6 +194,7 @@ a_range = np.linspace(a_start, a_stop, n_steps)
 
 # -
 rates_1, rates_2 = [], []
+vars_1, vars_2 = [], []
 for i, a in enumerate(a_range):
     print(f"Curve: {i}. Pulse: {a}")
 
