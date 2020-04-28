@@ -187,7 +187,7 @@ dt = 1e-5
 # Impulse desgin
 t_pulse = 4.5
 w_pulse = .1
-a_start = 0.1e-5
+a_start = 0.01e-5
 a_stop = 1.0e-5
 n_steps = 90
 a_range = np.linspace(a_start, a_stop, n_steps)
