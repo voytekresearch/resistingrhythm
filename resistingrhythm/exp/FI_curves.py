@@ -52,7 +52,7 @@ rates_1, rates_2 = [], []
 
 for n in range(num_iter):
     for i, a in enumerate(a_range):
-        print(f"Curve: {i}. Pulse: {a}")
+        print(f"Iteration {n} - Curve: {i}. Pulse: {a}")
 
         # Create pulse
         times = create_times((0, time), dt=dt)
@@ -122,7 +122,7 @@ fi = {
     'rate_ref': rates_1,
     'rate_h': rates_2,
     'n': iterations,
-    'impulse': a_range
+    'impulse': a_range.tolist() * num_iter
 }
 
 # to npy
