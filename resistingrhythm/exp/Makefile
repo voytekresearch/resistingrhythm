@@ -2417,5 +2417,5 @@ exp339:
 # 8-22-2019
 # Generate FI curve data
 exp440:
-	python ../ipynb/figure_FI.py
+	python FI_curves.py
 	
