@@ -40,11 +40,11 @@ t_pulse = 4.5
 w_pulse = .1
 a_start = 0.01e-5
 a_stop = 1.0e-5
-n_steps = 2
+n_steps = 100
 a_range = np.linspace(a_start, a_stop, n_steps)
 
 # Num replicates
-num_iter = 2
+num_iter = 10
 
 # -
 iterations = []
