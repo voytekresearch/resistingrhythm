@@ -15,9 +15,9 @@ from resistingrhythm.neurons import HHH
 from fakespikes.rates import square_pulse
 
 # Load some input; set path for data by hand....
-osc_name = "/Users/qualia/Code/resistingrhythm/data/osc115.csv"
+# osc_name = "/Users/qualia/Code/resistingrhythm/data/osc115.csv"
 # osc_name = "/home/ejp/src/resistingrhythm/data/osc115.csv"
-# osc_name = "/home/stitch/Code/resistingrhythm/data/osc115.csv"
+osc_name = "/home/stitch/Code/resistingrhythm/data/osc115.csv"
 
 ns_osc, ts_osc = load_spikes(osc_name)
 
